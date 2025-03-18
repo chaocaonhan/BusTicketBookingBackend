@@ -7,8 +7,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -47,18 +47,15 @@ public class NguoiDung {
     @Column(name = "confirmtoken")
     private String confirmToken;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
+    @Column(name = "tokenexpiry")
+    private LocalDateTime tokenExpiry;
 
 //    @Column(name = "id_vaiTro")
 //    private int id_VaiTro;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
-    @JoinColumn(name = "id_vaiTro", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "idvaitro", referencedColumnName = "id")
     private VaiTro vaiTro;
+
+
 }

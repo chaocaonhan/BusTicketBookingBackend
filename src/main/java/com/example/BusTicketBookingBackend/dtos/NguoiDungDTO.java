@@ -20,4 +20,5 @@ public class NguoiDungDTO {
     private String loaiDangKi;
     private String confirmToken;
     private String vaiTro;
+
 }

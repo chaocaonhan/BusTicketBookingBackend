@@ -12,5 +12,8 @@ import java.util.Optional;
 public interface NguoiDungRepository extends JpaRepository<NguoiDung, Integer> {
     @Query("SELECT n FROM NguoiDung n JOIN FETCH n.vaiTro WHERE n.id = :id")
     Optional<NguoiDung> getNguoiDungsById( int id);
-    List<NguoiDung> getAllNguoiDungs();
+
+    Boolean existsNguoiDungByEmail(String email);
+    NguoiDung findByEmail(String email);
+    List<NguoiDung> findAll();
 }
