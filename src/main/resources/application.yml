@@ -27,5 +27,9 @@ spring:
       mail.smtp.starttls.enable: true
       mail.smtp.ssl.enable: false
 
+jwt:
+  secret: BusTicketBookingApplicationSecretKey123456789012345678901234567890
+  expiration: 86400
+
 
 

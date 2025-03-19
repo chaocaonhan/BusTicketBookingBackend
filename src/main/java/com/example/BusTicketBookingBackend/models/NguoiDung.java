@@ -50,8 +50,6 @@ public class NguoiDung {
     @Column(name = "tokenexpiry")
     private LocalDateTime tokenExpiry;
 
-//    @Column(name = "id_vaiTro")
-//    private int id_VaiTro;
 
     @ManyToOne
     @JoinColumn(name = "idvaitro", referencedColumnName = "id")

@@ -1,10 +1,9 @@
 package com.example.BusTicketBookingBackend.service.impl;
 
+import com.example.BusTicketBookingBackend.config.JwtUtil;
 import com.example.BusTicketBookingBackend.dtos.LoginDTO;
 import com.example.BusTicketBookingBackend.dtos.NguoiDungDTO;
-import com.example.BusTicketBookingBackend.models.DiemDungTrenTuyen;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
-import com.example.BusTicketBookingBackend.repositories.DiemDungTrenTuyenRepository;
 import com.example.BusTicketBookingBackend.repositories.NguoiDungRepository;
 import com.example.BusTicketBookingBackend.repositories.VaiTroRepository;
 import com.example.BusTicketBookingBackend.service.EmailService;
@@ -13,6 +12,12 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +35,9 @@ public class NguoiDungServiceImpl implements NguoiDungService {
     private  final ModelMapper modelMapper;
     private final VaiTroRepository vaiTroRepository;
     private final EmailService emailService;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
 
 
     @Override
@@ -133,24 +141,60 @@ public class NguoiDungServiceImpl implements NguoiDungService {
         return false;
     }
 
+//    @Override
+//    public String login(LoginDTO loginDTO) {
+//        NguoiDung nd = nguoiDungRepository.findByEmail(loginDTO.getEmail());
+//
+//        if (nd == null){
+//            return "NULL";// "Không tìm thấy người dùng"
+//        }
+//
+//        if(!passwordEncoder.matches(loginDTO.getMatKhau(), nd.getMatKhau())) {
+//            return "PASSWORD";// "Mật khẩu không đúng";
+//        }
+//        if ( nd.getTrangThai() == NguoiDung.trangthai.INACTIVE) {
+//            return "LOCK OR VERIFY" ;
+//        }
+//        if (nd.getTrangThai() == NguoiDung.trangthai.ACTIVE) {
+//            return "đang nhap thanh cong + trả về token ( chưa xử lý )";
+//        }
+//        return "other case";
+//    }
+
     @Override
     public String login(LoginDTO loginDTO) {
         NguoiDung nd = nguoiDungRepository.findByEmail(loginDTO.getEmail());
 
-        if (nd == null){
-            return "NULL";// "Không tìm thấy người dùng"
+        if (nd == null) {
+            return "NULL"; // "Không tìm thấy người dùng"
         }
 
-        if(!passwordEncoder.matches(loginDTO.getMatKhau(), nd.getMatKhau())) {
-            return "PASSWORD";// "Mật khẩu không đúng";
+        if (!passwordEncoder.matches(loginDTO.getMatKhau(), nd.getMatKhau())) {
+            return "PASSWORD"; // "Mật khẩu không đúng"
         }
-        if ( nd.getTrangThai() == NguoiDung.trangthai.INACTIVE) {
-            return "LOCK OR VERIFY" ;
+
+        if (nd.getTrangThai() == NguoiDung.trangthai.INACTIVE) {
+            return "LOCK_OR_VERIFY";
         }
+
         if (nd.getTrangThai() == NguoiDung.trangthai.ACTIVE) {
-            return "đang nhap thanh cong + trả về token ( chưa xử lý )";
+            try {
+                Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getMatKhau())
+                );
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTO.getEmail());
+                String jwt = jwtUtil.generateToken(userDetails, nd.getVaiTro().getTenvaitro());
+
+                return jwt;
+            } catch (Exception e) {
+                return "AUTH_ERROR";
+            }
         }
-        return "other case";
+
+        return "OTHER_CASE";
     }
 
 
