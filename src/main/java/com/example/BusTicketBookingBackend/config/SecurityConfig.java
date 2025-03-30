@@ -74,7 +74,9 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/nguoidung/login").permitAll()
+                        .requestMatchers("/api/nguoidung/register").permitAll()
+                        .requestMatchers("/api/nguoidung/verify").permitAll()
                         .requestMatchers("/api/tuyen-xe/**").permitAll()
                         .requestMatchers("api/tinhthanh/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
