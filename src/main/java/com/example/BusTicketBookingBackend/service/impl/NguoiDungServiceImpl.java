@@ -1,15 +1,18 @@
 package com.example.BusTicketBookingBackend.service.impl;
 
 import com.example.BusTicketBookingBackend.config.JwtUtil;
-import com.example.BusTicketBookingBackend.dtos.LoginDTO;
+import com.example.BusTicketBookingBackend.dtos.request.LoginDTO;
 import com.example.BusTicketBookingBackend.dtos.NguoiDungDTO;
+import com.example.BusTicketBookingBackend.exception.AppException;
+import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
 import com.example.BusTicketBookingBackend.repositories.NguoiDungRepository;
 import com.example.BusTicketBookingBackend.repositories.VaiTroRepository;
 import com.example.BusTicketBookingBackend.service.EmailService;
 import com.example.BusTicketBookingBackend.service.NguoiDungService;
-import jakarta.mail.MessagingException;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,20 +27,20 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class NguoiDungServiceImpl implements NguoiDungService {
 
-    private final NguoiDungRepository nguoiDungRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
-    private  final ModelMapper modelMapper;
-    private final VaiTroRepository vaiTroRepository;
-    private final EmailService emailService;
-    private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
-    private final JwtUtil jwtUtil;
+    NguoiDungRepository nguoiDungRepository;
+    BCryptPasswordEncoder passwordEncoder;
+    ModelMapper modelMapper;
+    VaiTroRepository vaiTroRepository;
+    EmailService emailService;
+    AuthenticationManager authenticationManager;
+    UserDetailsService userDetailsService;
+    JwtUtil jwtUtil;
 
 
     @Override
@@ -45,8 +48,11 @@ public class NguoiDungServiceImpl implements NguoiDungService {
         String result = "";
         if(nguoiDungRepository.existsNguoiDungByEmail(nguoiDungDTO.getEmail())){
             result += "Email đã tồn tại";
+            throw new AppException(ErrorCode.EMAIL_EXITS);
         }else {
-            String confirmToken = String.format("%06d", new Random().nextInt(999999));
+//            để code = 123456 thay vì random
+            String confirmToken = "123456";
+//            String confirmToken = String.format("%06d", new Random().nextInt(999999));
             NguoiDung nguoiDung = new NguoiDung();
             nguoiDung.setHoTen(nguoiDungDTO.getHoTen());
             nguoiDung.setEmail(nguoiDungDTO.getEmail());
@@ -57,12 +63,16 @@ public class NguoiDungServiceImpl implements NguoiDungService {
             nguoiDung.setTokenExpiry(LocalDateTime.now().plusMinutes(5));
             nguoiDung.setTrangThai(NguoiDung.trangthai.INACTIVE);
             NguoiDung savedUser = nguoiDungRepository.save(nguoiDung);
-            try {
-                emailService.sendVerificationEmail(nguoiDungDTO.getEmail(),confirmToken);
-                result = String.valueOf(savedUser.getId());
-            }catch(MessagingException e){
-                result = "Tài khoản đã được tạo nhưng gửi email xác nhận thất bại.";
-            }
+
+
+//            comment để tắt gửi mail, thêm dòng dưới để vẫn trả về response
+            result = String.valueOf(savedUser.getId());
+//            try {
+//                emailService.sendVerificationEmail(nguoiDungDTO.getEmail(),confirmToken);
+//                result = String.valueOf(savedUser.getId());
+//            }catch(MessagingException e){
+//                result = "Tài khoản đã được tạo nhưng gửi email xác nhận thất bại.";
+//            }
         }
         return result;
     }

@@ -1,9 +1,8 @@
 package com.example.BusTicketBookingBackend.service;
 
-import com.example.BusTicketBookingBackend.dtos.LoginDTO;
+import com.example.BusTicketBookingBackend.dtos.request.LoginDTO;
 import com.example.BusTicketBookingBackend.dtos.NguoiDungDTO;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;

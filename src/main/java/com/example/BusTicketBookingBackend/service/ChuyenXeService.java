@@ -1,8 +1,7 @@
 package com.example.BusTicketBookingBackend.service;
 
-import com.example.BusTicketBookingBackend.dtos.ChuyenXeDTO;
+import com.example.BusTicketBookingBackend.dtos.response.ChuyenXeDTO;
 import com.example.BusTicketBookingBackend.models.ChuyenXe;
-import com.example.BusTicketBookingBackend.models.TuyenXe;
 
 import java.time.LocalDate;
 import java.util.List;

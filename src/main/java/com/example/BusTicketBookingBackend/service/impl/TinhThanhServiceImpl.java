@@ -29,8 +29,8 @@ public class TinhThanhServiceImpl implements TinhThanhService {
     }
 
     @Override
-    public String deleteTinhThanh(String tinhThanh) {
-        tinhThanhRepository.deleteByTenTinhThanh(tinhThanh);
+    public String deleteTinhThanh(Integer IDtinhThanh) {
+        tinhThanhRepository.deleteById(IDtinhThanh);
         return "Đã xoá tỉnh";
     }
 }

@@ -1,6 +1,6 @@
 package com.example.BusTicketBookingBackend.service.impl;
 
-import com.example.BusTicketBookingBackend.dtos.ChuyenXeDTO;
+import com.example.BusTicketBookingBackend.dtos.response.ChuyenXeDTO;
 import com.example.BusTicketBookingBackend.models.ChuyenXe;
 import com.example.BusTicketBookingBackend.models.LoaiXe;
 import com.example.BusTicketBookingBackend.models.TuyenXe;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;

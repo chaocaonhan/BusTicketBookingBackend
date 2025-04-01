@@ -1,5 +1,6 @@
 package com.example.BusTicketBookingBackend.controller;
 
+import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
 import com.example.BusTicketBookingBackend.dtos.TuyenXeDTO;
 import com.example.BusTicketBookingBackend.models.TuyenXe;
 import com.example.BusTicketBookingBackend.service.TuyenXeService;
@@ -17,19 +18,23 @@ public class TuyenXeController {
     private final TuyenXeService tuyenXeService;
 
     @GetMapping("")
-    public List<TuyenXe> getAllTuyenXe() {
-        return tuyenXeService.getAllTuyenXe();
+    public ApiResponse<List<TuyenXe>> getAllTuyenXe() {
+        ApiResponse<List<TuyenXe>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(tuyenXeService.getAllTuyenXe());
+        return apiResponse;
     }
 
     @PutMapping("/suaThongTinTuyen/{id}")
-    public ResponseEntity<String> upDateTuyenXe(@PathVariable Integer id, @RequestBody TuyenXeDTO tuyenXeDTO) {
+    public ApiResponse upDateTuyenXe(@PathVariable Integer id, @RequestBody TuyenXeDTO tuyenXeDTO) {
+        ApiResponse apiResponse = new ApiResponse();
+
         String result = tuyenXeService.editTuyenXe(tuyenXeDTO, id);
 
         if (result.startsWith("Không tìm thấy")) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+            apiResponse.setMessage(result);
         }
 
-        return ResponseEntity.ok(result);
+        return apiResponse;
     }
 
     @PostMapping("/taoTuyen")

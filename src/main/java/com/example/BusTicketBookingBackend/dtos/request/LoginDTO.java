@@ -1,4 +1,4 @@
-package com.example.BusTicketBookingBackend.dtos;
+package com.example.BusTicketBookingBackend.dtos.request;
 
 import lombok.Getter;
 import lombok.Setter;

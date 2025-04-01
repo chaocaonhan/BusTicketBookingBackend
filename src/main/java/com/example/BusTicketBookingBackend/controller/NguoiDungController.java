@@ -1,18 +1,14 @@
 package com.example.BusTicketBookingBackend.controller;
 
-import com.example.BusTicketBookingBackend.dtos.AuthResponseDTO;
-import com.example.BusTicketBookingBackend.dtos.LoginDTO;
+import com.example.BusTicketBookingBackend.dtos.response.AuthResponseDTO;
+import com.example.BusTicketBookingBackend.dtos.request.LoginDTO;
 import com.example.BusTicketBookingBackend.dtos.NguoiDungDTO;
-import com.example.BusTicketBookingBackend.models.DiemDungTrenTuyen;
-import com.example.BusTicketBookingBackend.repositories.DiemDungTrenTuyenRepository;
 import com.example.BusTicketBookingBackend.service.NguoiDungService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 
 @RestController
@@ -24,7 +20,8 @@ public class NguoiDungController {
     private final NguoiDungService nguoiDungService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody NguoiDungDTO nguoiDungDTO) {
+    //valid là để validation dữ liệu từ frontend gửi về
+    public ResponseEntity<?> register(@RequestBody @Valid NguoiDungDTO nguoiDungDTO) {
         String result = nguoiDungService.createNguoiDung(nguoiDungDTO);
 
         if (result.equals("Email đã tồn tại")) {
