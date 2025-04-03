@@ -1,7 +1,7 @@
 package com.example.BusTicketBookingBackend.controller;
 
 import com.example.BusTicketBookingBackend.dtos.response.ChuyenXeDTO;
-import com.example.BusTicketBookingBackend.dtos.ChuyenXeSearchDTO;
+import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeSearchDTO;
 import com.example.BusTicketBookingBackend.models.ChuyenXe;
 import com.example.BusTicketBookingBackend.service.ChuyenXeService;
 import lombok.RequiredArgsConstructor;

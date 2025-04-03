@@ -1,5 +1,7 @@
 package com.example.BusTicketBookingBackend.service.impl;
 
+import com.example.BusTicketBookingBackend.exception.AppException;
+import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
 import com.example.BusTicketBookingBackend.repositories.NguoiDungRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        NguoiDung nguoiDung = nguoiDungRepository.findByEmail(email);
+        NguoiDung nguoiDung = nguoiDungRepository.findByEmail(email)
+                .orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
         if (nguoiDung == null) {
             throw new UsernameNotFoundException("Không tìm thấy người dùng với email: " + email);
         }

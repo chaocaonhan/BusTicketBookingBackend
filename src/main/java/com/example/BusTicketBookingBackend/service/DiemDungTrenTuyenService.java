@@ -1,6 +1,6 @@
 package com.example.BusTicketBookingBackend.service;
 
-import com.example.BusTicketBookingBackend.dtos.DiemDungTrenTuyenDTO;
+import com.example.BusTicketBookingBackend.dtos.response.DiemDungTrenTuyenDTO;
 
 import java.util.List;
 

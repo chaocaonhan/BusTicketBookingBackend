@@ -1,6 +1,6 @@
 package com.example.BusTicketBookingBackend.service.impl;
 
-import com.example.BusTicketBookingBackend.dtos.TuyenXeDTO;
+import com.example.BusTicketBookingBackend.dtos.response.TuyenXeDTO;
 import com.example.BusTicketBookingBackend.models.TinhThanh;
 import com.example.BusTicketBookingBackend.models.TuyenXe;
 import com.example.BusTicketBookingBackend.repositories.TinhThanhRepository;

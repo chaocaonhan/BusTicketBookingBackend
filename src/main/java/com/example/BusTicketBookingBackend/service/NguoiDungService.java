@@ -1,7 +1,7 @@
 package com.example.BusTicketBookingBackend.service;
 
 import com.example.BusTicketBookingBackend.dtos.request.LoginDTO;
-import com.example.BusTicketBookingBackend.dtos.NguoiDungDTO;
+import com.example.BusTicketBookingBackend.dtos.response.NguoiDungDTO;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Optional;
 
 
 public interface NguoiDungService {
-    String createNguoiDung(NguoiDungDTO nguoiDungDTO);
+    NguoiDungDTO createNguoiDung(NguoiDungDTO nguoiDungDTO);
     NguoiDung getNguoiDung(int id);
 
     NguoiDung setNguoiDung(NguoiDung nguoiDung);
@@ -20,4 +20,6 @@ public interface NguoiDungService {
 
     Boolean verifyUser(Integer id, String confirmtoken);
     String login(LoginDTO loginDTO);
+
+    NguoiDungDTO getMyInfor();
 }

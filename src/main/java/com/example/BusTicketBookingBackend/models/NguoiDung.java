@@ -3,6 +3,7 @@ package com.example.BusTicketBookingBackend.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
@@ -13,24 +14,25 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "nguoidung")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class NguoiDung {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    int id;
 
     @Column(name = "hoten")
-    private String hoTen;
+    String hoTen;
 
     @Column(name = "email")
-    private String email;
+    String email;
 
     @Column(name = "matkhau")
-    private String matKhau;
+    String matKhau;
 
     @Column(name = "sdt")
-    private String SDT;
+    String SDT;
 
     public enum trangthai{
         ACTIVE,
@@ -39,21 +41,20 @@ public class NguoiDung {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "trangthai")
-    private trangthai trangThai;
+    trangthai trangThai;
 
     @Column(name = "loaidangki")
-    private String loaiDangKi;
+    String loaiDangKi;
 
     @Column(name = "confirmtoken")
-    private String confirmToken;
+    String confirmToken;
 
     @Column(name = "tokenexpiry")
-    private LocalDateTime tokenExpiry;
-
+    LocalDateTime tokenExpiry;
 
     @ManyToOne
     @JoinColumn(name = "idvaitro", referencedColumnName = "id")
-    private VaiTro vaiTro;
+    VaiTro vaiTro;
 
 
 }

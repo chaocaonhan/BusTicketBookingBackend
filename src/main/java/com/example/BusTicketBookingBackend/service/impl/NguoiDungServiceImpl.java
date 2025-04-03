@@ -2,7 +2,7 @@ package com.example.BusTicketBookingBackend.service.impl;
 
 import com.example.BusTicketBookingBackend.config.JwtUtil;
 import com.example.BusTicketBookingBackend.dtos.request.LoginDTO;
-import com.example.BusTicketBookingBackend.dtos.NguoiDungDTO;
+import com.example.BusTicketBookingBackend.dtos.response.NguoiDungDTO;
 import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
@@ -44,10 +44,10 @@ public class NguoiDungServiceImpl implements NguoiDungService {
 
 
     @Override
-    public String createNguoiDung(NguoiDungDTO nguoiDungDTO) {
-        String result = "";
+    public NguoiDungDTO createNguoiDung(NguoiDungDTO nguoiDungDTO) {
+
+        NguoiDung savedUser = new NguoiDung();
         if(nguoiDungRepository.existsNguoiDungByEmail(nguoiDungDTO.getEmail())){
-            result += "Email đã tồn tại";
             throw new AppException(ErrorCode.EMAIL_EXITS);
         }else {
 //            để code = 123456 thay vì random
@@ -62,11 +62,10 @@ public class NguoiDungServiceImpl implements NguoiDungService {
             nguoiDung.setConfirmToken(confirmToken);
             nguoiDung.setTokenExpiry(LocalDateTime.now().plusMinutes(5));
             nguoiDung.setTrangThai(NguoiDung.trangthai.INACTIVE);
-            NguoiDung savedUser = nguoiDungRepository.save(nguoiDung);
+            savedUser = nguoiDungRepository.save(nguoiDung);
 
 
 //            comment để tắt gửi mail, thêm dòng dưới để vẫn trả về response
-            result = String.valueOf(savedUser.getId());
 //            try {
 //                emailService.sendVerificationEmail(nguoiDungDTO.getEmail(),confirmToken);
 //                result = String.valueOf(savedUser.getId());
@@ -74,7 +73,15 @@ public class NguoiDungServiceImpl implements NguoiDungService {
 //                result = "Tài khoản đã được tạo nhưng gửi email xác nhận thất bại.";
 //            }
         }
-        return result;
+        return NguoiDungDTO.builder()
+                .id(savedUser.getId())
+                .hoTen(savedUser.getHoTen())
+                .SDT(savedUser.getSDT())
+                .email(savedUser.getEmail())
+                .loaiDangKi(savedUser.getLoaiDangKi())
+                .vaiTro(savedUser.getVaiTro().getTenvaitro())
+                .trangThai(String.valueOf(savedUser.getTrangThai()))
+        .build();
     }
 
     @Override
@@ -173,11 +180,9 @@ public class NguoiDungServiceImpl implements NguoiDungService {
 
     @Override
     public String login(LoginDTO loginDTO) {
-        NguoiDung nd = nguoiDungRepository.findByEmail(loginDTO.getEmail());
+        NguoiDung nd = nguoiDungRepository.findByEmail(loginDTO.getEmail())
+                .orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
 
-        if (nd == null) {
-            return "NULL"; // "Không tìm thấy người dùng"
-        }
 
         if (!passwordEncoder.matches(loginDTO.getMatKhau(), nd.getMatKhau())) {
             return "PASSWORD"; // "Mật khẩu không đúng"
@@ -205,6 +210,16 @@ public class NguoiDungServiceImpl implements NguoiDungService {
         }
 
         return "OTHER_CASE";
+    }
+
+    @Override
+    public NguoiDungDTO getMyInfor(){
+        var context = SecurityContextHolder.getContext();
+        String mail = context.getAuthentication().getName();
+        NguoiDung nguoiDung = nguoiDungRepository.findByEmail(mail)
+                .orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
+
+        return modelMapper.map(nguoiDung, NguoiDungDTO.class);
     }
 
 

@@ -1,7 +1,7 @@
 package com.example.BusTicketBookingBackend.controller;
 
 import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
-import com.example.BusTicketBookingBackend.dtos.TuyenXeDTO;
+import com.example.BusTicketBookingBackend.dtos.response.TuyenXeDTO;
 import com.example.BusTicketBookingBackend.models.TuyenXe;
 import com.example.BusTicketBookingBackend.service.TuyenXeService;
 import lombok.RequiredArgsConstructor;

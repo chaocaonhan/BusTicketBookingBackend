@@ -1,14 +1,18 @@
 package com.example.BusTicketBookingBackend.controller;
 
+import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
 import com.example.BusTicketBookingBackend.dtos.response.AuthResponseDTO;
 import com.example.BusTicketBookingBackend.dtos.request.LoginDTO;
-import com.example.BusTicketBookingBackend.dtos.NguoiDungDTO;
+import com.example.BusTicketBookingBackend.dtos.response.NguoiDungDTO;
+import com.example.BusTicketBookingBackend.exception.AppException;
+import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.service.NguoiDungService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClient;
 
 
 @RestController
@@ -18,24 +22,28 @@ import org.springframework.web.bind.annotation.*;
 public class NguoiDungController {
 
     private final NguoiDungService nguoiDungService;
+    private final RestClient.Builder builder;
 
     @PostMapping("/register")
     //valid là để validation dữ liệu từ frontend gửi về
-    public ResponseEntity<?> register(@RequestBody @Valid NguoiDungDTO nguoiDungDTO) {
-        String result = nguoiDungService.createNguoiDung(nguoiDungDTO);
+    public ResponseEntity<ApiResponse<NguoiDungDTO>> register(@RequestBody @Valid NguoiDungDTO nguoiDungDTO) {
+        // Gọi service để tạo người dùng
+        NguoiDungDTO result = nguoiDungService.createNguoiDung(nguoiDungDTO);
 
-        if (result.equals("Email đã tồn tại")) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
-        } else if (result.startsWith("Tài khoản đã được tạo")) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(result);
-        } else {
-            try {
-                int userId = Integer.parseInt(result);
-                return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponseDTO(userId, "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản."));
-            } catch (NumberFormatException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-            }
+        // Kiểm tra kết quả trả về từ service
+        if (result == null) {
+            // Trường hợp có lỗi không xác định
+            throw new AppException(ErrorCode.UNKNOWN_ERROR);
         }
+
+        // Tạo ApiResponse để trả về
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(result);
+        apiResponse.setCode(HttpStatus.CREATED.value());
+        apiResponse.setMessage("Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.");
+
+        // Trả về response với status code 201 (CREATED)
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
     @PostMapping("/login")
@@ -70,6 +78,13 @@ public class NguoiDungController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Xác nhận tài khoản thất bại. Mã xác nhận không hợp lệ hoặc đã hết hạn.");
         }
+    }
+
+    @GetMapping("/myInfor")
+    public ApiResponse<NguoiDungDTO> getMyInfor() {
+        return ApiResponse.<NguoiDungDTO>builder()
+                .result(nguoiDungService.getMyInfor())
+                .build();
     }
 
 

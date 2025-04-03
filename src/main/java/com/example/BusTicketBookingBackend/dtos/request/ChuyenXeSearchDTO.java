@@ -1,7 +1,6 @@
-package com.example.BusTicketBookingBackend.dtos;
+package com.example.BusTicketBookingBackend.dtos.request;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data

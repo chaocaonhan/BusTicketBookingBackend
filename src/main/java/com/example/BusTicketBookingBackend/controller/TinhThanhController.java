@@ -3,7 +3,10 @@ package com.example.BusTicketBookingBackend.controller;
 import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
 import com.example.BusTicketBookingBackend.models.TinhThanh;
 import com.example.BusTicketBookingBackend.service.TinhThanhService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,11 +15,17 @@ import java.util.List;
 @RequestMapping("/api/tinhthanh")
 public class TinhThanhController {
 
+    private static final Logger log = LoggerFactory.getLogger(TinhThanhController.class);
     @Autowired
     private TinhThanhService tinhThanhService;
 
     @GetMapping("")
     public ApiResponse<List<TinhThanh>> getAllTinhThanh(){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        log.info("user name:{}",authentication.getName());
+        log.info("Role:{}",authentication.getAuthorities());
+
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(tinhThanhService.getAllTinhThanh());
         return apiResponse;

@@ -1,6 +1,6 @@
 package com.example.BusTicketBookingBackend.controller;
 
-import com.example.BusTicketBookingBackend.dtos.DiemDungTrenTuyenDTO;
+import com.example.BusTicketBookingBackend.dtos.response.DiemDungTrenTuyenDTO;
 import com.example.BusTicketBookingBackend.service.DiemDungTrenTuyenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

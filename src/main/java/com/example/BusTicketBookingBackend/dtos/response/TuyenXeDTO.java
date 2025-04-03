@@ -1,4 +1,4 @@
-package com.example.BusTicketBookingBackend.dtos;
+package com.example.BusTicketBookingBackend.dtos.response;
 
 import lombok.*;
 

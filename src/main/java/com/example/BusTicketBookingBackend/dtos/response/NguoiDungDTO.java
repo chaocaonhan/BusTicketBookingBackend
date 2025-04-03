@@ -1,8 +1,6 @@
-package com.example.BusTicketBookingBackend.dtos;
+package com.example.BusTicketBookingBackend.dtos.response;
 
-import com.example.BusTicketBookingBackend.models.NguoiDung;
-import com.example.BusTicketBookingBackend.models.VaiTro;
-import jakarta.validation.Valid;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -19,7 +17,7 @@ public class NguoiDungDTO {
     String hoTen;
 
     @Email(message = "EMAIL_INVALID")
-    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@gmail\\.com$", message = "Email phải là @gmail.com")
+//    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@gmail\\.com$", message = "Email phải là @gmail.com")
     String email;
 
     @Size(min = 8, message = "INVALID_PASSWORD")
@@ -27,6 +25,5 @@ public class NguoiDungDTO {
     String SDT;
     String trangThai;
     String loaiDangKi;
-    String confirmToken;
     String vaiTro;
 }
