@@ -116,27 +116,28 @@ public class NguoiDungServiceImpl implements NguoiDungService {
         return nguoiDungs.stream().map(nguoiDung -> {
             NguoiDungDTO nguoiDungDTO = modelMapper.map(nguoiDung, NguoiDungDTO.class);
             nguoiDungDTO.setVaiTro(nguoiDung.getVaiTro().getTenvaitro());
+            nguoiDungDTO.setLoaiDangKi(nguoiDung.getLoaiDangKi());
+            nguoiDungDTO.setSDT(nguoiDung.getSDT());
             return nguoiDungDTO;
         }).toList();
     }
 
     @Override
-    public String updateNguoiDung(NguoiDungDTO nguoiDungDto) {
-        Optional<NguoiDung> nguoiDung = nguoiDungRepository.findById(nguoiDungDto.getId());
-        if (nguoiDung.isPresent()) {
-            NguoiDung nguoiDungModel = nguoiDung.get();
+    public NguoiDungDTO updateNguoiDung(Integer id, NguoiDungDTO nguoiDungDTO) {
+        NguoiDung nguoiDung = nguoiDungRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-            // Dùng ModelMapper để cập nhật dữ liệu từ DTO vào Entity
-            modelMapper.map(nguoiDungDto, nguoiDungModel);
+        modelMapper.map(nguoiDungDTO,nguoiDung);
 
-            // Lưu vào database
-            nguoiDungRepository.save(nguoiDungModel);
+        // Lưu vào database
+        nguoiDung = nguoiDungRepository.save(nguoiDung);
 
-            return "Cập nhật thành công!";
-        } else {
-            return "Không tìm thấy người dùng!";
-        }
+        NguoiDungDTO updatedUser = modelMapper.map(nguoiDung, NguoiDungDTO.class);
+
+
+        return updatedUser;
     }
+
 
     @Override
     public Boolean verifyUser(Integer userId, String inputToken) {
@@ -220,6 +221,17 @@ public class NguoiDungServiceImpl implements NguoiDungService {
                 .orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
 
         return modelMapper.map(nguoiDung, NguoiDungDTO.class);
+    }
+
+    @Override
+    public Boolean deleteNguoiDungById(Integer id) {
+        NguoiDung nguoiDung = nguoiDungRepository.findById(id).orElseThrow(
+                ()-> new AppException(ErrorCode.USER_NOT_FOUND)
+
+        );
+        nguoiDungRepository.delete(nguoiDung);
+        return true;
+
     }
 
 

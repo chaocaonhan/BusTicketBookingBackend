@@ -28,6 +28,7 @@ public class TinhThanhController {
 
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(tinhThanhService.getAllTinhThanh());
+        apiResponse.setCode(200);
         return apiResponse;
     }
 

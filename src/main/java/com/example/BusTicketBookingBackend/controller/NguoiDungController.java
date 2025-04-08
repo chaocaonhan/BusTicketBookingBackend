@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClient;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("api/nguoidung")
@@ -46,6 +48,17 @@ public class NguoiDungController {
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
+    @GetMapping("/verify")
+    public ResponseEntity<?> verifyAccount(@RequestParam("userId") Integer userId, @RequestParam("token") String token) {
+        Boolean isVerified = nguoiDungService.verifyUser(userId, token);
+
+        if (isVerified) {
+            return ResponseEntity.ok("Xác nhận tài khoản thành công. Bạn có thể đăng nhập ngay bây giờ.");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Xác nhận tài khoản thất bại. Mã xác nhận không hợp lệ hoặc đã hết hạn.");
+        }
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
         String result = nguoiDungService.login(loginDTO);
@@ -69,16 +82,6 @@ public class NguoiDungController {
         }
     }
 
-    @GetMapping("/verify")
-    public ResponseEntity<?> verifyAccount(@RequestParam("userId") Integer userId, @RequestParam("token") String token) {
-        Boolean isVerified = nguoiDungService.verifyUser(userId, token);
-
-        if (isVerified) {
-            return ResponseEntity.ok("Xác nhận tài khoản thành công. Bạn có thể đăng nhập ngay bây giờ.");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Xác nhận tài khoản thất bại. Mã xác nhận không hợp lệ hoặc đã hết hạn.");
-        }
-    }
 
     @GetMapping("/myInfor")
     public ApiResponse<NguoiDungDTO> getMyInfor() {
@@ -87,8 +90,52 @@ public class NguoiDungController {
                 .build();
     }
 
+    @GetMapping("")
+    public ResponseEntity<ApiResponse<List<NguoiDungDTO>>> getAll() {
+        ApiResponse<List<NguoiDungDTO>> response = ApiResponse.<List<NguoiDungDTO>>builder()
+                .result(nguoiDungService.getAllNguoiDung())
+                .code(200)
+                .message("Success")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<NguoiDungDTO>> updateUser(
+            @PathVariable Integer id,
+            @RequestBody NguoiDungDTO nguoiDungDTO) {
 
+        NguoiDungDTO updatedUser = nguoiDungService.updateNguoiDung(id, nguoiDungDTO);
 
+        ApiResponse<NguoiDungDTO> response = ApiResponse.<NguoiDungDTO>builder()
+                .code(200)
+                .message("User updated successfully")
+                .result(updatedUser)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteUser(@PathVariable Integer id) {
+        boolean isDeleted = nguoiDungService.deleteNguoiDungById(id);
+
+        if (isDeleted) {
+            ApiResponse<String> response = ApiResponse.<String>builder()
+                    .code(200)
+                    .message("User deleted successfully")
+                    .result("User with ID " + id + " has been deleted")
+                    .build();
+            return ResponseEntity.ok(response);
+        } else {
+            ApiResponse<String> response = ApiResponse.<String>builder()
+                    .code(404)
+                    .message("User not found")
+                    .result(null)
+                    .build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
 }

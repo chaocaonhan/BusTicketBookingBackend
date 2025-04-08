@@ -15,11 +15,12 @@ public interface NguoiDungService {
     NguoiDung setNguoiDung(NguoiDung nguoiDung);
     Optional<NguoiDungDTO> getNguoiDungByID(int id);
     List<NguoiDungDTO> getAllNguoiDung();
-    String updateNguoiDung(NguoiDungDTO nguoiDungDTO);
+    NguoiDungDTO updateNguoiDung(Integer id, NguoiDungDTO nguoiDungDTO);
 
 
     Boolean verifyUser(Integer id, String confirmtoken);
     String login(LoginDTO loginDTO);
 
     NguoiDungDTO getMyInfor();
+    Boolean deleteNguoiDungById(Integer id);
 }
