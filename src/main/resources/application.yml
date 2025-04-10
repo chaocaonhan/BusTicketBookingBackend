@@ -33,14 +33,8 @@ jwt:
 
 logging:
   level:
-    root: INFO                          # Mức log mặc định
-    org.springframework.security: DEBUG # Log chi tiết từ Spring Security
-    com.example.BusTicketBookingBackend: DEBUG # Log chi tiết từ package của bạn
+    root: INFO
+    org.springframework.security: DEBUG
+    com.example.BusTicketBookingBackend: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-  file:
-    name: logs/application.log         # File log chung
-  rollingpolicy:
-    file-name-pattern: logs/application.%d{yyyy-MM-dd}.log
-    max-history: 30

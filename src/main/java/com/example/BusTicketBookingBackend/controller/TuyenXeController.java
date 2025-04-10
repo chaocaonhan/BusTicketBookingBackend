@@ -18,10 +18,12 @@ public class TuyenXeController {
     private final TuyenXeService tuyenXeService;
 
     @GetMapping("")
-    public ApiResponse<List<TuyenXe>> getAllTuyenXe() {
+    public ResponseEntity<ApiResponse<List<TuyenXe>>> getAllTuyenXe() {
         ApiResponse<List<TuyenXe>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(tuyenXeService.getAllTuyenXe());
-        return apiResponse;
+        apiResponse.setCode(200);
+        apiResponse.setMessage("Lấy thành công danh sách tuyến xe");
+        return ResponseEntity.ok(apiResponse);
     }
 
     @PutMapping("/suaThongTinTuyen/{id}")

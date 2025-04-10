@@ -84,6 +84,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/nguoidung/login").permitAll()
                         .requestMatchers("/api/nguoidung/register").permitAll()
                         .requestMatchers("/api/nguoidung/verify").permitAll()
+                        .requestMatchers("/api/Station/getByProvince/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/tuyen-xe/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"api/tinhthanh/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE,"/api/tinhthanh/deleteTinhThanh").hasRole("ADMIN")
