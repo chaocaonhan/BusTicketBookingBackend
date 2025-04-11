@@ -1,5 +1,6 @@
 package com.example.BusTicketBookingBackend.controller;
 
+import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
 import com.example.BusTicketBookingBackend.dtos.response.DiemDungTrenTuyenDTO;
 import com.example.BusTicketBookingBackend.service.DiemDungTrenTuyenService;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,11 @@ public class DiemDungTrenTuyenController {
     private final DiemDungTrenTuyenService diemDungTrenTuyenService;
 
     @GetMapping("/tuyen/{idTuyen}")
-    public ResponseEntity<List<DiemDungTrenTuyenDTO>> getDiemDungByTuyen(@PathVariable Integer idTuyen) {
-        List<DiemDungTrenTuyenDTO> danhSachDiemDung = diemDungTrenTuyenService.danhSachDiemDungCuaMotTuyen(idTuyen);
-        return ResponseEntity.ok(danhSachDiemDung);
+    public ApiResponse<List<DiemDungTrenTuyenDTO>> getDiemDungByTuyen(@PathVariable Integer idTuyen) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(diemDungTrenTuyenService.danhSachDiemDungCuaMotTuyen(idTuyen));
+        apiResponse.setMessage("Diem Dung Tren Tuyen");
+        apiResponse.setCode(200);
+        return apiResponse;
     }
 }

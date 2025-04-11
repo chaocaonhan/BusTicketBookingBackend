@@ -159,25 +159,7 @@ public class NguoiDungServiceImpl implements NguoiDungService {
         return false;
     }
 
-//    @Override
-//    public String login(LoginDTO loginDTO) {
-//        NguoiDung nd = nguoiDungRepository.findByEmail(loginDTO.getEmail());
-//
-//        if (nd == null){
-//            return "NULL";// "Không tìm thấy người dùng"
-//        }
-//
-//        if(!passwordEncoder.matches(loginDTO.getMatKhau(), nd.getMatKhau())) {
-//            return "PASSWORD";// "Mật khẩu không đúng";
-//        }
-//        if ( nd.getTrangThai() == NguoiDung.trangthai.INACTIVE) {
-//            return "LOCK OR VERIFY" ;
-//        }
-//        if (nd.getTrangThai() == NguoiDung.trangthai.ACTIVE) {
-//            return "đang nhap thanh cong + trả về token ( chưa xử lý )";
-//        }
-//        return "other case";
-//    }
+
 
     @Override
     public String login(LoginDTO loginDTO) {

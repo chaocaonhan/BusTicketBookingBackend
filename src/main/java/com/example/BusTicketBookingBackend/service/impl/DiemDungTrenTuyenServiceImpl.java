@@ -29,7 +29,7 @@ public class DiemDungTrenTuyenServiceImpl implements DiemDungTrenTuyenService {
             dto.setId(diemDung.getId());
             dto.setTenTuyenXe(diemDung.getTuyenXe().getTenTuyen());
             dto.setTenDiemDon(diemDung.getDiemDonTra().getTenDiemDon());
-            dto.setTinhThanh(diemDung.getDiemDonTra().getTinhThanh().getTenTinhThanh());
+            dto.setDiaChi(diemDung.getDiemDonTra().getDiaChi());
             dto.setThuTuDiemDung(diemDung.getThuTuDiemDung());
             dto.setKhoangCachToiDiemDau(diemDung.getKhoangCachToiDiemDau());
             dto.setThoiGianTuDiemDau(diemDung.getThoiGianTuDiemDau());
