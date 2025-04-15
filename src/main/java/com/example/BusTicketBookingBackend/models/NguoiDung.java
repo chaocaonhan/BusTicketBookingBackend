@@ -1,5 +1,6 @@
 package com.example.BusTicketBookingBackend.models;
 
+import com.example.BusTicketBookingBackend.enums.TrangThai;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,8 +26,10 @@ public class NguoiDung {
     @Column(name = "hoten")
     String hoTen;
 
+
     @Column(name = "email")
     String email;
+
 
     @Column(name = "matkhau")
     String matKhau;
@@ -34,14 +37,9 @@ public class NguoiDung {
     @Column(name = "sdt")
     String SDT;
 
-    public enum trangthai{
-        ACTIVE,
-        INACTIVE
-    }
-
     @Enumerated(EnumType.STRING)
     @Column(name = "trangthai")
-    trangthai trangThai;
+    TrangThai trangThai;
 
     @Column(name = "loaidangki")
     String loaiDangKi;
@@ -55,6 +53,5 @@ public class NguoiDung {
     @ManyToOne
     @JoinColumn(name = "idvaitro", referencedColumnName = "id")
     VaiTro vaiTro;
-
 
 }

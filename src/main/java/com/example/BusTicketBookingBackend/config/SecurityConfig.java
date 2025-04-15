@@ -87,6 +87,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/nguoidung/verify").permitAll()
                         .requestMatchers("/api/Xe/getAll").permitAll()
                         .requestMatchers("/api/diem-dung/**").permitAll()
+                        .requestMatchers("/api/chuyenxe/search").permitAll()
                         .requestMatchers("/api/Station/getByProvince/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/tuyen-xe/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"api/tinhthanh/**").permitAll()

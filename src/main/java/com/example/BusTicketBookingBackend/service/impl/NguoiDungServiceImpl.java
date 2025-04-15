@@ -3,6 +3,7 @@ package com.example.BusTicketBookingBackend.service.impl;
 import com.example.BusTicketBookingBackend.config.JwtUtil;
 import com.example.BusTicketBookingBackend.dtos.request.LoginDTO;
 import com.example.BusTicketBookingBackend.dtos.response.NguoiDungDTO;
+import com.example.BusTicketBookingBackend.enums.TrangThai;
 import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
@@ -61,7 +62,7 @@ public class NguoiDungServiceImpl implements NguoiDungService {
             nguoiDung.setVaiTro(vaiTroRepository.findById(3));
             nguoiDung.setConfirmToken(confirmToken);
             nguoiDung.setTokenExpiry(LocalDateTime.now().plusMinutes(5));
-            nguoiDung.setTrangThai(NguoiDung.trangthai.INACTIVE);
+            nguoiDung.setTrangThai(TrangThai.INACTIVE);
             savedUser = nguoiDungRepository.save(nguoiDung);
 
 
@@ -149,7 +150,7 @@ public class NguoiDungServiceImpl implements NguoiDungService {
                     LocalDateTime.now().isBefore(user.getTokenExpiry())) {
 
                 // Kích hoạt tài khoản và xóa token
-                user.setTrangThai(NguoiDung.trangthai.ACTIVE);
+                user.setTrangThai(TrangThai.ACTIVE);
                 user.setConfirmToken(null);
                 user.setTokenExpiry(null);
                 nguoiDungRepository.save(user);
@@ -171,11 +172,11 @@ public class NguoiDungServiceImpl implements NguoiDungService {
             return "PASSWORD"; // "Mật khẩu không đúng"
         }
 
-        if (nd.getTrangThai() == NguoiDung.trangthai.INACTIVE) {
+        if (nd.getTrangThai() == TrangThai.INACTIVE) {
             return "LOCK_OR_VERIFY";
         }
 
-        if (nd.getTrangThai() == NguoiDung.trangthai.ACTIVE) {
+        if (nd.getTrangThai() == TrangThai.ACTIVE) {
             try {
                 Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getMatKhau())

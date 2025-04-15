@@ -1,5 +1,6 @@
 package com.example.BusTicketBookingBackend.service.impl;
 
+import com.example.BusTicketBookingBackend.enums.TrangThai;
 import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
@@ -33,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new User(
                 nguoiDung.getEmail(),
                 nguoiDung.getMatKhau(),
-                nguoiDung.getTrangThai() == NguoiDung.trangthai.ACTIVE,
+                nguoiDung.getTrangThai() == TrangThai.ACTIVE,
                 true,
                 true,
                 true,
