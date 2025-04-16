@@ -27,5 +27,4 @@ public class VaiTro {
     @Column(name = "mota")
     private String mota;
 
-
 }

@@ -26,6 +26,8 @@ public class NguoiDung {
     @Column(name = "hoten")
     String hoTen;
 
+    @Column(name ="gioitinh")
+    String gioiTinh;
 
     @Column(name = "email")
     String email;
@@ -53,5 +55,6 @@ public class NguoiDung {
     @ManyToOne
     @JoinColumn(name = "idvaitro", referencedColumnName = "id")
     VaiTro vaiTro;
+
 
 }

@@ -61,6 +61,8 @@ public class NguoiDungServiceImpl implements NguoiDungService {
             nguoiDung.setMatKhau(passwordEncoder.encode(nguoiDungDTO.getMatKhau()));
             nguoiDung.setVaiTro(vaiTroRepository.findById(3));
             nguoiDung.setConfirmToken(confirmToken);
+            nguoiDung.setGioiTinh(nguoiDungDTO.getGioiTinh());
+            nguoiDung.setLoaiDangKi("Email");
             nguoiDung.setTokenExpiry(LocalDateTime.now().plusMinutes(5));
             nguoiDung.setTrangThai(TrangThai.INACTIVE);
             savedUser = nguoiDungRepository.save(nguoiDung);
@@ -79,6 +81,7 @@ public class NguoiDungServiceImpl implements NguoiDungService {
                 .hoTen(savedUser.getHoTen())
                 .SDT(savedUser.getSDT())
                 .email(savedUser.getEmail())
+                .gioiTinh(savedUser.getGioiTinh())
                 .loaiDangKi(savedUser.getLoaiDangKi())
                 .vaiTro(savedUser.getVaiTro().getTenvaitro())
                 .trangThai(String.valueOf(savedUser.getTrangThai()))
@@ -119,6 +122,7 @@ public class NguoiDungServiceImpl implements NguoiDungService {
             nguoiDungDTO.setVaiTro(nguoiDung.getVaiTro().getTenvaitro());
             nguoiDungDTO.setLoaiDangKi(nguoiDung.getLoaiDangKi());
             nguoiDungDTO.setSDT(nguoiDung.getSDT());
+            nguoiDungDTO.setGioiTinh(nguoiDung.getGioiTinh());
             return nguoiDungDTO;
         }).toList();
     }
@@ -128,13 +132,16 @@ public class NguoiDungServiceImpl implements NguoiDungService {
         NguoiDung nguoiDung = nguoiDungRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        modelMapper.map(nguoiDungDTO,nguoiDung);
+        String PassWord = nguoiDung.getMatKhau();
 
+        modelMapper.map(nguoiDungDTO,nguoiDung);
         // Lưu vào database
+        nguoiDung.setMatKhau(PassWord);
         nguoiDung = nguoiDungRepository.save(nguoiDung);
 
         NguoiDungDTO updatedUser = modelMapper.map(nguoiDung, NguoiDungDTO.class);
 
+        updatedUser.setMatKhau("");
 
         return updatedUser;
     }

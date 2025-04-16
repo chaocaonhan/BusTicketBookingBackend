@@ -4,8 +4,10 @@ import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
 import com.example.BusTicketBookingBackend.dtos.response.AuthResponseDTO;
 import com.example.BusTicketBookingBackend.dtos.request.LoginDTO;
 import com.example.BusTicketBookingBackend.dtos.response.NguoiDungDTO;
+import com.example.BusTicketBookingBackend.enums.TrangThai;
 import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
+import com.example.BusTicketBookingBackend.models.NguoiDung;
 import com.example.BusTicketBookingBackend.service.NguoiDungService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -80,6 +82,17 @@ public class NguoiDungController {
                     return ResponseEntity.ok(new AuthResponseDTO(result, "Đăng nhập thành công"));
                 }
         }
+    }
+
+    @PostMapping("/createUser")
+    public ApiResponse<NguoiDung> createUser(@RequestBody @Valid NguoiDungDTO nguoiDungDTO) {
+        NguoiDungDTO nguoiDung = nguoiDungService.createNguoiDung(nguoiDungDTO);
+
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(nguoiDungDTO);
+        apiResponse.setCode(HttpStatus.CREATED.value());
+        apiResponse.setMessage("Tạo ng dùng thành công");
+        return apiResponse;
     }
 
 
