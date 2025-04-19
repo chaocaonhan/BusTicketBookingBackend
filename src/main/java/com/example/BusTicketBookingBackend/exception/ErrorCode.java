@@ -15,6 +15,7 @@ public enum ErrorCode{
     USER_NOT_FOUND(1005,"Không tìm thấy ng dùng",HttpStatus.NOT_FOUND),
     UNAUTHENTICATED(1006,"Unauthenticated",HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007,"You do not have permisson",HttpStatus.FORBIDDEN),
+    DATA_NOT_FOUND(1008,"Khong tim thay du lieu",HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode httpStatusCode) {

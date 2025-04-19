@@ -3,6 +3,7 @@ package com.example.BusTicketBookingBackend.service;
 import com.example.BusTicketBookingBackend.dtos.request.LoginDTO;
 import com.example.BusTicketBookingBackend.dtos.response.NguoiDungDTO;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
+import com.example.BusTicketBookingBackend.models.TaiXe;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,9 @@ public interface NguoiDungService {
     NguoiDung setNguoiDung(NguoiDung nguoiDung);
     Optional<NguoiDungDTO> getNguoiDungByID(int id);
     List<NguoiDungDTO> getAllNguoiDung();
+
+    List<TaiXe> getAllTaiXe();
+
     NguoiDungDTO updateNguoiDung(Integer id, NguoiDungDTO nguoiDungDTO);
 
 

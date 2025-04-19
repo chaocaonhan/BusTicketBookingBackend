@@ -1,4 +1,4 @@
-package com.example.BusTicketBookingBackend.dtos.response;
+package com.example.BusTicketBookingBackend.dtos.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

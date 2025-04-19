@@ -1,4 +1,4 @@
-package com.example.BusTicketBookingBackend.dtos.request;
+package com.example.BusTicketBookingBackend.dtos.response;
 import lombok.*;
 
 import java.time.LocalTime;
@@ -9,7 +9,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ChuyenXeSearchDTO {
+public class ChuyenXeResponse {
     private String diemDi;
     private String diemDen;
     private LocalTime gioKhoiHanh;

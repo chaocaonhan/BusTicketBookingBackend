@@ -83,12 +83,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/nguoidung/login").permitAll()
                         .requestMatchers("/api/nguoidung/register").permitAll()
-
                         .requestMatchers("/api/nguoidung/verify").permitAll()
+                        .requestMatchers("/api/nguoidung/danhSachTaiXe").permitAll()
                         .requestMatchers("/api/Xe/getAll").permitAll()
+                        .requestMatchers("/api/Xe/getAllLoaiXe").permitAll()
                         .requestMatchers("/api/diem-dung/**").permitAll()
-                        .requestMatchers("/api/chuyenxe/search").permitAll()
-                        .requestMatchers("/api/Station/getByProvince/**").permitAll()
+                        .requestMatchers("/api/chuyenxe/**").permitAll()
+                        .requestMatchers("/api/Station/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/tuyen-xe/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"api/tinhthanh/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE,"/api/tinhthanh/deleteTinhThanh").hasRole("ADMIN")

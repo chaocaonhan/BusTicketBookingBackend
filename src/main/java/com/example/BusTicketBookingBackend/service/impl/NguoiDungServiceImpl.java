@@ -7,7 +7,9 @@ import com.example.BusTicketBookingBackend.enums.TrangThai;
 import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
+import com.example.BusTicketBookingBackend.models.TaiXe;
 import com.example.BusTicketBookingBackend.repositories.NguoiDungRepository;
+import com.example.BusTicketBookingBackend.repositories.TaiXeRepository;
 import com.example.BusTicketBookingBackend.repositories.VaiTroRepository;
 import com.example.BusTicketBookingBackend.service.EmailService;
 import com.example.BusTicketBookingBackend.service.NguoiDungService;
@@ -42,6 +44,7 @@ public class NguoiDungServiceImpl implements NguoiDungService {
     AuthenticationManager authenticationManager;
     UserDetailsService userDetailsService;
     JwtUtil jwtUtil;
+    private final TaiXeRepository taiXeRepository;
 
 
     @Override
@@ -125,6 +128,11 @@ public class NguoiDungServiceImpl implements NguoiDungService {
             nguoiDungDTO.setGioiTinh(nguoiDung.getGioiTinh());
             return nguoiDungDTO;
         }).toList();
+    }
+
+    @Override
+    public List<TaiXe> getAllTaiXe(){
+        return taiXeRepository.findAll();
     }
 
     @Override

@@ -16,7 +16,7 @@ import java.util.List;
 public class DiemDonTraController {
     private final DiemDonTraService diemDonTraService;
 
-    @PostMapping("/getByProvince")
+    @GetMapping("/getByProvince")
     public ResponseEntity<ApiResponse<List<DiemDonTra>>> getDiemDonTraByProvince(@RequestParam String province) {
         ApiResponse<List<DiemDonTra>> apiResponse = ApiResponse.<List<DiemDonTra>>builder()
                 .result(diemDonTraService.getDiemDonTraByTinhThanh(province))

@@ -8,6 +8,7 @@ import com.example.BusTicketBookingBackend.enums.TrangThai;
 import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
+import com.example.BusTicketBookingBackend.models.TaiXe;
 import com.example.BusTicketBookingBackend.service.NguoiDungService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -112,6 +113,14 @@ public class NguoiDungController {
                 .build();
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/danhSachTaiXe")
+    public ApiResponse<List<TaiXe>> getDanhSachTaiXe() {
+        return ApiResponse.<List<TaiXe>>builder()
+                .result(nguoiDungService.getAllTaiXe())
+                .code(200)
+                .build();
     }
 
 

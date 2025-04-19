@@ -1,6 +1,9 @@
 package com.example.BusTicketBookingBackend.service.impl;
 
-import com.example.BusTicketBookingBackend.dtos.response.ChuyenXeDTO;
+import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeDTO;
+import com.example.BusTicketBookingBackend.dtos.response.ChuyenXeResponse;
+import com.example.BusTicketBookingBackend.exception.AppException;
+import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.ChuyenXe;
 import com.example.BusTicketBookingBackend.models.LoaiXe;
 import com.example.BusTicketBookingBackend.models.TuyenXe;
@@ -20,41 +23,53 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
     private final ChuyenXeRepository chuyenXeRepository;
     private final TuyenXeRepository tuyenXeRepository;
     private final DiemDonTraRepository diemDonTraRepository;
-    XeRepository xeRepository;
-    TaiXeRepository taiXeRepository;
+    private final XeRepository xeRepository;
+    private final TaiXeRepository taiXeRepository;
 
     @Override
-    public List<ChuyenXe> timChuyenXeTheoTuyen(String tinhDi, String tinhDen,LocalDate ngayDi) {
-
+    public List<ChuyenXeResponse> timChuyenXeTheoTuyen(String tinhDi, String tinhDen, LocalDate ngayDi) {
         Optional<TuyenXe> tuyenCanTim = tuyenXeRepository.findByTinhDiAndTinhDen(tinhDi, tinhDen);
 
-        if (tuyenCanTim.isPresent()) {
-            TuyenXe tuyenXe = tuyenCanTim.get();
-
-            List<ChuyenXe> lstChuyenXe = chuyenXeRepository.findChuyenXeByTuyenXe(tuyenXe)
-                    .stream()
-                    .filter(chuyenXe -> {
-                        LocalDate ngayKhoiHanh = chuyenXe.getNgayKhoiHanh();
-                        LocalTime gioKhoiHanh = chuyenXe.getGioKhoiHanh();
-
-                        // Chỉ lấy chuyến xe có ngày khởi hành trùng với ngày đi do client gửi
-                        if (ngayKhoiHanh.isEqual(ngayDi)) {
-                            // Nếu ngày đi là hôm nay, kiểm tra giờ khởi hành phải sau giờ hiện tại
-                            return ngayDi.isAfter(LocalDate.now()) || gioKhoiHanh.isAfter(LocalTime.now());
-                        }
-                        return false;
-                    })
-                    .toList();
-
-            if (lstChuyenXe.isEmpty()) {
-                throw new RuntimeException("Không có chuyến xe nào phù hợp.");
-            }
-
-            return lstChuyenXe;
-        } else {
+        if (tuyenCanTim.isEmpty()) {
             throw new RuntimeException("Không tìm thấy tuyến xe phù hợp.");
         }
+
+        List<ChuyenXe> lstChuyenXe = chuyenXeRepository.findChuyenXeByTuyenXe(tuyenCanTim.get())
+                .stream()
+                .filter(chuyenXe -> {
+                    LocalDate ngayKhoiHanh = chuyenXe.getNgayKhoiHanh();
+                    LocalTime gioKhoiHanh = chuyenXe.getGioKhoiHanh();
+
+                    return ngayKhoiHanh.isEqual(ngayDi)
+                            && (ngayDi.isAfter(LocalDate.now()) || gioKhoiHanh.isAfter(LocalTime.now()));
+                })
+                .toList();
+
+        if (lstChuyenXe.isEmpty()) {
+            throw new AppException(ErrorCode.DATA_NOT_FOUND);
+        }
+
+        return lstChuyenXe.stream().map(this::convertToResponse).toList();
     }
+
+    @Override
+    public List<ChuyenXeResponse> getAll() {
+        List<ChuyenXe> lsChuyenXe = chuyenXeRepository.findAll();
+        return lsChuyenXe.stream().map(this::convertToResponse).toList();
+    }
+
+    private ChuyenXeResponse convertToResponse(ChuyenXe chuyenXe) {
+        return ChuyenXeResponse.builder()
+                .diemDi(chuyenXe.getDiemDi().getTenDiemDon())
+                .diemDen(chuyenXe.getDiemDen().getTenDiemDon())
+                .gioKhoiHanh(chuyenXe.getGioKhoiHanh())
+                .gioKetThuc(chuyenXe.getGioKetThuc())
+                .giaVe(chuyenXe.getGiaVe())
+                .tenLoaiXe(chuyenXe.getXe().getLoaiXe().getTenLoaiXe())
+                .soGheTrong(chuyenXe.getSoGheTrong())
+                .build();
+    }
+
 
     @Override
     public String taoChuyenXe(ChuyenXeDTO chuyenXe) {
@@ -78,4 +93,6 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
 
         return "Thêm chuyến xe thành công";
     }
+
+
 }
