@@ -4,18 +4,25 @@ import com.example.BusTicketBookingBackend.dtos.request.LoginDTO;
 import com.example.BusTicketBookingBackend.dtos.response.NguoiDungDTO;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
 import com.example.BusTicketBookingBackend.models.TaiXe;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
 
 
 public interface NguoiDungService {
+    List<NguoiDungDTO> getAllNguoiDungNoPaging();
+
+    Page<NguoiDungDTO> getAllNguoiDung(Pageable pageable);
+
+    Page<NguoiDungDTO> searchNguoiDung(String keyword, Pageable pageable);
+
     NguoiDungDTO createNguoiDung(NguoiDungDTO nguoiDungDTO);
     NguoiDung getNguoiDung(int id);
 
     NguoiDung setNguoiDung(NguoiDung nguoiDung);
     Optional<NguoiDungDTO> getNguoiDungByID(int id);
-    List<NguoiDungDTO> getAllNguoiDung();
 
     List<TaiXe> getAllTaiXe();
 

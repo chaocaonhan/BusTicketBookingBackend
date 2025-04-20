@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,6 +47,48 @@ public class NguoiDungServiceImpl implements NguoiDungService {
     UserDetailsService userDetailsService;
     JwtUtil jwtUtil;
     private final TaiXeRepository taiXeRepository;
+
+    @Override
+    public List<NguoiDungDTO> getAllNguoiDungNoPaging() {
+        List<NguoiDung> nguoiDungs = nguoiDungRepository.findAll();
+        return nguoiDungs.stream().map(nguoiDung -> {
+            NguoiDungDTO nguoiDungDTO = modelMapper.map(nguoiDung, NguoiDungDTO.class);
+            nguoiDungDTO.setVaiTro(nguoiDung.getVaiTro().getTenvaitro());
+            nguoiDungDTO.setLoaiDangKi(nguoiDung.getLoaiDangKi());
+            nguoiDungDTO.setSDT(nguoiDung.getSDT());
+            nguoiDungDTO.setGioiTinh(nguoiDung.getGioiTinh());
+            return nguoiDungDTO;
+        }).toList();
+    }
+
+    @Override
+    public Page<NguoiDungDTO> getAllNguoiDung(Pageable pageable) {
+        Page<NguoiDung> nguoiDungPage = nguoiDungRepository.findAll(pageable);
+
+        return nguoiDungPage.map(nguoiDung -> {
+            NguoiDungDTO dto = modelMapper.map(nguoiDung, NguoiDungDTO.class);
+            dto.setVaiTro(nguoiDung.getVaiTro().getTenvaitro());
+            dto.setLoaiDangKi(nguoiDung.getLoaiDangKi());
+            dto.setSDT(nguoiDung.getSDT());
+            dto.setGioiTinh(nguoiDung.getGioiTinh());
+            return dto;
+        });
+    }
+
+    @Override
+    public Page<NguoiDungDTO> searchNguoiDung(String keyword, Pageable pageable) {
+        // Tìm kiếm theo nhiều trường
+        Page<NguoiDung> nguoiDungPage = nguoiDungRepository.findByKeyword(keyword, pageable);
+        return nguoiDungPage.map(nguoiDung -> {
+            NguoiDungDTO dto = modelMapper.map(nguoiDung, NguoiDungDTO.class);
+            dto.setVaiTro(nguoiDung.getVaiTro().getTenvaitro());
+            dto.setLoaiDangKi(nguoiDung.getLoaiDangKi());
+            dto.setSDT(nguoiDung.getSDT());
+            dto.setGioiTinh(nguoiDung.getGioiTinh());
+            return dto;
+        });
+    }
+
 
 
     @Override
@@ -116,19 +160,6 @@ public class NguoiDungServiceImpl implements NguoiDungService {
         }
     }
 
-
-    @Override
-    public List<NguoiDungDTO> getAllNguoiDung() {
-        List<NguoiDung> nguoiDungs = nguoiDungRepository.findAll();
-        return nguoiDungs.stream().map(nguoiDung -> {
-            NguoiDungDTO nguoiDungDTO = modelMapper.map(nguoiDung, NguoiDungDTO.class);
-            nguoiDungDTO.setVaiTro(nguoiDung.getVaiTro().getTenvaitro());
-            nguoiDungDTO.setLoaiDangKi(nguoiDung.getLoaiDangKi());
-            nguoiDungDTO.setSDT(nguoiDung.getSDT());
-            nguoiDungDTO.setGioiTinh(nguoiDung.getGioiTinh());
-            return nguoiDungDTO;
-        }).toList();
-    }
 
     @Override
     public List<TaiXe> getAllTaiXe(){

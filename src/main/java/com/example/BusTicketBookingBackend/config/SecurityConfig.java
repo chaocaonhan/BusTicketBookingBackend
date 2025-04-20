@@ -84,6 +84,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/nguoidung/login").permitAll()
                         .requestMatchers("/api/nguoidung/register").permitAll()
                         .requestMatchers("/api/nguoidung/verify").permitAll()
+                        .requestMatchers("/api/nguoidung/getPage").permitAll()
                         .requestMatchers("/api/nguoidung/danhSachTaiXe").permitAll()
                         .requestMatchers("/api/Xe/getAll").permitAll()
                         .requestMatchers("/api/Xe/getAllLoaiXe").permitAll()

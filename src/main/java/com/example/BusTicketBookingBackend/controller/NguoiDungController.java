@@ -12,6 +12,9 @@ import com.example.BusTicketBookingBackend.models.TaiXe;
 import com.example.BusTicketBookingBackend.service.NguoiDungService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,16 +35,12 @@ public class NguoiDungController {
     @PostMapping("/register")
     //valid là để validation dữ liệu từ frontend gửi về
     public ResponseEntity<ApiResponse<NguoiDungDTO>> register(@RequestBody @Valid NguoiDungDTO nguoiDungDTO) {
-        // Gọi service để tạo người dùng
         NguoiDungDTO result = nguoiDungService.createNguoiDung(nguoiDungDTO);
 
-        // Kiểm tra kết quả trả về từ service
         if (result == null) {
-            // Trường hợp có lỗi không xác định
             throw new AppException(ErrorCode.UNKNOWN_ERROR);
         }
 
-        // Tạo ApiResponse để trả về
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(result);
         apiResponse.setCode(HttpStatus.CREATED.value());
@@ -105,15 +104,39 @@ public class NguoiDungController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<NguoiDungDTO>>> getAll() {
+    public ResponseEntity<ApiResponse<List<NguoiDungDTO>>> getAllNoPaging() {
         ApiResponse<List<NguoiDungDTO>> response = ApiResponse.<List<NguoiDungDTO>>builder()
-                .result(nguoiDungService.getAllNguoiDung())
+                .result(nguoiDungService.getAllNguoiDungNoPaging())
                 .code(200)
                 .message("Success")
                 .build();
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/getPage")
+    public ResponseEntity<Page<NguoiDungDTO>> getAllNguoiDung(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<NguoiDungDTO> result = nguoiDungService.getAllNguoiDung(pageable);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<NguoiDungDTO>> searchNguoiDung(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<NguoiDungDTO> result = nguoiDungService.searchNguoiDung(keyword, pageable);
+        return ResponseEntity.ok(result);
+    }
+
+
+
 
     @GetMapping("/danhSachTaiXe")
     public ApiResponse<List<TaiXe>> getDanhSachTaiXe() {
