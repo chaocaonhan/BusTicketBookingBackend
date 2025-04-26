@@ -1,6 +1,8 @@
 package com.example.BusTicketBookingBackend.dtos.response;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
@@ -10,9 +12,19 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Builder
 public class ChuyenXeResponse {
+
+
+    private Integer id;
     private String diemDi;
     private String diemDen;
+
+    @JsonFormat(pattern = "dd/MM/yy")
+    private LocalDate ngayKhoiHanh;
+
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime gioKhoiHanh;
+
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime gioKetThuc;
     private int giaVe;
     private String tenLoaiXe;

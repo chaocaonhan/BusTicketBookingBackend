@@ -1,7 +1,10 @@
 package com.example.BusTicketBookingBackend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Setter
@@ -25,4 +28,9 @@ public class LoaiXe {
 
     @Column(name = "mota")
     private String moTa;
+
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "loaiXe", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ChoiNgoi> choiNgoi;
 }

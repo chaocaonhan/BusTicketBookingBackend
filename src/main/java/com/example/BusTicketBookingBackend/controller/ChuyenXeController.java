@@ -21,8 +21,8 @@ public class ChuyenXeController {
 
     private final ChuyenXeService chuyenXeService;
 
-    @GetMapping("/getAll")
-    public ApiResponse<List<ChuyenXeDTO>> getAll() {
+    @GetMapping("/getAllChuyenXe")
+    public ApiResponse<List<ChuyenXeResponse>> getAll() {
         ApiResponse apiResponse = new ApiResponse();
         List<ChuyenXeResponse> chuyenXeList = chuyenXeService.getAll();
         apiResponse.setResult(chuyenXeList);
@@ -35,10 +35,12 @@ public class ChuyenXeController {
     public ResponseEntity<?> getChuyenXe(
             @RequestParam("tinhDi") String tinhDi,
             @RequestParam("tinhDen") String tinhDen,
-            @RequestParam("ngayDi") @DateTimeFormat(pattern = "d/M/yyyy") LocalDate ngayDi) {
+            @RequestParam("ngayDi") @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate ngayDi,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate ngayVe,
+            @RequestParam(required = false, defaultValue = "false") boolean khuHoi) {
 
         try {
-            List<ChuyenXeResponse> dtoList = chuyenXeService.timChuyenXeTheoTuyen(tinhDi, tinhDen, ngayDi);
+            List<ChuyenXeResponse> dtoList = chuyenXeService.timChuyenXeTheoTuyen(tinhDi, tinhDen, ngayDi, ngayVe, khuHoi);
             return ResponseEntity.ok(dtoList);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
