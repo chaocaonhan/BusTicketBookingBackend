@@ -83,14 +83,40 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
         return lsChuyenXe.stream().map(this::convertToResponse).toList();
     }
 
+    @Override
+    public ChuyenXeResponse editChuyenXe(ChuyenXeDTO chuyenXeDto, Integer idChuyenXe) {
+        ChuyenXe chuyenXe = chuyenXeRepository.findById(idChuyenXe).get();
+        if (chuyenXe == null) {
+            throw new AppException(ErrorCode.DATA_NOT_FOUND);
+        }
+
+        chuyenXe.setTuyenXe(tuyenXeRepository.findByTenTuyen(chuyenXeDto.getTenTuyen()));
+        chuyenXe.setXe(xeRepository.findByBienSo(chuyenXeDto.getBienSoXe()));
+        chuyenXe.setTaiXe(taiXeRepository.findByHoTen(chuyenXeDto.getTaiXe()));
+        chuyenXe.setDiemDi(diemDonTraRepository.findDiemDonTraByTenDiemDon(chuyenXeDto.getDiemDi()));
+        chuyenXe.setDiemDen(diemDonTraRepository.findDiemDonTraByTenDiemDon(chuyenXeDto.getDiemDen()));
+        chuyenXe.setNgayKhoiHanh(chuyenXeDto.getNgayKhoiHanh());
+        chuyenXe.setGioKhoiHanh(chuyenXeDto.getGioKhoiHanh());
+        chuyenXe.setGioKetThuc(chuyenXeDto.getGioKetThuc());
+        chuyenXe.setGiaVe(chuyenXeDto.getGiaVe());
+
+        return convertToResponse(chuyenXeRepository.save(chuyenXe));
+
+
+
+    }
+
     private ChuyenXeResponse convertToResponse(ChuyenXe chuyenXe) {
         return ChuyenXeResponse.builder()
                 .id(chuyenXe.getId())
+                .tenTuyen(chuyenXe.getTuyenXe().getTenTuyen())
                 .diemDi(chuyenXe.getDiemDi().getTenDiemDon())
                 .diemDen(chuyenXe.getDiemDen().getTenDiemDon())
                 .ngayKhoiHanh(chuyenXe.getNgayKhoiHanh())
                 .gioKhoiHanh(chuyenXe.getGioKhoiHanh())
                 .gioKetThuc(chuyenXe.getGioKetThuc())
+                .bienSo(chuyenXe.getXe().getBienSo())
+                .taiXe(chuyenXe.getTaiXe().getHoTen())
                 .giaVe(chuyenXe.getGiaVe())
                 .tenLoaiXe(chuyenXe.getXe().getLoaiXe().getTenLoaiXe())
                 .soGheTrong(chuyenXe.getSoGheTrong())

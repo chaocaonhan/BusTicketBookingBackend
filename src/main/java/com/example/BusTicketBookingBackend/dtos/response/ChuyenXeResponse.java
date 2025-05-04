@@ -13,12 +13,12 @@ import java.time.LocalTime;
 @Builder
 public class ChuyenXeResponse {
 
-
     private Integer id;
+    private String tenTuyen;
     private String diemDi;
     private String diemDen;
 
-    @JsonFormat(pattern = "dd/MM/yy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate ngayKhoiHanh;
 
     @JsonFormat(pattern = "HH:mm")
@@ -26,6 +26,11 @@ public class ChuyenXeResponse {
 
     @JsonFormat(pattern = "HH:mm")
     private LocalTime gioKetThuc;
+
+
+    private String bienSo;
+    private String taiXe;
+
     private int giaVe;
     private String tenLoaiXe;
     private int  soGheTrong;

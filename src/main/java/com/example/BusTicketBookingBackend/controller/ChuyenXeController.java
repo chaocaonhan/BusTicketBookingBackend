@@ -43,6 +43,8 @@ public class ChuyenXeController {
             List<ChuyenXeResponse> dtoList = chuyenXeService.timChuyenXeTheoTuyen(tinhDi, tinhDen, ngayDi, ngayVe, khuHoi);
             return ResponseEntity.ok(dtoList);
         } catch (RuntimeException e) {
+
+
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -51,5 +53,12 @@ public class ChuyenXeController {
     @PostMapping("/TaoChuyenXe")
     public String createChuyenXe(@RequestBody ChuyenXeDTO chuyenXedto) {
         return chuyenXeService.taoChuyenXe(chuyenXedto);
+    }
+
+    @PutMapping("/editChuyenXe")
+    public ApiResponse editChuyenXe(@RequestBody ChuyenXeDTO chuyenXedto, @RequestParam Integer id) {
+        return ApiResponse.builder()
+                .result(chuyenXeService.editChuyenXe(chuyenXedto, id))
+        .code(200).message("Success").build();
     }
 }

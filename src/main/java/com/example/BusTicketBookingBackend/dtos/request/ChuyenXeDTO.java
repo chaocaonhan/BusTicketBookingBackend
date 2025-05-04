@@ -1,5 +1,6 @@
 package com.example.BusTicketBookingBackend.dtos.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -19,7 +20,10 @@ public class ChuyenXeDTO {
     String diemDi;
     String diemDen;
     LocalDate ngayKhoiHanh;
+    @JsonFormat(pattern = "HH:mm")  // ví dụ: "12:30:00"
     LocalTime gioKhoiHanh;
+
+    @JsonFormat(pattern = "HH:mm")
     LocalTime gioKetThuc;
     int giaVe;
 }
