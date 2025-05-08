@@ -5,6 +5,7 @@ import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeDTO;
 import com.example.BusTicketBookingBackend.dtos.response.ChuyenXeResponse;
 import com.example.BusTicketBookingBackend.models.ChuyenXe;
 import com.example.BusTicketBookingBackend.service.ChuyenXeService;
+import com.example.BusTicketBookingBackend.service.DatGheService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ChuyenXeController {
 
     private final ChuyenXeService chuyenXeService;
+    private final DatGheService datGheService;
 
     @GetMapping("/getAllChuyenXe")
     public ApiResponse<List<ChuyenXeResponse>> getAll() {
@@ -60,5 +62,14 @@ public class ChuyenXeController {
         return ApiResponse.builder()
                 .result(chuyenXeService.editChuyenXe(chuyenXedto, id))
         .code(200).message("Success").build();
+    }
+
+    @GetMapping("/danhSachDatGhe")
+    public ApiResponse getDanhSachGhe(@RequestParam Integer id){
+        return ApiResponse.builder()
+                .result(datGheService.getByChuyenXe(id))
+                .code(200)
+                .message("Danh sach dat ghe cua chuyen xe ")
+                .build();
     }
 }
