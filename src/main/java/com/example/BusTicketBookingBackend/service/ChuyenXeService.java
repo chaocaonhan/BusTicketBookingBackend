@@ -13,4 +13,6 @@ public interface ChuyenXeService {
 
     String taoChuyenXe(ChuyenXeDTO chuyenXe);
     List<ChuyenXeResponse> getAll();
+
+    void capNhatSoGheTrong(Integer idChuyenXe);
 }

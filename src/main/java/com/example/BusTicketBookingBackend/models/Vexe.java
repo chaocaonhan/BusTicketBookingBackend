@@ -24,9 +24,9 @@ public class Vexe {
     @JoinColumn(name = "MaChuyenXe")
     private ChuyenXe maChuyenXe;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaChoNgoi")
-    private ChoiNgoi maChoNgoi;
+    private DatGhe maDatGhe;
 
     @Enumerated(EnumType.STRING)
     @NotNull

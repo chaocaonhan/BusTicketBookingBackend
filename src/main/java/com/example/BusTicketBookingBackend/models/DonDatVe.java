@@ -22,11 +22,14 @@ public class DonDatVe {
     int id;
 
     @ManyToOne
-    @JoinColumn(name = "id_nguoiDung", referencedColumnName = "id")
+    @JoinColumn(name = "id_nguoi_dung", referencedColumnName = "id")
     NguoiDung nguoiDung;
 
     @Column(name = "thoigiandat")
     LocalDateTime thoiGianDat;
+
+    @Column(name = "soluongve")
+    int soLuongVe;
 
     @Column(name = "tongtien")
     int tongTien;
@@ -44,19 +47,13 @@ public class DonDatVe {
     @Column(name = "ghichu", columnDefinition = "TEXT")
     String ghiChu;
 
-    @Column(name = "created_at", updatable = false)
-    LocalDateTime createdAt;
+    @Column(name ="tenhanhkhach")
+    String tenHanhKhach;
 
-    @Column(name = "updated_at")
-    LocalDateTime updatedAt;
+    @Column(name ="SDT")
+    String SDT;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
+    @Column(name ="email")
+    String email;
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 }

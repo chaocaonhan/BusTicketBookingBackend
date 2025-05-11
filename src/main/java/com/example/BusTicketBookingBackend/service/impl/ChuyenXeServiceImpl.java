@@ -80,6 +80,10 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
     @Override
     public List<ChuyenXeResponse> getAll() {
         List<ChuyenXe> lsChuyenXe = chuyenXeRepository.findAll();
+        for(ChuyenXe chuyenXe : lsChuyenXe){
+            chuyenXe.setSoGheTrong(datGheRepository.countSeatAvailableByChuyenXe_Id(chuyenXe.getId()));
+            chuyenXeRepository.save(chuyenXe);
+        }
         return lsChuyenXe.stream().map(this::convertToResponse).toList();
     }
 
@@ -154,9 +158,18 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
             datGheRepository.save(datGhes);
         }
 
-
-
         return "Thêm chuyến xe thành công";
+    }
+
+    @Override
+    public void capNhatSoGheTrong(Integer idChuyenXe){
+        ChuyenXe chuyenXe = chuyenXeRepository.findById(idChuyenXe).get();
+        if (chuyenXe == null) {
+            throw new AppException(ErrorCode.DATA_NOT_FOUND);
+        }
+
+        chuyenXe.setSoGheTrong(datGheRepository.countSeatAvailableByChuyenXe_Id(idChuyenXe));
+
     }
 
 

@@ -99,6 +99,7 @@ public class NguoiDungController {
     @GetMapping("/myInfor")
     public ApiResponse<NguoiDungDTO> getMyInfor() {
         return ApiResponse.<NguoiDungDTO>builder()
+                .code(200)
                 .result(nguoiDungService.getMyInfor())
                 .build();
     }

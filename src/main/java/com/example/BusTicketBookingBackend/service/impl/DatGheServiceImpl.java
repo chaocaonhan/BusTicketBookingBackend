@@ -1,5 +1,6 @@
 package com.example.BusTicketBookingBackend.service.impl;
 
+import com.example.BusTicketBookingBackend.dtos.request.ChuyenDiInfo;
 import com.example.BusTicketBookingBackend.dtos.response.DatGheResponse;
 import com.example.BusTicketBookingBackend.enums.TrangThaiGhe;
 import com.example.BusTicketBookingBackend.models.DatGhe;
@@ -7,7 +8,6 @@ import com.example.BusTicketBookingBackend.repositories.DatGheRepository;
 import com.example.BusTicketBookingBackend.service.DatGheService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -38,4 +38,23 @@ public class DatGheServiceImpl implements DatGheService {
                     return datGheResponse;
                 }).toList();
     }
+
+    @Override
+    public boolean seatSelectedIsAvaible(List<Integer> datgheIds) {
+        // Lấy danh sách `DatGhe` từ repository theo IDs truyền vào
+        List<DatGhe> datGhes = datGheRepository.findAllById(datgheIds);
+
+        // Kiểm tra nếu tất cả `DatGhe` đều có trạng thái AVAILABLE
+        return datGhes.stream().allMatch(datGhe -> datGhe.getTrangThai() == TrangThaiGhe.AVAILABLE);
+
+    }
+
+    @Override
+    public boolean capNhatTrangThaiGhe(ChuyenDiInfo chuyenXe) {
+        List<DatGhe> danhSachGheCanCapNhat = datGheRepository.findAllById(chuyenXe.getDanhSachGheMuonDat());
+        danhSachGheCanCapNhat.forEach(datGhe -> datGhe.setTrangThai(TrangThaiGhe.BOOKED));
+        datGheRepository.saveAll(danhSachGheCanCapNhat);
+        return true;
+    }
+
 }

@@ -1,0 +1,113 @@
+package com.example.BusTicketBookingBackend.service.impl;
+
+import com.example.BusTicketBookingBackend.dtos.request.ChuyenDiInfo;
+import com.example.BusTicketBookingBackend.dtos.request.DatVeRequest;
+import com.example.BusTicketBookingBackend.dtos.response.DonDatVeResponse;
+import com.example.BusTicketBookingBackend.enums.KieuThanhToan;
+import com.example.BusTicketBookingBackend.exception.AppException;
+import com.example.BusTicketBookingBackend.exception.ErrorCode;
+import com.example.BusTicketBookingBackend.models.DonDatVe;
+import com.example.BusTicketBookingBackend.models.NguoiDung;
+import com.example.BusTicketBookingBackend.repositories.DatGheRepository;
+import com.example.BusTicketBookingBackend.repositories.DonDatVeRepository;
+import com.example.BusTicketBookingBackend.repositories.NguoiDungRepository;
+import com.example.BusTicketBookingBackend.service.ChuyenXeService;
+import com.example.BusTicketBookingBackend.service.DatGheService;
+import com.example.BusTicketBookingBackend.service.DonDatVeService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class DonDatVeServiceImpl implements DonDatVeService {
+    DonDatVeRepository donDatVeRepository;
+    NguoiDungRepository nguoiDungRepository;
+    DatGheRepository datGheRepository;
+    DatGheService datGheService;
+    private final ChuyenXeService chuyenXeService;
+    private final ModelMapper modelMapper;
+
+    @Override
+    public String taoDonDatVe(DatVeRequest datVeRequest) {
+        DonDatVe donDatVe = new DonDatVe();
+
+        if(datVeRequest.getUserId() != null){
+            Optional<NguoiDung> nguoiDung = nguoiDungRepository.findById(datVeRequest.getUserId());
+            if(nguoiDung.isEmpty()){
+                throw new AppException(ErrorCode.USER_NOT_FOUND);
+            }
+            donDatVe.setNguoiDung(nguoiDung.get());
+        }
+
+        donDatVe.setThoiGianDat(LocalDateTime.now());
+        donDatVe.setTongTien(datVeRequest.getTongTien());
+        donDatVe.setKieuThanhToan(KieuThanhToan.valueOf(datVeRequest.getKieuThanhToan()));
+        donDatVe.setTrangThaiThanhToan(datVeRequest.getTrangThaiThanhToan());
+        donDatVe.setKhuHoi(datVeRequest.getLoaiChuyenDi());
+        donDatVe.setTenHanhKhach(datVeRequest.getHoTen());
+        int sl = datVeRequest.getChuyenDi().getDanhSachGheMuonDat().size()+(datVeRequest.getChuyenVe() != null ? datVeRequest.getChuyenVe().getDanhSachGheMuonDat().size() : 0);
+        donDatVe.setSoLuongVe(sl);
+        donDatVe.setSDT(datVeRequest.getSdt());
+        donDatVe.setEmail(datVeRequest.getEmail());
+
+        ChuyenDiInfo chuyenDi = datVeRequest.getChuyenDi();
+        ChuyenDiInfo chuyenVe = datVeRequest.getChuyenVe();
+
+        boolean datVeThanhCong = false;
+
+        // Kiểm tra chuyến đi
+        if (chuyenDi != null && datGheService.capNhatTrangThaiGhe(chuyenDi)) {
+            chuyenXeService.capNhatSoGheTrong(chuyenDi.getIdChuyenXe());
+
+            // Kiểm tra nếu là chuyến khứ hồi và chuyến về tồn tại
+            if (datVeRequest.getLoaiChuyenDi() == 1 && chuyenVe != null) {
+                if (datGheService.capNhatTrangThaiGhe(chuyenVe)) {
+                    chuyenXeService.capNhatSoGheTrong(chuyenVe.getIdChuyenXe());
+                    datVeThanhCong = true;
+                }
+            } else {
+                // Nếu không phải chuyến khứ hồi, chỉ cần xử lý chuyến đi là đủ
+                datVeThanhCong = true;
+            }
+        }
+
+        if (datVeThanhCong) {
+            donDatVeRepository.save(donDatVe);
+            return "Dat ve thanh cong";
+        }
+
+        return "Dat ve that bai";
+    }
+
+    @Override
+    public List<DonDatVeResponse> getAllDonDat() {
+
+        List<DonDatVe> donDatVes = donDatVeRepository.findAll();
+        return donDatVes.stream().map(donDatVe -> {
+            DonDatVeResponse donDatVeResponse = modelMapper.map(donDatVe, DonDatVeResponse.class);
+            if(donDatVe.getNguoiDung() != null){
+                donDatVeResponse.setTenNguoiDat(donDatVe.getNguoiDung().getHoTen());
+            }
+            donDatVeResponse.setTenHanhKhach(donDatVe.getTenHanhKhach());
+
+            donDatVeResponse.setId(donDatVe.getId());
+            donDatVeResponse.setKieuThanhToan(donDatVe.getKieuThanhToan().toString());
+            donDatVeResponse.setTrangThaiThanhToan(
+                    donDatVe.getTrangThaiThanhToan() == 1 ? "Đã thanh toán" : "Chưa thanh toán"
+            );
+            donDatVeResponse.setSoLuongVe(donDatVe.getSoLuongVe());
+            donDatVeResponse.setTrangThaiThanhToan(
+                    donDatVe.getTrangThaiThanhToan() == 1 ? "Đã thanh toán" : "Chưa thanh toán"
+            );
+            return donDatVeResponse;
+        }).toList();
+    }
+}

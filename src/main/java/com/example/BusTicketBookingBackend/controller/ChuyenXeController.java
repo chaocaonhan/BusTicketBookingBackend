@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/chuyenxe")
@@ -46,7 +47,6 @@ public class ChuyenXeController {
             return ResponseEntity.ok(dtoList);
         } catch (RuntimeException e) {
 
-
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -71,5 +71,33 @@ public class ChuyenXeController {
                 .code(200)
                 .message("Danh sach dat ghe cua chuyen xe ")
                 .build();
+    }
+
+    @PostMapping("/kiemtra-ghe")
+    public ResponseEntity<?> kiemTraTrangThaiGhe(@RequestBody Map<String, List<Integer>> request) {
+        try {
+            List<Integer> seatIds = request.get("seatIds");
+
+            // Kiểm tra ghế
+            boolean areSeatsAvailable = datGheService.seatSelectedIsAvaible(seatIds);
+
+            if (areSeatsAvailable) {
+                return ResponseEntity.ok(ApiResponse.builder()
+                        .code(200)
+                        .message("Ghế còn trống")
+                        .build()
+                );
+            } else {
+                return ResponseEntity.ok(ApiResponse.builder()
+                        .code(400)
+                        .message("Một số ghế đã được đặt")
+                        .build());
+            }
+        } catch (Exception e) {
+            return ResponseEntity.ok(ApiResponse.builder()
+                    .code(500)
+                    .message("Lỗi server: " + e.getMessage())
+                    .build());
+        }
     }
 }
