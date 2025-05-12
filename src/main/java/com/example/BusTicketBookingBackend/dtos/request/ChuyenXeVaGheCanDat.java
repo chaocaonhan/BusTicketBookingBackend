@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Builder
-public class ChuyenDiInfo {
+public class ChuyenXeVaGheCanDat {
     private Integer idChuyenXe;
     private List<Integer> danhSachGheMuonDat;
     // Getters và setters

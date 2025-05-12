@@ -2,8 +2,6 @@ package com.example.BusTicketBookingBackend.dtos.request;
 
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Data
 @AllArgsConstructor
 @Setter
@@ -19,6 +17,6 @@ public class DatVeRequest {
     private String kieuThanhToan;
     private int trangThaiThanhToan;
     private int loaiChuyenDi;
-    private ChuyenDiInfo chuyenDi;
-    private ChuyenDiInfo chuyenVe;
+    private ChuyenXeVaGheCanDat chuyenDi;
+    private ChuyenXeVaGheCanDat chuyenVe;
 }

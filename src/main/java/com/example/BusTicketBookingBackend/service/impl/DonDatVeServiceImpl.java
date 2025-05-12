@@ -1,6 +1,6 @@
 package com.example.BusTicketBookingBackend.service.impl;
 
-import com.example.BusTicketBookingBackend.dtos.request.ChuyenDiInfo;
+import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeVaGheCanDat;
 import com.example.BusTicketBookingBackend.dtos.request.DatVeRequest;
 import com.example.BusTicketBookingBackend.dtos.response.DonDatVeResponse;
 import com.example.BusTicketBookingBackend.enums.KieuThanhToan;
@@ -14,6 +14,7 @@ import com.example.BusTicketBookingBackend.repositories.NguoiDungRepository;
 import com.example.BusTicketBookingBackend.service.ChuyenXeService;
 import com.example.BusTicketBookingBackend.service.DatGheService;
 import com.example.BusTicketBookingBackend.service.DonDatVeService;
+import com.example.BusTicketBookingBackend.service.VeXeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,8 +33,9 @@ public class DonDatVeServiceImpl implements DonDatVeService {
     NguoiDungRepository nguoiDungRepository;
     DatGheRepository datGheRepository;
     DatGheService datGheService;
-    private final ChuyenXeService chuyenXeService;
-    private final ModelMapper modelMapper;
+    ChuyenXeService chuyenXeService;
+    ModelMapper modelMapper;
+    VeXeService veXeService;
 
     @Override
     public String taoDonDatVe(DatVeRequest datVeRequest) {
@@ -58,8 +60,8 @@ public class DonDatVeServiceImpl implements DonDatVeService {
         donDatVe.setSDT(datVeRequest.getSdt());
         donDatVe.setEmail(datVeRequest.getEmail());
 
-        ChuyenDiInfo chuyenDi = datVeRequest.getChuyenDi();
-        ChuyenDiInfo chuyenVe = datVeRequest.getChuyenVe();
+        ChuyenXeVaGheCanDat chuyenDi = datVeRequest.getChuyenDi();
+        ChuyenXeVaGheCanDat chuyenVe = datVeRequest.getChuyenVe();
 
         boolean datVeThanhCong = false;
 
@@ -81,6 +83,7 @@ public class DonDatVeServiceImpl implements DonDatVeService {
 
         if (datVeThanhCong) {
             donDatVeRepository.save(donDatVe);
+            veXeService.taoVeXeChoChuyenXe(datVeRequest, donDatVe.getId());
             return "Dat ve thanh cong";
         }
 

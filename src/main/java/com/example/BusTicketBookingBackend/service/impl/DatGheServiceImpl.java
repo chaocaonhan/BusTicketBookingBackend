@@ -1,6 +1,6 @@
 package com.example.BusTicketBookingBackend.service.impl;
 
-import com.example.BusTicketBookingBackend.dtos.request.ChuyenDiInfo;
+import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeVaGheCanDat;
 import com.example.BusTicketBookingBackend.dtos.response.DatGheResponse;
 import com.example.BusTicketBookingBackend.enums.TrangThaiGhe;
 import com.example.BusTicketBookingBackend.models.DatGhe;
@@ -50,7 +50,7 @@ public class DatGheServiceImpl implements DatGheService {
     }
 
     @Override
-    public boolean capNhatTrangThaiGhe(ChuyenDiInfo chuyenXe) {
+    public boolean capNhatTrangThaiGhe(ChuyenXeVaGheCanDat chuyenXe) {
         List<DatGhe> danhSachGheCanCapNhat = datGheRepository.findAllById(chuyenXe.getDanhSachGheMuonDat());
         danhSachGheCanCapNhat.forEach(datGhe -> datGhe.setTrangThai(TrangThaiGhe.BOOKED));
         datGheRepository.saveAll(danhSachGheCanCapNhat);

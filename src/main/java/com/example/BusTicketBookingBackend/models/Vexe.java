@@ -3,9 +3,12 @@ package com.example.BusTicketBookingBackend.models;
 import com.example.BusTicketBookingBackend.enums.TrangThaiVe;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
@@ -17,19 +20,15 @@ public class Vexe {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MaDonDatVe")
-    private DonDatVe maDonDatVe;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MaChuyenXe")
-    private ChuyenXe maChuyenXe;
+    @JoinColumn(name = "madondatve")
+    private DonDatVe donDatVe;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MaChoNgoi")
-    private DatGhe maDatGhe;
+    @JoinColumn(name = "madatghe")
+    private DatGhe datGhe;
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    @Column(name = "TrangThaiVe", nullable = false, length = 20)
+    @Column(name = "trangthaive", nullable = false, length = 20)
     private TrangThaiVe trangThaiVe;
 }
