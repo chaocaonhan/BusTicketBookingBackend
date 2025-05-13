@@ -2,6 +2,7 @@ package com.example.BusTicketBookingBackend.service.impl;
 
 import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeVaGheCanDat;
 import com.example.BusTicketBookingBackend.dtos.request.DatVeRequest;
+import com.example.BusTicketBookingBackend.dtos.response.VeXeResponse;
 import com.example.BusTicketBookingBackend.enums.TrangThaiVe;
 import com.example.BusTicketBookingBackend.models.Vexe;
 import com.example.BusTicketBookingBackend.repositories.DatGheRepository;
@@ -12,6 +13,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -56,4 +60,29 @@ public class VeXeServiceImpl implements VeXeService {
 
         return "Tạo vé thành công!";
     }
+
+    @Override
+    public List<VeXeResponse> layDanhSachVeXeTheoMaDonDat(Integer maDonDat) {
+        List<Vexe> veXes = veXeRepository.findAllByDonDatVe_Id(maDonDat);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        List<VeXeResponse> veXeResponses = veXes.stream().map(vexe -> {
+            VeXeResponse response = new VeXeResponse();
+            response.setMaVeXe(vexe.getId());
+            response.setTenTuyen(vexe.getDatGhe().getChuyenXe().getTuyenXe().getTenTuyen() +" "+ vexe.getDatGhe().getChuyenXe().getNgayKhoiHanh().format(formatter));
+            response.setTrangThaiVe(vexe.getTrangThaiVe());
+            response.setGiaVe(vexe.getDatGhe().getChuyenXe().getGiaVe());
+            response.setLoaiXe(vexe.getDatGhe().getChuyenXe().getXe().getLoaiXe().getTenLoaiXe());
+            response.setTenGhe(vexe.getDatGhe().getChoNgoi().getTenghe());
+            response.setTrungChuyenTu("Tự di chuyển");
+            response.setDiemBatDau(vexe.getDatGhe().getChuyenXe().getDiemDi().getTenDiemDon());
+            response.setThoiGianBatDau(vexe.getDatGhe().getChuyenXe().getGioKhoiHanh());
+            response.setThoiGianKetThuc(vexe.getDatGhe().getChuyenXe().getGioKetThuc());
+            response.setDiemKetThuc(vexe.getDatGhe().getChuyenXe().getDiemDen().getTenDiemDon());
+            response.setTrungChuyenDen("Tự di chuyển");
+            return response;
+        }).toList();
+        return veXeResponses;
+    }
+
 }
+

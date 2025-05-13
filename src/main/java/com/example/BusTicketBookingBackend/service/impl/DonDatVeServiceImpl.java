@@ -22,6 +22,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -100,16 +101,13 @@ public class DonDatVeServiceImpl implements DonDatVeService {
                 donDatVeResponse.setTenNguoiDat(donDatVe.getNguoiDung().getHoTen());
             }
             donDatVeResponse.setTenHanhKhach(donDatVe.getTenHanhKhach());
-
             donDatVeResponse.setId(donDatVe.getId());
+            donDatVeResponse.setNgayDat(donDatVe.getThoiGianDat());
             donDatVeResponse.setKieuThanhToan(donDatVe.getKieuThanhToan().toString());
             donDatVeResponse.setTrangThaiThanhToan(
                     donDatVe.getTrangThaiThanhToan() == 1 ? "Đã thanh toán" : "Chưa thanh toán"
             );
             donDatVeResponse.setSoLuongVe(donDatVe.getSoLuongVe());
-            donDatVeResponse.setTrangThaiThanhToan(
-                    donDatVe.getTrangThaiThanhToan() == 1 ? "Đã thanh toán" : "Chưa thanh toán"
-            );
             return donDatVeResponse;
         }).toList();
     }
