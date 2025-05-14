@@ -5,10 +5,7 @@ import com.example.BusTicketBookingBackend.service.VeXeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +20,13 @@ public class VeXeController {
                 .code(200)
                 .message("Danh sách vé của hoá đơn"+maDonDatVe)
                 .result(veXeService.layDanhSachVeXeTheoMaDonDat(maDonDatVe))
+                .build();
+    }
+
+    @PutMapping("/huyVe")
+    public ApiResponse huyVeTheoMa(@RequestParam Integer maVeXe) {
+        return ApiResponse.builder()
+                .code(veXeService.xoaVeXe(maVeXe) == 1 ? 200 : 500)
                 .build();
     }
 }

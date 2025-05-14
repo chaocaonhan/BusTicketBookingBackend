@@ -3,7 +3,10 @@ package com.example.BusTicketBookingBackend.service.impl;
 import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeVaGheCanDat;
 import com.example.BusTicketBookingBackend.dtos.request.DatVeRequest;
 import com.example.BusTicketBookingBackend.dtos.response.VeXeResponse;
+import com.example.BusTicketBookingBackend.enums.TrangThaiGhe;
 import com.example.BusTicketBookingBackend.enums.TrangThaiVe;
+import com.example.BusTicketBookingBackend.models.DatGhe;
+import com.example.BusTicketBookingBackend.models.DonDatVe;
 import com.example.BusTicketBookingBackend.models.Vexe;
 import com.example.BusTicketBookingBackend.repositories.DatGheRepository;
 import com.example.BusTicketBookingBackend.repositories.DonDatVeRepository;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -73,6 +77,7 @@ public class VeXeServiceImpl implements VeXeService {
             response.setGiaVe(vexe.getDatGhe().getChuyenXe().getGiaVe());
             response.setLoaiXe(vexe.getDatGhe().getChuyenXe().getXe().getLoaiXe().getTenLoaiXe());
             response.setTenGhe(vexe.getDatGhe().getChoNgoi().getTenghe());
+            response.setBienSoXe(vexe.getDatGhe().getChuyenXe().getXe().getBienSo());
             response.setTrungChuyenTu("Tự di chuyển");
             response.setDiemBatDau(vexe.getDatGhe().getChuyenXe().getDiemDi().getTenDiemDon());
             response.setThoiGianBatDau(vexe.getDatGhe().getChuyenXe().getGioKhoiHanh());
@@ -82,6 +87,29 @@ public class VeXeServiceImpl implements VeXeService {
             return response;
         }).toList();
         return veXeResponses;
+    }
+
+    @Override
+    public Integer xoaVeXe(Integer maVeXe) {
+        Optional<Vexe> vexe = veXeRepository.findById(maVeXe);
+        if(vexe != null && vexe.isPresent()){
+            Vexe veCanHuy = vexe.get();
+//            thay doi tranvg thais ve
+            veCanHuy.setTrangThaiVe(TrangThaiVe.CANCELED);
+            veXeRepository.save(veCanHuy);
+
+            // sửa trang thái ghế trên chuyến
+            DatGhe datGheCanSua = veCanHuy.getDatGhe();
+            datGheCanSua.setTrangThai(TrangThaiGhe.AVAILABLE);
+            datGheRepository.save(datGheCanSua);
+
+            //sửa tổng tiền hoá đơn
+            DonDatVe donDatVe = veCanHuy.getDonDatVe();
+            donDatVe.setTongTien(donDatVe.getTongTien()-veCanHuy.getDatGhe().getChuyenXe().getGiaVe());
+            donDatVeRepository.save(donDatVe);
+            return 1;
+        }
+        return 0;
     }
 
 }

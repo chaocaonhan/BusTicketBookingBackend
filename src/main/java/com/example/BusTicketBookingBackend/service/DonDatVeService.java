@@ -9,4 +9,6 @@ import java.util.List;
 public interface DonDatVeService {
     String taoDonDatVe(DatVeRequest datVeRequest);
     List<DonDatVeResponse> getAllDonDat();
+
+    List<DonDatVeResponse> getMyBooking();
 }

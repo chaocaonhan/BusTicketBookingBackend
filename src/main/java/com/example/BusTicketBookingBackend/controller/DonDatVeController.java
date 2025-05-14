@@ -32,6 +32,13 @@ public class DonDatVeController {
                 .code(200)
                 .message("Success")
                 .result(donDatVeService.getAllDonDat()).build();
+    }
 
+    @GetMapping("/getMyDonDat")
+    public ApiResponse getMyDonDat(){
+        return ApiResponse.builder()
+                .code(200)
+                .message("Success")
+                .result(donDatVeService.getMyBooking()).build();
     }
 }

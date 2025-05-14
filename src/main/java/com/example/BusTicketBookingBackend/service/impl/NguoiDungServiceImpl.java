@@ -1,6 +1,7 @@
 package com.example.BusTicketBookingBackend.service.impl;
 
 import com.example.BusTicketBookingBackend.config.JwtUtil;
+import com.example.BusTicketBookingBackend.dtos.request.ChangePassRequest;
 import com.example.BusTicketBookingBackend.dtos.request.LoginDTO;
 import com.example.BusTicketBookingBackend.dtos.response.NguoiDungDTO;
 import com.example.BusTicketBookingBackend.enums.TrangThai;
@@ -261,6 +262,21 @@ public class NguoiDungServiceImpl implements NguoiDungService {
         nguoiDungRepository.delete(nguoiDung);
         return true;
 
+    }
+
+    @Override
+    public String changePassword(Integer id, ChangePassRequest changePassRequest) {
+        Optional<NguoiDung> nguoiDung = nguoiDungRepository.findById(id);
+        if(nguoiDung.isEmpty()){
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+        }
+        NguoiDung user = nguoiDung.get();
+        if(passwordEncoder.matches(changePassRequest.getOldPass(), user.getMatKhau())){
+            user.setMatKhau(passwordEncoder.encode(changePassRequest.getNewPass()));
+            nguoiDungRepository.save(user);
+            return "SUCCESS";
+        }else{
+        return "WRONG_PASS";}
     }
 
 

@@ -8,9 +8,11 @@ import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.DonDatVe;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
+import com.example.BusTicketBookingBackend.models.Vexe;
 import com.example.BusTicketBookingBackend.repositories.DatGheRepository;
 import com.example.BusTicketBookingBackend.repositories.DonDatVeRepository;
 import com.example.BusTicketBookingBackend.repositories.NguoiDungRepository;
+import com.example.BusTicketBookingBackend.repositories.VeXeRepository;
 import com.example.BusTicketBookingBackend.service.ChuyenXeService;
 import com.example.BusTicketBookingBackend.service.DatGheService;
 import com.example.BusTicketBookingBackend.service.DonDatVeService;
@@ -19,6 +21,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -37,6 +40,7 @@ public class DonDatVeServiceImpl implements DonDatVeService {
     ChuyenXeService chuyenXeService;
     ModelMapper modelMapper;
     VeXeService veXeService;
+    private final VeXeRepository veXeRepository;
 
     @Override
     public String taoDonDatVe(DatVeRequest datVeRequest) {
@@ -105,9 +109,49 @@ public class DonDatVeServiceImpl implements DonDatVeService {
             donDatVeResponse.setNgayDat(donDatVe.getThoiGianDat());
             donDatVeResponse.setKieuThanhToan(donDatVe.getKieuThanhToan().toString());
             donDatVeResponse.setTrangThaiThanhToan(
-                    donDatVe.getTrangThaiThanhToan() == 1 ? "Đã thanh toán" : "Chưa thanh toán"
+                    donDatVe.getTrangThaiThanhToan() == 1 ? "PAID" : "UNPAID"
             );
             donDatVeResponse.setSoLuongVe(donDatVe.getSoLuongVe());
+            int soVeDaHuy = veXeRepository.countCancelledTicketsByDonDatVeId(donDatVe.getId());
+            if(soVeDaHuy > 0){
+                donDatVeResponse.setTrangThai("Đã huỷ "+soVeDaHuy+"/"+donDatVe.getSoLuongVe());
+            }
+            else {
+                donDatVeResponse.setTrangThai("Hoàn thành "+ 0+"/"+donDatVe.getSoLuongVe());
+            }
+            return donDatVeResponse;
+        }).toList();
+    }
+
+    @Override
+    public List<DonDatVeResponse> getMyBooking() {
+        var context = SecurityContextHolder.getContext();
+        String mail = context.getAuthentication().getName();
+        NguoiDung nguoiDung = nguoiDungRepository.findByEmail(mail)
+                .orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
+
+        List<DonDatVe> lstMyBooking = donDatVeRepository.findAllByNguoiDung_Email(mail);
+
+        return lstMyBooking.stream().map(donDatVe -> {
+            DonDatVeResponse donDatVeResponse = modelMapper.map(donDatVe, DonDatVeResponse.class);
+            if(donDatVe.getNguoiDung() != null){
+                donDatVeResponse.setTenNguoiDat(donDatVe.getNguoiDung().getHoTen());
+            }
+            donDatVeResponse.setTenHanhKhach(donDatVe.getTenHanhKhach());
+            donDatVeResponse.setId(donDatVe.getId());
+            donDatVeResponse.setNgayDat(donDatVe.getThoiGianDat());
+            donDatVeResponse.setKieuThanhToan(donDatVe.getKieuThanhToan().toString());
+            donDatVeResponse.setTrangThaiThanhToan(
+                    donDatVe.getTrangThaiThanhToan() == 1 ? "PAID" : "UNPAID"
+            );
+            donDatVeResponse.setSoLuongVe(donDatVe.getSoLuongVe());
+            int soVeDaHuy = veXeRepository.countCancelledTicketsByDonDatVeId(donDatVe.getId());
+            if(soVeDaHuy > 0){
+                donDatVeResponse.setTrangThai("Đã huỷ "+soVeDaHuy+"/"+donDatVe.getSoLuongVe());
+            }
+            else {
+                donDatVeResponse.setTrangThai("Hoàn thành "+ 0+"/"+donDatVe.getSoLuongVe());
+            }
             return donDatVeResponse;
         }).toList();
     }

@@ -55,5 +55,4 @@ public class DonDatVe {
 
     @Column(name ="email")
     String email;
-
 }

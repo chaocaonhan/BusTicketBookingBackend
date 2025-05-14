@@ -20,6 +20,7 @@ public class DonDatVeResponse {
     String kieuThanhToan;
     String trangThaiThanhToan;
     int soLuongVe;
+    String trangThai;
     String ghiChu;
     String tenHanhKhach;
     String SDT;

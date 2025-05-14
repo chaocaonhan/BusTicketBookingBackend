@@ -24,6 +24,7 @@ public class VeXeResponse {
     String diemBatDau;
     LocalTime thoiGianBatDau;
     String diemKetThuc;
+    String bienSoXe;
     LocalTime thoiGianKetThuc;
     String trungChuyenDen;
 }

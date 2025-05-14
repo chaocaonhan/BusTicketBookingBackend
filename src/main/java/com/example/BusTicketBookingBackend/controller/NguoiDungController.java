@@ -1,5 +1,6 @@
 package com.example.BusTicketBookingBackend.controller;
 
+import com.example.BusTicketBookingBackend.dtos.request.ChangePassRequest;
 import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
 import com.example.BusTicketBookingBackend.dtos.response.AuthResponseDTO;
 import com.example.BusTicketBookingBackend.dtos.request.LoginDTO;
@@ -105,6 +106,15 @@ public class NguoiDungController {
                 .build();
     }
 
+    @PutMapping("/changePassword/{id}")
+    public ApiResponse changePass(@PathVariable Integer id,
+                                  @RequestBody ChangePassRequest changePassRequest){
+        return ApiResponse.builder()
+                .code(200)
+                .message(nguoiDungService.changePassword(id,changePassRequest))
+                .build();
+    };
+
     @GetMapping("")
     public ResponseEntity<ApiResponse<List<NguoiDungDTO>>> getAllNoPaging() {
         ApiResponse<List<NguoiDungDTO>> response = ApiResponse.<List<NguoiDungDTO>>builder()
@@ -138,8 +148,6 @@ public class NguoiDungController {
     }
 
 
-
-
     @GetMapping("/danhSachTaiXe")
     public ApiResponse<List<TaiXe>> getDanhSachTaiXe() {
         return ApiResponse.<List<TaiXe>>builder()
@@ -149,7 +157,7 @@ public class NguoiDungController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/")
     public ResponseEntity<ApiResponse<NguoiDungDTO>> updateUser(
             @PathVariable Integer id,
             @RequestBody NguoiDungDTO nguoiDungDTO) {
@@ -164,6 +172,7 @@ public class NguoiDungController {
 
         return ResponseEntity.ok(response);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteUser(@PathVariable Integer id) {

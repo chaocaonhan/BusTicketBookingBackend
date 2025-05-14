@@ -1,5 +1,6 @@
 package com.example.BusTicketBookingBackend.service;
 
+import com.example.BusTicketBookingBackend.dtos.request.ChangePassRequest;
 import com.example.BusTicketBookingBackend.dtos.request.LoginDTO;
 import com.example.BusTicketBookingBackend.dtos.response.NguoiDungDTO;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
@@ -34,4 +35,6 @@ public interface NguoiDungService {
 
     NguoiDungDTO getMyInfor();
     Boolean deleteNguoiDungById(Integer id);
+
+    String changePassword(Integer id, ChangePassRequest changePassRequest);
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -56,5 +57,10 @@ public class NguoiDung {
     @JoinColumn(name = "idvaitro", referencedColumnName = "id")
     VaiTro vaiTro;
 
+    @Column(name = "ngaysinh")
+    LocalDate ngaySinh;
+
+    @Column(name = "nghenghiep")
+    String ngheNghiep;
 
 }
