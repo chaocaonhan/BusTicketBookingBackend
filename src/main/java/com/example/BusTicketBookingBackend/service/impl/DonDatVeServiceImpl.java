@@ -89,9 +89,8 @@ public class DonDatVeServiceImpl implements DonDatVeService {
         if (datVeThanhCong) {
             donDatVeRepository.save(donDatVe);
             veXeService.taoVeXeChoChuyenXe(datVeRequest, donDatVe.getId());
-            return "Dat ve thanh cong";
+            return String.valueOf(donDatVe.getId());
         }
-
         return "Dat ve that bai";
     }
 

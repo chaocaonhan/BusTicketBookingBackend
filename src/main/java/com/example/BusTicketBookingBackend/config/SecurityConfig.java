@@ -92,6 +92,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/chuyenxe/**").permitAll()
                         .requestMatchers("/api/datve/**").permitAll()
                         .requestMatchers("api/ve-xe/**").permitAll()
+                        .requestMatchers("api/payment/**").permitAll()
                         .requestMatchers("/api/Station/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/tuyen-xe/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"api/tinhthanh/**").permitAll()
