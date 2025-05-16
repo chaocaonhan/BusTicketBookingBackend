@@ -173,10 +173,12 @@ public class NguoiDungServiceImpl implements NguoiDungService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         String PassWord = nguoiDung.getMatKhau();
+        String avatars = nguoiDung.getAvatar();
 
         modelMapper.map(nguoiDungDTO,nguoiDung);
         // Lưu vào database
         nguoiDung.setMatKhau(PassWord);
+        nguoiDung.setAvatar(avatars);
         nguoiDung = nguoiDungRepository.save(nguoiDung);
 
         NguoiDungDTO updatedUser = modelMapper.map(nguoiDung, NguoiDungDTO.class);
@@ -279,5 +281,17 @@ public class NguoiDungServiceImpl implements NguoiDungService {
         return "WRONG_PASS";}
     }
 
+    @Override
+    public void updateAvatarForCurrentUser(String avatarUrl) {
+        // Lấy thông tin người dùng hiện tại từ context bảo mật
+        var context = SecurityContextHolder.getContext();
+        String mail = context.getAuthentication().getName();
+        NguoiDung nguoiDung = nguoiDungRepository.findByEmail(mail)
+                .orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
+
+        // Cập nhật URL ảnh đại diện
+        nguoiDung.setAvatar(avatarUrl);
+        nguoiDungRepository.save(nguoiDung);
+    }
 
 }

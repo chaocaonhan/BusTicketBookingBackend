@@ -37,4 +37,6 @@ public interface NguoiDungService {
     Boolean deleteNguoiDungById(Integer id);
 
     String changePassword(Integer id, ChangePassRequest changePassRequest);
+
+    void updateAvatarForCurrentUser(String avatarUrl);
 }

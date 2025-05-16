@@ -50,6 +50,9 @@ public class NguoiDung {
     @Column(name = "confirmtoken")
     String confirmToken;
 
+    @Column(name="avatar")
+    String avatar;
+
     @Column(name = "tokenexpiry")
     LocalDateTime tokenExpiry;
 

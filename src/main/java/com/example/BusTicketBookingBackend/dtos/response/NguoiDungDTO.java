@@ -30,6 +30,7 @@ public class NguoiDungDTO {
     @Size(min = 8, message = "INVALID_PASSWORD")
     String matKhau;
     String SDT;
+    String avatar;
     String trangThai;
     String loaiDangKi;
     String vaiTro;

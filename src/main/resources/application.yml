@@ -31,6 +31,12 @@ jwt:
   secret: BusTicketBookingApplicationSecretKey123456789012345678901234567890
   expiration: 86400
 
+cloudinary:
+  cloud-name: dcobbjewc
+  api-key: 469351546516413
+  api-secret: NhYKyxjf-WyUJTDA9pxO60VR3Z4
+
+
 logging:
   level:
     root: INFO

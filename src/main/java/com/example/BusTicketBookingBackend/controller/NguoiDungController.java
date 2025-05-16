@@ -10,6 +10,7 @@ import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
 import com.example.BusTicketBookingBackend.models.TaiXe;
+import com.example.BusTicketBookingBackend.service.CloudinaryService;
 import com.example.BusTicketBookingBackend.service.NguoiDungService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -33,6 +36,7 @@ public class NguoiDungController {
 
     private final NguoiDungService nguoiDungService;
     private final RestClient.Builder builder;
+    private final CloudinaryService cloudinaryService;
 
     @PostMapping("/register")
     //valid là để validation dữ liệu từ frontend gửi về
@@ -157,7 +161,7 @@ public class NguoiDungController {
     }
 
 
-    @PutMapping("/")
+    @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<NguoiDungDTO>> updateUser(
             @PathVariable Integer id,
             @RequestBody NguoiDungDTO nguoiDungDTO) {
@@ -194,4 +198,32 @@ public class NguoiDungController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
+
+    @PostMapping("/upload-avatar")
+    public ResponseEntity<ApiResponse<String>> uploadAvatar(@RequestParam("file") MultipartFile file) {
+        try {
+            // Sử dụng CloudinaryService để tải file ảnh lên Cloudinary
+            String url = cloudinaryService.upload(file);
+
+            // Lưu URL ảnh vào hồ sơ người dùng hiện tại (nếu cần)
+            nguoiDungService.updateAvatarForCurrentUser(url);
+
+            // Trả về URL ảnh đã được tải lên
+            return ResponseEntity.ok(
+                    ApiResponse.<String>builder()
+                            .code(200)
+                            .message("Cập nhật ảnh đại diện thành công!")
+                            .result(url)
+                            .build()
+            );
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    ApiResponse.<String>builder()
+                            .code(500)
+                            .message("Có lỗi xảy ra khi tải ảnh lên")
+                            .build()
+            );
+        }
+    }
+
 }
