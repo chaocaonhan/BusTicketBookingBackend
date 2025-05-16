@@ -13,4 +13,6 @@ public interface DiemDonTraRepository extends JpaRepository<DiemDonTra, Integer>
     DiemDonTra findDiemDonTraByTenDiemDon(String tenDiemDon);
 
     List<DiemDonTra> findByTinhThanh_TenTinhThanh(String tenTinh);
+    List<DiemDonTra> findByTinhThanh_TenTinhThanhAndTrangThai(String tinhThanh, Integer trangthai);
+
 }

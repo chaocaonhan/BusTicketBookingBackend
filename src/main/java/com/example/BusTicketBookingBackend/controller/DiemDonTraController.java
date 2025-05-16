@@ -27,5 +27,14 @@ public class DiemDonTraController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @DeleteMapping("/id")
+    public ApiResponse deleteDiemDonTraById(@RequestParam Integer id) {
+        return ApiResponse.builder()
+                .code(200)
+                .message("Success")
+                .result(diemDonTraService.deleteDiemDonTra(id))
+                .build();
+    }
+
 
 }

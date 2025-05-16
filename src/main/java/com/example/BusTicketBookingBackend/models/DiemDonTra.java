@@ -27,5 +27,8 @@ public class DiemDonTra {
     @ManyToOne
     @JoinColumn(name = "id_tinhthanh", referencedColumnName = "id")
     private TinhThanh tinhThanh;
+
+    @Column(name = "trangthai")
+    private int trangThai;
 }
 

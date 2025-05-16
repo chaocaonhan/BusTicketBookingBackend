@@ -3,6 +3,7 @@ package com.example.BusTicketBookingBackend.service.impl;
 import com.example.BusTicketBookingBackend.dtos.response.TuyenXeDTO;
 import com.example.BusTicketBookingBackend.models.TinhThanh;
 import com.example.BusTicketBookingBackend.models.TuyenXe;
+import com.example.BusTicketBookingBackend.repositories.ChuyenXeRepository;
 import com.example.BusTicketBookingBackend.repositories.TinhThanhRepository;
 import com.example.BusTicketBookingBackend.repositories.TuyenXeRepository;
 import com.example.BusTicketBookingBackend.service.TuyenXeService;
@@ -11,12 +12,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class TuyenXeServiceImpl implements TuyenXeService {
     private final TuyenXeRepository tuyenXeRepository;
     private final TinhThanhRepository tinhThanhRepository;
+    private final ChuyenXeRepository chuyenXeRepository;
 
     @Override
     public TuyenXe timTuyenTheoTenHaiTinh(String tinhXuatPhat, String tinhDen) {
@@ -35,11 +38,15 @@ public class TuyenXeServiceImpl implements TuyenXeService {
             return "Không tìm thấy tuyến xe với ID: " + id;
         }
 
+
+
         TuyenXe tuyenXe = optionalTuyenXe.get();
+
         tuyenXe.setTenTuyen(tuyenXeDTO.getTenTuyen());
         tuyenXe.setTinhDi(tinhThanhRepository.findByTen(tuyenXeDTO.getTinhDi()));
         tuyenXe.setTinhDen(tinhThanhRepository.findByTen(tuyenXeDTO.getTinhDen()));
         tuyenXe.setKhoangCach(tuyenXeDTO.getKhoangCach());
+
         tuyenXe.setThoiGianDiChuyen(tuyenXeDTO.getThoiGianDiChuyen());
         tuyenXeRepository.save(tuyenXe);
 
@@ -70,6 +77,15 @@ public class TuyenXeServiceImpl implements TuyenXeService {
 
         tuyenXeRepository.deleteById(id);
         return "Đã xoá tuyến xe";
+    }
+
+    @Override
+    public List<TuyenXe> getTop5TuyenXePhoBien() {
+        List<Object[]> results = chuyenXeRepository.findTop5TuyenXePhoBien();
+
+        return results.stream()
+                .map(result -> (TuyenXe) result[0]) // Kết quả đầu tiên là đối tượng TuyenXe
+                .collect(Collectors.toList());
     }
 
 

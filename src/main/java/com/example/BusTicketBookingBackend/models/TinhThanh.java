@@ -20,6 +20,9 @@ public class TinhThanh {
     @Column(name = "tentinhthanh")
     private String tenTinhThanh;
 
+    @Column(name = "anh1")
+    private String anh1;
+
 
 
 }

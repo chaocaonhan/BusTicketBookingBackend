@@ -54,5 +54,14 @@ public class TuyenXeController {
         return tuyenXeService.deleteTuyenXe(id);
     }
 
+    @GetMapping("/top5-popular")
+    public ApiResponse getTop5Popular(){
+        return ApiResponse.builder()
+                .code(200)
+                .message("5 tuyến phổ biến nhất")
+                .result(tuyenXeService.getTop5TuyenXePhoBien())
+                .build();
+    }
+
 
 }

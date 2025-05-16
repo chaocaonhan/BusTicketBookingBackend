@@ -14,4 +14,6 @@ public interface TuyenXeService {
     TuyenXe createTuyenXe(TuyenXeDTO tuyenXeDTO);
 
     String deleteTuyenXe(Integer id);
+
+    List<TuyenXe> getTop5TuyenXePhoBien();
 }

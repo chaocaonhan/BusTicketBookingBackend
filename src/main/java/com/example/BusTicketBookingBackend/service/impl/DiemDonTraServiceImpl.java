@@ -21,6 +21,14 @@ public class DiemDonTraServiceImpl implements DiemDonTraService {
 
     @Override
     public List<DiemDonTra> getDiemDonTraByTinhThanh(String tinhThanh) {
-        return diemDonTraRepository.findByTinhThanh_TenTinhThanh(tinhThanh);
+        return diemDonTraRepository.findByTinhThanh_TenTinhThanhAndTrangThai(tinhThanh,1);
+    }
+
+    @Override
+    public DiemDonTra deleteDiemDonTra(Integer id) {
+        DiemDonTra diemDonTra = diemDonTraRepository.findById(id).get();
+        diemDonTra.setTrangThai(0);
+        diemDonTraRepository.save(diemDonTra);
+        return diemDonTra;
     }
 }

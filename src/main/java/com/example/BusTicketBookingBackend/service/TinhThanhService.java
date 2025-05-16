@@ -6,6 +6,10 @@ import java.util.List;
 
 public interface TinhThanhService {
     List<TinhThanh> getAllTinhThanh();
+
     TinhThanh createTinhThanh(String tinhThanh);
+
     String deleteTinhThanh(Integer IdtinhThanh);
+
+    void updateAnh(String urlanh, Integer idTinhThanh);
 }

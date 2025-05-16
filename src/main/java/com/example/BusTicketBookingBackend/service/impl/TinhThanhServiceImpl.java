@@ -4,7 +4,6 @@ import com.example.BusTicketBookingBackend.models.TinhThanh;
 import com.example.BusTicketBookingBackend.repositories.TinhThanhRepository;
 import com.example.BusTicketBookingBackend.service.TinhThanhService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,4 +34,12 @@ public class TinhThanhServiceImpl implements TinhThanhService {
         tinhThanhRepository.deleteById(IDtinhThanh);
         return "Đã xoá tỉnh";
     }
+
+    @Override
+    public void updateAnh(String urlanh, Integer idTinhThanh) {
+        TinhThanh tinhThanh = tinhThanhRepository.findById(idTinhThanh).get();
+        tinhThanh.setAnh1(urlanh);
+        tinhThanhRepository.save(tinhThanh);
+    }
+
 }
