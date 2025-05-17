@@ -2,12 +2,14 @@ package com.example.BusTicketBookingBackend.service.impl;
 
 import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeDTO;
 import com.example.BusTicketBookingBackend.dtos.response.ChuyenXeResponse;
+import com.example.BusTicketBookingBackend.dtos.response.DiemDonCuaChuyen;
 import com.example.BusTicketBookingBackend.enums.TrangThaiGhe;
 import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.*;
 import com.example.BusTicketBookingBackend.repositories.*;
 import com.example.BusTicketBookingBackend.service.ChuyenXeService;
+import com.example.BusTicketBookingBackend.service.DiemDungTrenTuyenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,8 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
     private final TaiXeRepository taiXeRepository;
     private final ChoNgoiRepository choNgoiRepository;
     private final DatGheRepository datGheRepository;
+    private final DiemDungTrenTuyenService diemDungTrenTuyenService;
+    private final DiemDungTrenTuyenRepository diemDungTrenTuyenRepository;
 
     public List<ChuyenXeResponse> timChuyenXeTheoTuyen(String tinhDi, String tinhDen, LocalDate ngayDi, LocalDate ngayVe, Boolean khuHoi) {
         Optional<TuyenXe> tuyenDi = tuyenXeRepository.findByTinhDiAndTinhDen(tinhDi, tinhDen);
@@ -169,6 +173,40 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
         }
 
         chuyenXe.setSoGheTrong(datGheRepository.countSeatAvailableByChuyenXe_Id(idChuyenXe));
+
+    }
+
+    @Override
+    public List<DiemDonCuaChuyen> getLichTrinhChuyenXe(Integer idChuyenXe) {
+        ChuyenXe chuyenXe = chuyenXeRepository.findById(idChuyenXe).get();
+        if (chuyenXe == null) {
+            throw new AppException(ErrorCode.DATA_NOT_FOUND);
+        }
+        TuyenXe tuyenXe = chuyenXe.getTuyenXe();
+        List<DiemDungTrenTuyen> lstDiemDungCuaTuyen = diemDungTrenTuyenRepository.findByTuyenId(tuyenXe.getId());
+        LocalTime gioXeXuatPhat = chuyenXe.getGioKhoiHanh();
+        List<DiemDonCuaChuyen> lichTrinh = new ArrayList<>();
+
+        for( DiemDungTrenTuyen diemDung : lstDiemDungCuaTuyen ){
+            DiemDonCuaChuyen diemDonCuaChuyen = new DiemDonCuaChuyen();
+
+            diemDonCuaChuyen.setTenDiemDon(diemDung.getDiemDonTra().getTenDiemDon());
+            diemDonCuaChuyen.setThuTu(diemDung.getThuTuDiemDung());
+
+            int soPhutDeDiTuDiemDauDenDiemHienTai = diemDung.getThoiGianTuDiemDau();
+            int soGio = soPhutDeDiTuDiemDauDenDiemHienTai / 60;
+            int soPhut = soPhutDeDiTuDiemDauDenDiemHienTai % 60;
+
+            diemDonCuaChuyen.setThoiGianXeDen(chuyenXe.getGioKhoiHanh().plusHours(soGio).plusMinutes(soPhut));
+            diemDonCuaChuyen.setKhoangCahDenDiemDau(diemDung.getKhoangCachToiDiemDau());
+
+            lichTrinh.add(diemDonCuaChuyen);
+
+
+
+
+        }
+        return lichTrinh;
 
     }
 

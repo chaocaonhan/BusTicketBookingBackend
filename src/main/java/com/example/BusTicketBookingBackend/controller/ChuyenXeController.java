@@ -4,6 +4,7 @@ import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
 import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeDTO;
 import com.example.BusTicketBookingBackend.dtos.response.ChuyenXeResponse;
 import com.example.BusTicketBookingBackend.models.ChuyenXe;
+import com.example.BusTicketBookingBackend.models.TuyenXe;
 import com.example.BusTicketBookingBackend.service.ChuyenXeService;
 import com.example.BusTicketBookingBackend.service.DatGheService;
 import lombok.RequiredArgsConstructor;
@@ -100,4 +101,14 @@ public class ChuyenXeController {
                     .build());
         }
     }
+
+    @GetMapping("/lichTrinhChuyenXe")
+    public ApiResponse getlichTrinhChuyenXe(@RequestParam Integer idChuyenXe){
+        return ApiResponse.builder()
+                .code(200)
+                .message("Lịch trình của chuyến xe + {idChuyenXe}")
+                .result(chuyenXeService.getLichTrinhChuyenXe(idChuyenXe))
+                .build();
+    }
+
 }

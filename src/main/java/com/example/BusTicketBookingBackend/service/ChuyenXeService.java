@@ -2,6 +2,7 @@ package com.example.BusTicketBookingBackend.service;
 
 import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeDTO;
 import com.example.BusTicketBookingBackend.dtos.response.ChuyenXeResponse;
+import com.example.BusTicketBookingBackend.dtos.response.DiemDonCuaChuyen;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,4 +16,5 @@ public interface ChuyenXeService {
     List<ChuyenXeResponse> getAll();
 
     void capNhatSoGheTrong(Integer idChuyenXe);
+    List<DiemDonCuaChuyen> getLichTrinhChuyenXe(Integer idChuyenXe);
 }
