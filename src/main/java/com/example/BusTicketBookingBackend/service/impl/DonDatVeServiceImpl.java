@@ -13,10 +13,7 @@ import com.example.BusTicketBookingBackend.repositories.DatGheRepository;
 import com.example.BusTicketBookingBackend.repositories.DonDatVeRepository;
 import com.example.BusTicketBookingBackend.repositories.NguoiDungRepository;
 import com.example.BusTicketBookingBackend.repositories.VeXeRepository;
-import com.example.BusTicketBookingBackend.service.ChuyenXeService;
-import com.example.BusTicketBookingBackend.service.DatGheService;
-import com.example.BusTicketBookingBackend.service.DonDatVeService;
-import com.example.BusTicketBookingBackend.service.VeXeService;
+import com.example.BusTicketBookingBackend.service.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -40,7 +37,8 @@ public class DonDatVeServiceImpl implements DonDatVeService {
     ChuyenXeService chuyenXeService;
     ModelMapper modelMapper;
     VeXeService veXeService;
-    private final VeXeRepository veXeRepository;
+    VeXeRepository veXeRepository;
+    DanhGiaService danhGiaService;
 
     @Override
     public String taoDonDatVe(DatVeRequest datVeRequest) {
@@ -111,6 +109,9 @@ public class DonDatVeServiceImpl implements DonDatVeService {
                     donDatVe.getTrangThaiThanhToan() == 1 ? "PAID" : "UNPAID"
             );
             donDatVeResponse.setSoLuongVe(donDatVe.getSoLuongVe());
+
+            donDatVeResponse.setDaDanhGia(danhGiaService.daDanhGia(donDatVe.getId()));
+
             int soVeDaHuy = veXeRepository.countCancelledTicketsByDonDatVeId(donDatVe.getId());
             if(soVeDaHuy > 0){
                 donDatVeResponse.setTrangThai("Đã huỷ "+soVeDaHuy+"/"+donDatVe.getSoLuongVe());
@@ -144,6 +145,10 @@ public class DonDatVeServiceImpl implements DonDatVeService {
                     donDatVe.getTrangThaiThanhToan() == 1 ? "PAID" : "UNPAID"
             );
             donDatVeResponse.setSoLuongVe(donDatVe.getSoLuongVe());
+
+//            kiểm tra xem đã đánh giá chưa, dùng trong trang đơn hàng của tôi
+            donDatVeResponse.setDaDanhGia(danhGiaService.daDanhGia(donDatVe.getId()));
+
             int soVeDaHuy = veXeRepository.countCancelledTicketsByDonDatVeId(donDatVe.getId());
             if(soVeDaHuy > 0){
                 donDatVeResponse.setTrangThai("Đã huỷ "+soVeDaHuy+"/"+donDatVe.getSoLuongVe());
@@ -154,4 +159,7 @@ public class DonDatVeServiceImpl implements DonDatVeService {
             return donDatVeResponse;
         }).toList();
     }
+
+
+
 }

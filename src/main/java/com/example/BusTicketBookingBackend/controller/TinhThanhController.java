@@ -2,7 +2,7 @@ package com.example.BusTicketBookingBackend.controller;
 
 import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
 import com.example.BusTicketBookingBackend.models.TinhThanh;
-import com.example.BusTicketBookingBackend.service.CloudinaryService;
+import com.example.BusTicketBookingBackend.service.impl.CloudinaryService;
 import com.example.BusTicketBookingBackend.service.TinhThanhService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

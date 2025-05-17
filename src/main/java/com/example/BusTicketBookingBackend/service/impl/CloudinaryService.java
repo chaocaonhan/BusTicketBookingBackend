@@ -1,4 +1,4 @@
-package com.example.BusTicketBookingBackend.service;
+package com.example.BusTicketBookingBackend.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;

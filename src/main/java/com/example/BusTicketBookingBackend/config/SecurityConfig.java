@@ -95,6 +95,7 @@ public class SecurityConfig {
                         .requestMatchers("api/payment/**").permitAll()
                         .requestMatchers("/api/images/**").permitAll()
                         .requestMatchers("/api/Station/**").permitAll()
+                        .requestMatchers("/api/danhGia/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/tuyen-xe/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"api/tinhthanh/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE,"/api/tinhthanh/deleteTinhThanh").hasRole("ADMIN")

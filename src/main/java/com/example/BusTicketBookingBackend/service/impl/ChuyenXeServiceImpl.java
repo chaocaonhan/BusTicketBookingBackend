@@ -10,7 +10,10 @@ import com.example.BusTicketBookingBackend.models.*;
 import com.example.BusTicketBookingBackend.repositories.*;
 import com.example.BusTicketBookingBackend.service.ChuyenXeService;
 import com.example.BusTicketBookingBackend.service.DiemDungTrenTuyenService;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,16 +24,18 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ChuyenXeServiceImpl implements ChuyenXeService {
-    private final ChuyenXeRepository chuyenXeRepository;
-    private final TuyenXeRepository tuyenXeRepository;
-    private final DiemDonTraRepository diemDonTraRepository;
-    private final XeRepository xeRepository;
-    private final TaiXeRepository taiXeRepository;
-    private final ChoNgoiRepository choNgoiRepository;
-    private final DatGheRepository datGheRepository;
-    private final DiemDungTrenTuyenService diemDungTrenTuyenService;
-    private final DiemDungTrenTuyenRepository diemDungTrenTuyenRepository;
+    ChuyenXeRepository chuyenXeRepository;
+    TuyenXeRepository tuyenXeRepository;
+    DiemDonTraRepository diemDonTraRepository;
+    XeRepository xeRepository;
+    TaiXeRepository taiXeRepository;
+    ChoNgoiRepository choNgoiRepository;
+    DatGheRepository datGheRepository;
+    VeXeRepository vexeRepository;
+    DiemDungTrenTuyenService diemDungTrenTuyenService;
+    DiemDungTrenTuyenRepository diemDungTrenTuyenRepository;
 
     public List<ChuyenXeResponse> timChuyenXeTheoTuyen(String tinhDi, String tinhDen, LocalDate ngayDi, LocalDate ngayVe, Boolean khuHoi) {
         Optional<TuyenXe> tuyenDi = tuyenXeRepository.findByTinhDiAndTinhDen(tinhDi, tinhDen);
@@ -211,4 +216,19 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
     }
 
 
+    //dùng để tìm chuyến xe trong đánh giá
+    @Override
+    public int getChuyenXeIdFromDonDatVeId(int donDatVeId) {
+        // Step 1: Find the associated Vexe by DonDatVe ID
+        List<Vexe> veXes = vexeRepository.findByDonDatVe_Id(donDatVeId);
+        Vexe vexe = veXes.get(0);
+
+        // Step 2: Access the linked DatGhe and ChuyenXe
+        if (vexe.getDatGhe() == null || vexe.getDatGhe().getChuyenXe() == null) {
+            throw new EntityNotFoundException("Không tìm thấy chuyến xe cho vé xe: " + vexe.getId());
+        }
+
+        // Step 3: Return ChuyenXe ID
+        return vexe.getDatGhe().getChuyenXe().getId();
+    }
 }

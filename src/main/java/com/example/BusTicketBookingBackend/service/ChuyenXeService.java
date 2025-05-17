@@ -17,4 +17,6 @@ public interface ChuyenXeService {
 
     void capNhatSoGheTrong(Integer idChuyenXe);
     List<DiemDonCuaChuyen> getLichTrinhChuyenXe(Integer idChuyenXe);
+
+    int getChuyenXeIdFromDonDatVeId(int donDatVeId);
 }

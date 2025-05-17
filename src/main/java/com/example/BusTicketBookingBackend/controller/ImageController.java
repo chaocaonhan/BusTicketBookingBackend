@@ -1,6 +1,6 @@
 package com.example.BusTicketBookingBackend.controller;
 
-import com.example.BusTicketBookingBackend.service.CloudinaryService;
+import com.example.BusTicketBookingBackend.service.impl.CloudinaryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
