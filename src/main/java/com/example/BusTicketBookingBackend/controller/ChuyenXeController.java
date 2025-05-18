@@ -111,4 +111,13 @@ public class ChuyenXeController {
                 .build();
     }
 
+    @DeleteMapping("/huyChuyen/{id}")
+    public ApiResponse huyChuyenXe(@PathVariable Integer id){
+        return ApiResponse.builder()
+                .code(200)
+                .message("Lịch trình của chuyến xe + {idChuyenXe}")
+                .result(chuyenXeService.huyChuyen(id))
+                .build();
+    }
+
 }

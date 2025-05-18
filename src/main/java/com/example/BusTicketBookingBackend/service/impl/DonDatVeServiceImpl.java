@@ -8,7 +8,6 @@ import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.DonDatVe;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
-import com.example.BusTicketBookingBackend.models.Vexe;
 import com.example.BusTicketBookingBackend.repositories.DatGheRepository;
 import com.example.BusTicketBookingBackend.repositories.DonDatVeRepository;
 import com.example.BusTicketBookingBackend.repositories.NguoiDungRepository;
@@ -23,7 +22,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -161,7 +159,7 @@ public class DonDatVeServiceImpl implements DonDatVeService {
         }).toList();
     }
 
-    @Scheduled(fixedRate = 18000)
+    @Scheduled(fixedRate = 30000)
     public void huyDonDatVeChuaThanhToan(){
         LocalDateTime now = LocalDateTime.now();
         List<DonDatVe> donCanHuy = donDatVeRepository.findByTrangThaiThanhToanAndKieuThanhToanAndThoiGianDatBefore(0,KieuThanhToan.VNPAY,now.minusMinutes(3));
@@ -171,6 +169,10 @@ public class DonDatVeServiceImpl implements DonDatVeService {
         }
     }
 
+    @Override
+    public void huyDon(Integer maDonDatVe){
+        veXeService.huyTatCaVeCuaDonDat(maDonDatVe);
+    }
 
 
 }

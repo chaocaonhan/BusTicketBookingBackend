@@ -41,4 +41,15 @@ public class DonDatVeController {
                 .message("Success")
                 .result(donDatVeService.getMyBooking()).build();
     }
+
+    @DeleteMapping("/huyDon/{id}")
+    public ApiResponse getMyDonDat(@PathVariable Integer id){
+        donDatVeService.huyDon(id);
+        return ApiResponse.builder()
+                .code(200)
+                .message("Đã huỷ đơn")
+                .build();
+    }
+
+
 }

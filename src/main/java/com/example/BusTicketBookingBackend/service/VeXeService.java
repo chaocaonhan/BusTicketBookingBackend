@@ -13,4 +13,6 @@ public interface VeXeService {
     void huyTatCaVeCuaDonDat(Integer maDonDat);
 
     Integer huyVeXe(Integer maVeXe);
+
+    void huyVeTheoChuyenXe(Integer chuyenXeId);
 }

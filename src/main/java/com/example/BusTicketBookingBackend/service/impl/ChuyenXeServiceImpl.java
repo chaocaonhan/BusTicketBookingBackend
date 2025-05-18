@@ -10,6 +10,8 @@ import com.example.BusTicketBookingBackend.models.*;
 import com.example.BusTicketBookingBackend.repositories.*;
 import com.example.BusTicketBookingBackend.service.ChuyenXeService;
 import com.example.BusTicketBookingBackend.service.DiemDungTrenTuyenService;
+import com.example.BusTicketBookingBackend.service.DonDatVeService;
+import com.example.BusTicketBookingBackend.service.VeXeService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +33,10 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
     DiemDonTraRepository diemDonTraRepository;
     XeRepository xeRepository;
     TaiXeRepository taiXeRepository;
+    VeXeService veXeService;
     ChoNgoiRepository choNgoiRepository;
     DatGheRepository datGheRepository;
     VeXeRepository vexeRepository;
-    DiemDungTrenTuyenService diemDungTrenTuyenService;
     DiemDungTrenTuyenRepository diemDungTrenTuyenRepository;
 
     public List<ChuyenXeResponse> timChuyenXeTheoTuyen(String tinhDi, String tinhDen, LocalDate ngayDi, LocalDate ngayVe, Boolean khuHoi) {
@@ -208,8 +210,6 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
             lichTrinh.add(diemDonCuaChuyen);
 
 
-
-
         }
         return lichTrinh;
 
@@ -231,4 +231,16 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
         // Step 3: Return ChuyenXe ID
         return vexe.getDatGhe().getChuyenXe().getId();
     }
+
+    @Override
+    public int huyChuyen(int idChuyenXe) {
+        ChuyenXe chuyenXe = chuyenXeRepository.findById(idChuyenXe)
+                .orElseThrow(() -> new AppException(ErrorCode.DATA_NOT_FOUND));
+        chuyenXe.setTrangThai(ChuyenXe.TrangThai.CANCELED);
+        chuyenXeRepository.save(chuyenXe);
+        veXeService.huyVeTheoChuyenXe(idChuyenXe);
+        return 1;
+    }
+
+
 }

@@ -129,5 +129,13 @@ public class VeXeServiceImpl implements VeXeService {
         return 0;
     }
 
+    @Override
+    public void huyVeTheoChuyenXe(Integer chuyenXeId) {
+        List<DonDatVe> donDatVeCanHuy = donDatVeRepository.findByChuyenXeId(chuyenXeId);
+        for (DonDatVe donDatVe : donDatVeCanHuy) {
+            huyTatCaVeCuaDonDat(donDatVe.getId());
+        }
+    }
+
 }
 

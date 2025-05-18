@@ -19,4 +19,6 @@ public interface ChuyenXeService {
     List<DiemDonCuaChuyen> getLichTrinhChuyenXe(Integer idChuyenXe);
 
     int getChuyenXeIdFromDonDatVeId(int donDatVeId);
+
+    int huyChuyen(int idChuyenXe);
 }
