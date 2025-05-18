@@ -90,7 +90,24 @@ public class VeXeServiceImpl implements VeXeService {
     }
 
     @Override
-    public Integer xoaVeXe(Integer maVeXe) {
+    public void huyTatCaVeCuaDonDat(Integer maDonDat){
+        List<Vexe> veXes = veXeRepository.findAllByDonDatVeWithIDDatGhe
+                (maDonDat);
+        for(Vexe veXe : veXes){
+            DatGhe datGheCanSua = veXe.getDatGhe();
+            if (datGheCanSua != null) {
+                datGheCanSua.setTrangThai(TrangThaiGhe.AVAILABLE);
+                datGheRepository.save(datGheCanSua);
+            }
+
+            veXe.setTrangThaiVe(TrangThaiVe.CANCELED);
+            veXeRepository.save(veXe);
+
+        }
+    }
+
+    @Override
+    public Integer huyVeXe(Integer maVeXe) {
         Optional<Vexe> vexe = veXeRepository.findById(maVeXe);
         if(vexe != null && vexe.isPresent()){
             Vexe veCanHuy = vexe.get();

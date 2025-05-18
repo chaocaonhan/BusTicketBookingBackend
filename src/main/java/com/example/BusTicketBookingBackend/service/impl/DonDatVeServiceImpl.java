@@ -18,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -158,6 +159,16 @@ public class DonDatVeServiceImpl implements DonDatVeService {
             }
             return donDatVeResponse;
         }).toList();
+    }
+
+    @Scheduled(fixedRate = 18000)
+    public void huyDonDatVeChuaThanhToan(){
+        LocalDateTime now = LocalDateTime.now();
+        List<DonDatVe> donCanHuy = donDatVeRepository.findByTrangThaiThanhToanAndKieuThanhToanAndThoiGianDatBefore(0,KieuThanhToan.VNPAY,now.minusMinutes(3));
+
+        for(DonDatVe donDatVe : donCanHuy){
+            veXeService.huyTatCaVeCuaDonDat(donDatVe.getId());
+        }
     }
 
 

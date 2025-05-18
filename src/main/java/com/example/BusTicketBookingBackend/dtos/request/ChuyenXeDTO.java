@@ -20,7 +20,7 @@ public class ChuyenXeDTO {
     String diemDi;
     String diemDen;
     LocalDate ngayKhoiHanh;
-    @JsonFormat(pattern = "HH:mm")  // ví dụ: "12:30:00"
+    @JsonFormat(pattern = "HH:mm")
     LocalTime gioKhoiHanh;
 
     @JsonFormat(pattern = "HH:mm")

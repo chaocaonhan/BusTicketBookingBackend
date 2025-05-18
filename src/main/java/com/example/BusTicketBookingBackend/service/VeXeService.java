@@ -9,5 +9,8 @@ public interface VeXeService {
 
     String taoVeXeChoChuyenXe(DatVeRequest datVeRequest, Integer maDonDat);
     List<VeXeResponse> layDanhSachVeXeTheoMaDonDat(Integer maDonDat);
-    Integer xoaVeXe(Integer maVeXe);
+
+    void huyTatCaVeCuaDonDat(Integer maDonDat);
+
+    Integer huyVeXe(Integer maVeXe);
 }

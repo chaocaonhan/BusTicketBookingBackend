@@ -26,7 +26,7 @@ public class VeXeController {
     @PutMapping("/huyVe")
     public ApiResponse huyVeTheoMa(@RequestParam Integer maVeXe) {
         return ApiResponse.builder()
-                .code(veXeService.xoaVeXe(maVeXe) == 1 ? 200 : 500)
+                .code(veXeService.huyVeXe(maVeXe) == 1 ? 200 : 500)
                 .build();
     }
 }
