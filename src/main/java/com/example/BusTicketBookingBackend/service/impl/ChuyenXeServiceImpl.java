@@ -9,8 +9,6 @@ import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.*;
 import com.example.BusTicketBookingBackend.repositories.*;
 import com.example.BusTicketBookingBackend.service.ChuyenXeService;
-import com.example.BusTicketBookingBackend.service.DiemDungTrenTuyenService;
-import com.example.BusTicketBookingBackend.service.DonDatVeService;
 import com.example.BusTicketBookingBackend.service.VeXeService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
@@ -87,6 +85,18 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
                 .toList();
     }
 
+    @Override
+    public void upDateSoGheTrong(int maChuyenXe){
+        ChuyenXe chuyenXe = chuyenXeRepository.findById(maChuyenXe).get();
+        if (chuyenXe == null) {
+            throw new AppException(ErrorCode.DATA_NOT_FOUND);
+        }
+        chuyenXe.setSoGheTrong(datGheRepository.countSeatAvailableByChuyenXe_Id(maChuyenXe));
+        chuyenXeRepository.save(chuyenXe);
+    }
+
+
+
 
     @Override
     public List<ChuyenXeResponse> getAll() {
@@ -134,7 +144,8 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
                 .taiXe(chuyenXe.getTaiXe().getHoTen())
                 .giaVe(chuyenXe.getGiaVe())
                 .tenLoaiXe(chuyenXe.getXe().getLoaiXe().getTenLoaiXe())
-                .soGheTrong(chuyenXe.getSoGheTrong())
+                .soGheTrong(datGheRepository.countSeatAvailableByChuyenXe_Id(chuyenXe.getId()))
+
                 .build();
     }
 

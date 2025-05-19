@@ -26,5 +26,4 @@ public class DonDatVeResponse {
     String SDT;
     String email;
     Boolean daDanhGia;
-
 }

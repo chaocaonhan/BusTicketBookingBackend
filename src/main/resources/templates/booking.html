@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="telephone=no" name="format-detection">
+  <title>Xác nhận đặt vé</title>
+  <style type="text/css">
+    .rollover:hover .rollover-first { max-height:0px!important; display:none!important; }
+    .rollover:hover .rollover-second { max-height:none!important; display:block!important; }
+    .rollover span { font-size:0px; }
+    u + .body img ~ div div { display:none; }
+    #outlook a { padding:0; }
+    span.MsoHyperlink, span.MsoHyperlinkFollowed { color:inherit; mso-style-priority:99; }
+    a.es-button { mso-style-priority:100!important; text-decoration:none!important; }
+    a[x-apple-data-detectors] { color:inherit!important; text-decoration:none!important; font-size:inherit!important; font-family:inherit!important; font-weight:inherit!important; line-height:inherit!important; }
+    .es-desk-hidden { display:none; float:left; overflow:hidden; width:0; max-height:0; line-height:0; mso-hide:all; }
+    .es-button-border:hover > a.es-button { color:#ffffff!important; }
+    @media only screen and (max-width:600px) {
+      .es-m-p0r { padding-right:0px!important; }
+      .es-m-p0l { padding-left:0px!important; }
+      *[class="gmail-fix"] { display:none!important; }
+      p, a { line-height:150%!important; }
+      h1, h1 a, h2, h2 a, h3, h3 a, h4, h4 a, h5, h5 a, h6, h6 a { line-height:120%!important; }
+      h1 { font-size:36px!important; text-align:left; }
+      h2 { font-size:26px!important; text-align:left; }
+      h3 { font-size:20px!important; text-align:left; }
+      .es-header-body p, .es-content-body p, .es-footer-body p, .es-infoblock p { font-size:14px!important; }
+      .es-m-txt-c, .es-m-txt-c h1, .es-m-txt-c h2, .es-m-txt-c h3 { text-align:center!important; }
+      .es-content table, .es-header table, .es-footer table, .es-content, .es-footer, .es-header { width:100%!important; max-width:600px!important; }
+      .adapt-img { width:100%!important; height:auto!important; }
+      .es-mobile-hidden, .es-hidden { display:none!important; }
+    }
+    @media screen and (max-width:384px) {
+      .mail-message-content { width:414px!important; }
+    }
+  </style>
+</head>
+<body style="width:100%;height:100%;padding:0;Margin:0;background-color:#FAFAFA;">
+<div dir="ltr" class="es-wrapper-color" lang="vi" style="background-color:#FAFAFA;">
+  <table class="es-wrapper" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-color:#FAFAFA;">
+    <tr>
+      <td valign="top" style="padding:0;Margin:0;">
+        <table cellpadding="0" cellspacing="0" class="es-content" align="center" style="border-collapse:collapse;border-spacing:0px;width:100%;">
+          <tr>
+            <td align="center" style="padding:0;Margin:0;">
+              <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;width:600px;">
+                <tr>
+                  <td align="left" style="padding:20px;Margin:0;">
+                    <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;border-spacing:0px;">
+                      <tr>
+                        <td align="center" valign="top" style="padding:0;Margin:0;width:560px;">
+                          <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
+                            <tr>
+                              <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px;">
+                                <img src="https://fiuasop.stripocdn.email/content/guids/CABINET_54100624d621728c49155116bef5e07d/images/84141618400759579.png" alt="Logo" style="display:block;border:0;outline:none;text-decoration:none;" width="100">
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="center" style="padding:0;Margin:0;padding-bottom:10px;">
+                                <h1 style="font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:36px;font-weight:bold;color:#333333;">Xác nhận đặt vé thành công</h1>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="center" style="padding:0;Margin:0;">
+                                <h2 style="font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:24px;font-weight:bold;color:#333333;">Mã đơn hàng: <span style="color:#5C68E2;" th:text="${donDatVe.id}"></span></h2>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="center" style="padding:0;Margin:0;padding-top:5px;padding-bottom:5px;">
+                                <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
+                                  Thời gian đặt: <span th:text="${#temporals.format(donDatVe.thoiGianDat, 'HH:mm dd/MM/yyyy')}"></span>
+                                </p>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="left" style="padding:0;Margin:0;padding-top:20px;">
+                                <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:33px;color:#333333;font-size:22px;">
+                                  <strong>Xin chào, <span th:text="${donDatVe.tenHanhKhach}">Khách hàng</span></strong>
+                                </p>
+                                <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
+                                  Cảm ơn bạn đã lựa chọn dịch vụ của chúng tôi. Dưới đây là thông tin đặt vé của bạn:
+                                </p>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="left" style="padding:0;Margin:0;padding-top:10px;">
+                                <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
+                                  <strong>Tên khách hàng:</strong> <span th:text="${donDatVe.tenHanhKhach}"></span>
+                                </p>
+                                <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
+                                  <strong>Số điện thoại:</strong> <span th:text="${donDatVe.SDT}"></span>
+                                </p>
+                                <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
+                                  <strong>Số lượng vé:</strong> <span th:text="${donDatVe.soLuongVe}"></span>
+                                </p>
+                                <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
+                                  <strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(donDatVe.tongTien, 0, 'COMMA', 0, 'POINT')}"></span> VND
+                                </p>
+                                <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
+                                  <strong>Phương thức thanh toán:</strong> <span th:text="${donDatVe.kieuThanhToan == 'CASH' ? 'Tiền mặt' : 'Thanh toán qua VNPay'}"></span>
+                                </p>
+                                <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
+                                  <strong>Trạng thái thanh toán:</strong> <span th:text="${donDatVe.trangThaiThanhToan == 0 ? 'Chưa thanh toán' : 'Đã thanh toán'}"></span>
+                                </p>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="left" style="padding:0;Margin:0;padding-top:20px;">
+                                <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
+                                  Quý khách vui lòng đến nhà xe trước giờ khởi hành <strong>20 phút</strong> và xuất trình email này cho nhân viên soát vé.
+                                </p>
+                                <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
+                                  Xin chân thành cảm ơn quý khách!
+                                </p>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

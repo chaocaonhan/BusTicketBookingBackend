@@ -43,8 +43,8 @@ public class DonDatVeController {
     }
 
     @DeleteMapping("/huyDon/{id}")
-    public ApiResponse getMyDonDat(@PathVariable Integer id){
-        donDatVeService.huyDon(id);
+    public ApiResponse getMyDonDat(@PathVariable Integer idDonCanHuy){
+        donDatVeService.huyDon(idDonCanHuy);
         return ApiResponse.builder()
                 .code(200)
                 .message("Đã huỷ đơn")

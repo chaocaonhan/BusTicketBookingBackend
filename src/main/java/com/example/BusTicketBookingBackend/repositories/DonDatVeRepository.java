@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface DonDatVeRepository extends JpaRepository<DonDatVe, Integer> {
 
@@ -23,5 +24,7 @@ public interface DonDatVeRepository extends JpaRepository<DonDatVe, Integer> {
             "JOIN DatGhe dg ON dg.id = vx.datGhe.id " +
             "WHERE dg.chuyenXe.id = :chuyenXeId")
     List<DonDatVe> findByChuyenXeId(@Param("chuyenXeId") int chuyenXeId);
+
+    Optional<DonDatVe> findById(int id);
 
 }

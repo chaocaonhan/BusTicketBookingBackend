@@ -13,6 +13,9 @@ public interface ChuyenXeService {
     ChuyenXeResponse editChuyenXe(ChuyenXeDTO chuyenXeDto, Integer idChuyenXe);
 
     String taoChuyenXe(ChuyenXeDTO chuyenXe);
+
+    void upDateSoGheTrong(int maChuyenXe);
+
     List<ChuyenXeResponse> getAll();
 
     void capNhatSoGheTrong(Integer idChuyenXe);

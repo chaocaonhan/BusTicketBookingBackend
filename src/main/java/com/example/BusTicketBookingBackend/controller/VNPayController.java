@@ -6,6 +6,8 @@ import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.DonDatVe;
 import com.example.BusTicketBookingBackend.repositories.DonDatVeRepository;
+import com.example.BusTicketBookingBackend.service.EmailService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.websocket.server.PathParam;
@@ -25,6 +27,8 @@ import java.util.*;
 public class VNPayController {
     @Autowired
     private DonDatVeRepository bookingRepository;
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("payment-callback")
     public void paymentCallback(@RequestParam Map<String, String> queryParams, HttpServletResponse response) throws IOException {
@@ -36,10 +40,7 @@ public class VNPayController {
         } else {
             // Giao dịch thất bại
             response.sendRedirect("http://localhost:3000/payment-failed");
-
         }
-
-
     }
 
 //    @GetMapping("payment-callback-booking")
@@ -76,7 +77,13 @@ public class VNPayController {
                         .orElseThrow(() -> new AppException(ErrorCode.DATA_NOT_FOUND));
                 booking.setTrangThaiThanhToan(1);
                 booking.setKieuThanhToan(KieuThanhToan.VNPAY);
+
                 bookingRepository.save(booking);
+                try {
+                    emailService.sendBookingDetailsEmail(booking.getId());
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
 
                 // Redirect về trang PaySuccess với các tham số
                 String redirectUrl = String.format(
@@ -169,7 +176,7 @@ public class VNPayController {
         long amount = total* 100L;
         String bankCode = "NCB";
 
-        String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
+        String vnp_TxnRef = bookingId.toString();
         String vnp_IpAddr = request.getRemoteAddr();
 
         String vnp_TmnCode = VNPayConfig.vnp_TmnCode;

@@ -102,6 +102,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/driver/**").hasRole("DRIVER")
                         .requestMatchers("/api/user/**").hasRole("USER")
+                        .requestMatchers("api/khuyen-mai/addMa").permitAll()
+                        .requestMatchers("api/khuyen-mai/check").permitAll()
                         // Thêm đường dẫn Swagger
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated()

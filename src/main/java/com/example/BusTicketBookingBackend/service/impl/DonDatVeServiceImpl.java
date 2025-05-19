@@ -13,6 +13,7 @@ import com.example.BusTicketBookingBackend.repositories.DonDatVeRepository;
 import com.example.BusTicketBookingBackend.repositories.NguoiDungRepository;
 import com.example.BusTicketBookingBackend.repositories.VeXeRepository;
 import com.example.BusTicketBookingBackend.service.*;
+import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -38,6 +39,7 @@ public class DonDatVeServiceImpl implements DonDatVeService {
     VeXeService veXeService;
     VeXeRepository veXeRepository;
     DanhGiaService danhGiaService;
+    private final EmailService emailService;
 
     @Override
     public String taoDonDatVe(DatVeRequest datVeRequest) {
@@ -85,6 +87,16 @@ public class DonDatVeServiceImpl implements DonDatVeService {
 
         if (datVeThanhCong) {
             donDatVeRepository.save(donDatVe);
+
+
+            if(donDatVe.getKieuThanhToan() == KieuThanhToan.CASH){
+                try {
+                    emailService.sendBookingDetailsEmail(donDatVe.getId());
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
             veXeService.taoVeXeChoChuyenXe(datVeRequest, donDatVe.getId());
             return String.valueOf(donDatVe.getId());
         }
@@ -173,6 +185,7 @@ public class DonDatVeServiceImpl implements DonDatVeService {
     public void huyDon(Integer maDonDatVe){
         veXeService.huyTatCaVeCuaDonDat(maDonDatVe);
     }
+
 
 
 }
