@@ -2,6 +2,7 @@ package com.example.BusTicketBookingBackend.service.impl;
 
 import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeVaGheCanDat;
 import com.example.BusTicketBookingBackend.dtos.request.DatVeRequest;
+import com.example.BusTicketBookingBackend.dtos.request.FindingRequest;
 import com.example.BusTicketBookingBackend.dtos.response.DonDatVeResponse;
 import com.example.BusTicketBookingBackend.enums.KieuThanhToan;
 import com.example.BusTicketBookingBackend.exception.AppException;
@@ -184,6 +185,39 @@ public class DonDatVeServiceImpl implements DonDatVeService {
     @Override
     public void huyDon(Integer maDonDatVe){
         veXeService.huyTatCaVeCuaDonDat(maDonDatVe);
+    }
+
+    @Override
+    public Optional<DonDatVeResponse> traCuuDonDat(FindingRequest findingRequest){
+        DonDatVe donDatVe = donDatVeRepository.findById(Integer.parseInt(findingRequest.getMaDonDatVe())).get();
+        if(donDatVe == null ){
+            return Optional.empty();
+        }
+
+        DonDatVeResponse donDatVeResponse = modelMapper.map(donDatVe, DonDatVeResponse.class);
+        if(donDatVe.getNguoiDung() != null){
+            donDatVeResponse.setTenNguoiDat(donDatVe.getNguoiDung().getHoTen());
+        }
+        donDatVeResponse.setTenHanhKhach(donDatVe.getTenHanhKhach());
+        donDatVeResponse.setId(donDatVe.getId());
+        donDatVeResponse.setNgayDat(donDatVe.getThoiGianDat());
+        donDatVeResponse.setKieuThanhToan(donDatVe.getKieuThanhToan().toString());
+        donDatVeResponse.setTrangThaiThanhToan(
+                donDatVe.getTrangThaiThanhToan() == 1 ? "PAID" : "UNPAID"
+        );
+        donDatVeResponse.setSoLuongVe(donDatVe.getSoLuongVe());
+
+//            kiểm tra xem đã đánh giá chưa, dùng trong trang đơn hàng của tôi
+        donDatVeResponse.setDaDanhGia(danhGiaService.daDanhGia(donDatVe.getId()));
+
+        int soVeDaHuy = veXeRepository.countCancelledTicketsByDonDatVeId(donDatVe.getId());
+        if(soVeDaHuy > 0){
+            donDatVeResponse.setTrangThai("Đã huỷ "+soVeDaHuy+"/"+donDatVe.getSoLuongVe());
+        }
+        else {
+            donDatVeResponse.setTrangThai("Hoàn thành "+ 0+"/"+donDatVe.getSoLuongVe());
+        }
+        return Optional.of(donDatVeResponse);
     }
 
 
