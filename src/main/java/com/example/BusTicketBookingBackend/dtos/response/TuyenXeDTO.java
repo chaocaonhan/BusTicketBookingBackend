@@ -18,5 +18,4 @@ public class TuyenXeDTO {
     private int khoangCach;
     private String thoiGianDiChuyen;
     private String tinhDenUrl;
-
 }

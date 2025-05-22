@@ -17,4 +17,6 @@ public interface TuyenXeRepository extends JpaRepository<TuyenXe, Integer> {
 
     TuyenXe findByTenTuyen(String tenTuyen);
 
+    Optional<TuyenXe> findTuyenXeById(int id);
+
 }

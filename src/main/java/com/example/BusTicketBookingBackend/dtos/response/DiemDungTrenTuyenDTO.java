@@ -12,6 +12,7 @@ public class DiemDungTrenTuyenDTO {
     private int id;
     private String tenTuyenXe;
     private String tenDiemDon;
+    int idDiemDonTra;
     private String diaChi;
     private int thuTuDiemDung;
     private float khoangCachToiDiemDau;

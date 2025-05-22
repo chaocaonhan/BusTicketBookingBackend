@@ -1,5 +1,6 @@
 package com.example.BusTicketBookingBackend.controller;
 
+import com.example.BusTicketBookingBackend.dtos.request.CapNhatLichTrinhRequest;
 import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
 import com.example.BusTicketBookingBackend.dtos.response.DiemDungTrenTuyenDTO;
 import com.example.BusTicketBookingBackend.service.DiemDungTrenTuyenService;
@@ -23,5 +24,14 @@ public class DiemDungTrenTuyenController {
         apiResponse.setMessage("Diem Dung Tren Tuyen");
         apiResponse.setCode(200);
         return apiResponse;
+    }
+
+    @PutMapping("/capNhatDiemDungTrenTuyen")
+    public ApiResponse capNhatDanhSachDiemDonTraCuaTuyen(@RequestBody CapNhatLichTrinhRequest capNhatLichTrinhRequest) {
+        return ApiResponse.builder()
+                .code(200)
+                .message("cap nhat diem dung tren tuyen")
+                .result(diemDungTrenTuyenService.capnhat(capNhatLichTrinhRequest))
+                .build();
     }
 }

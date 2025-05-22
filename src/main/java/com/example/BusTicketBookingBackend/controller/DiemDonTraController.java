@@ -1,6 +1,7 @@
 package com.example.BusTicketBookingBackend.controller;
 
 
+import com.example.BusTicketBookingBackend.dtos.request.DiemDonTraRequest;
 import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
 import com.example.BusTicketBookingBackend.models.DiemDonTra;
 import com.example.BusTicketBookingBackend.service.DiemDonTraService;
@@ -35,6 +36,16 @@ public class DiemDonTraController {
                 .result(diemDonTraService.deleteDiemDonTra(id))
                 .build();
     }
+
+    @PostMapping("/themDiemDon")
+    public ApiResponse create(@RequestBody DiemDonTraRequest diemDonTraRequest) {
+        return ApiResponse.builder()
+                .code(200)
+                .message("Success")
+                .result(diemDonTraService.addDiemDonTra(diemDonTraRequest))
+                .build();
+    }
+
 
 
 }
