@@ -79,5 +79,4 @@ public class DiemDungTrenTuyenServiceImpl implements DiemDungTrenTuyenService {
         }
         return 1;
     }
-
 }

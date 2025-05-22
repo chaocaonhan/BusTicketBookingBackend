@@ -35,7 +35,6 @@ public class TuyenXeController {
         if (result.startsWith("Không tìm thấy")) {
             apiResponse.setMessage(result);
         }
-
         return apiResponse;
     }
 
