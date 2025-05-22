@@ -96,6 +96,9 @@ public class NguoiDungServiceImpl implements NguoiDungService {
     public NguoiDungDTO createNguoiDung(NguoiDungDTO nguoiDungDTO) {
 
         NguoiDung savedUser = new NguoiDung();
+        if(nguoiDungRepository.existsNguoiDungBySDT(nguoiDungDTO.getSDT())){
+            throw new AppException(ErrorCode.SDT_EXITS);
+        }
         if(nguoiDungRepository.existsNguoiDungByEmail(nguoiDungDTO.getEmail())){
             throw new AppException(ErrorCode.EMAIL_EXITS);
         }else {

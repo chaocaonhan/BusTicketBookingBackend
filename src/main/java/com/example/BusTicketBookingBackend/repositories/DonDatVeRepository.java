@@ -2,6 +2,9 @@ package com.example.BusTicketBookingBackend.repositories;
 
 import com.example.BusTicketBookingBackend.enums.KieuThanhToan;
 import com.example.BusTicketBookingBackend.models.DonDatVe;
+import com.example.BusTicketBookingBackend.models.NguoiDung;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,5 +29,10 @@ public interface DonDatVeRepository extends JpaRepository<DonDatVe, Integer> {
     List<DonDatVe> findByChuyenXeId(@Param("chuyenXeId") int chuyenXeId);
 
     Optional<DonDatVe> findById(int id);
+
+    Page<DonDatVe> findAll(Pageable pageable);
+
+    @Query("SELECT d FROM DonDatVe d WHERE d.tenHanhKhach LIKE %:keyword% OR d.SDT LIKE %:keyword%")
+    Page<DonDatVe> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
 }

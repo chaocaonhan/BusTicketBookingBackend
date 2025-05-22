@@ -10,6 +10,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,6 +77,27 @@ public class DonDatVeController {
                 .message("Success")
                 .result(result)
                 .build();
+    }
+
+    @GetMapping("/getPage")
+    public ResponseEntity<Page<DonDatVeResponse>> getAllDonDatVe(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<DonDatVeResponse> result = donDatVeService.getAllDonDatVe(pageable);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<DonDatVeResponse>> searchDonDatVe(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<DonDatVeResponse> result = donDatVeService.searchDonDatVe(keyword, pageable);
+        return ResponseEntity.ok(result);
     }
 
 }

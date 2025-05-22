@@ -35,4 +35,6 @@ public class DiemDungTrenTuyen {
     @Column(name = "thoigiantudiemdau")
     private int thoiGianTuDiemDau;
 
+    @Column(name = "trangthai")
+    private int trangThai;
 }

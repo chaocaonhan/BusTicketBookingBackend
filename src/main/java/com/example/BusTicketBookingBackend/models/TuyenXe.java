@@ -33,5 +33,7 @@ public class TuyenXe {
 
     @Column(name = "thoigiandichuyen", length = 50)
     private String thoiGianDiChuyen;
+
+
 }
 

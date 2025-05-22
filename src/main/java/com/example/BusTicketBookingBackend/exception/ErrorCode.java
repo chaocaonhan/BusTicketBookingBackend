@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatusCode;
 public enum ErrorCode{
     INVALID_KEY(999,"LỖI NHẬP SAI ERROR CODE", HttpStatus.INTERNAL_SERVER_ERROR),
     EMAIL_EXITS(1001,"email đã tồn tại trên hệ thống",HttpStatus.BAD_REQUEST),
+    SDT_EXITS(1010,"Số điện thoại đã đăng ký",HttpStatus.BAD_REQUEST),
     UNKNOWN_ERROR(1002,"Unknown Error", HttpStatus.INTERNAL_SERVER_ERROR),
     EMAIL_INVALID(1003,"Email must contain @gmail.com",HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1004,"Invalid MUST BE AT LESS 8 characters",HttpStatus.BAD_REQUEST),

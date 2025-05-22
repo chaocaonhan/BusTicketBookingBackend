@@ -19,6 +19,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -70,25 +72,20 @@ public class DonDatVeServiceImpl implements DonDatVeService {
 
         boolean datVeThanhCong = false;
 
-        // Kiểm tra chuyến đi
         if (chuyenDi != null && datGheService.capNhatTrangThaiGhe(chuyenDi)) {
             chuyenXeService.capNhatSoGheTrong(chuyenDi.getIdChuyenXe());
-
-            // Kiểm tra nếu là chuyến khứ hồi và chuyến về tồn tại
             if (datVeRequest.getLoaiChuyenDi() == 1 && chuyenVe != null) {
                 if (datGheService.capNhatTrangThaiGhe(chuyenVe)) {
                     chuyenXeService.capNhatSoGheTrong(chuyenVe.getIdChuyenXe());
                     datVeThanhCong = true;
                 }
             } else {
-                // Nếu không phải chuyến khứ hồi, chỉ cần xử lý chuyến đi là đủ
                 datVeThanhCong = true;
             }
         }
 
         if (datVeThanhCong) {
             donDatVeRepository.save(donDatVe);
-
 
             if(donDatVe.getKieuThanhToan() == KieuThanhToan.CASH){
                 try {
@@ -106,80 +103,38 @@ public class DonDatVeServiceImpl implements DonDatVeService {
 
     @Override
     public List<DonDatVeResponse> getAllDonDat() {
-
-        List<DonDatVe> donDatVes = donDatVeRepository.findAll();
-        return donDatVes.stream().map(donDatVe -> {
-            DonDatVeResponse donDatVeResponse = modelMapper.map(donDatVe, DonDatVeResponse.class);
-            if(donDatVe.getNguoiDung() != null){
-                donDatVeResponse.setTenNguoiDat(donDatVe.getNguoiDung().getHoTen());
-            }
-            donDatVeResponse.setTenHanhKhach(donDatVe.getTenHanhKhach());
-            donDatVeResponse.setId(donDatVe.getId());
-            donDatVeResponse.setNgayDat(donDatVe.getThoiGianDat());
-            donDatVeResponse.setKieuThanhToan(donDatVe.getKieuThanhToan().toString());
-            donDatVeResponse.setTrangThaiThanhToan(
-                    donDatVe.getTrangThaiThanhToan() == 1 ? "PAID" : "UNPAID"
-            );
-            donDatVeResponse.setSoLuongVe(donDatVe.getSoLuongVe());
-
-            donDatVeResponse.setDaDanhGia(danhGiaService.daDanhGia(donDatVe.getId()));
-
-            int soVeDaHuy = veXeRepository.countCancelledTicketsByDonDatVeId(donDatVe.getId());
-            if(soVeDaHuy > 0){
-                donDatVeResponse.setTrangThai("Đã huỷ "+soVeDaHuy+"/"+donDatVe.getSoLuongVe());
-            }
-            else {
-                donDatVeResponse.setTrangThai("Hoàn thành "+ 0+"/"+donDatVe.getSoLuongVe());
-            }
-            return donDatVeResponse;
-        }).toList();
+        return donDatVeRepository.findAll().stream()
+                .map(this::toDonDatVeResponse)
+                .toList();
     }
 
     @Override
     public List<DonDatVeResponse> getMyBooking() {
         var context = SecurityContextHolder.getContext();
         String mail = context.getAuthentication().getName();
-        NguoiDung nguoiDung = nguoiDungRepository.findByEmail(mail)
-                .orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
-
-        List<DonDatVe> lstMyBooking = donDatVeRepository.findAllByNguoiDung_Email(mail);
-
-        return lstMyBooking.stream().map(donDatVe -> {
-            DonDatVeResponse donDatVeResponse = modelMapper.map(donDatVe, DonDatVeResponse.class);
-            if(donDatVe.getNguoiDung() != null){
-                donDatVeResponse.setTenNguoiDat(donDatVe.getNguoiDung().getHoTen());
-            }
-            donDatVeResponse.setTenHanhKhach(donDatVe.getTenHanhKhach());
-            donDatVeResponse.setId(donDatVe.getId());
-            donDatVeResponse.setNgayDat(donDatVe.getThoiGianDat());
-            donDatVeResponse.setKieuThanhToan(donDatVe.getKieuThanhToan().toString());
-            donDatVeResponse.setTrangThaiThanhToan(
-                    donDatVe.getTrangThaiThanhToan() == 1 ? "PAID" : "UNPAID"
-            );
-            donDatVeResponse.setSoLuongVe(donDatVe.getSoLuongVe());
-
-//            kiểm tra xem đã đánh giá chưa, dùng trong trang đơn hàng của tôi
-            donDatVeResponse.setDaDanhGia(danhGiaService.daDanhGia(donDatVe.getId()));
-
-            int soVeDaHuy = veXeRepository.countCancelledTicketsByDonDatVeId(donDatVe.getId());
-            if(soVeDaHuy > 0){
-                donDatVeResponse.setTrangThai("Đã huỷ "+soVeDaHuy+"/"+donDatVe.getSoLuongVe());
-            }
-            else {
-                donDatVeResponse.setTrangThai("Hoàn thành "+ 0+"/"+donDatVe.getSoLuongVe());
-            }
-            return donDatVeResponse;
-        }).toList();
+        nguoiDungRepository.findByEmail(mail)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        return donDatVeRepository.findAllByNguoiDung_Email(mail).stream()
+                .map(this::toDonDatVeResponse)
+                .toList();
     }
 
-    @Scheduled(fixedRate = 30000)
-    public void huyDonDatVeChuaThanhToan(){
-        LocalDateTime now = LocalDateTime.now();
-        List<DonDatVe> donCanHuy = donDatVeRepository.findByTrangThaiThanhToanAndKieuThanhToanAndThoiGianDatBefore(0,KieuThanhToan.VNPAY,now.minusMinutes(3));
+    @Override
+    public Page<DonDatVeResponse> getAllDonDatVe(Pageable pageable) {
+        return donDatVeRepository.findAll(pageable)
+                .map(this::toDonDatVeResponse);
+    }
 
-        for(DonDatVe donDatVe : donCanHuy){
-            veXeService.huyTatCaVeCuaDonDat(donDatVe.getId());
-        }
+    @Override
+    public Page<DonDatVeResponse> searchDonDatVe(String keyword, Pageable pageable) {
+        return donDatVeRepository.findByKeyword(keyword, pageable)
+                .map(this::toDonDatVeResponse);
+    }
+
+    @Override
+    public Optional<DonDatVeResponse> traCuuDonDat(FindingRequest findingRequest){
+        return donDatVeRepository.findById(Integer.parseInt(findingRequest.getMaDonDatVe()))
+                .map(this::toDonDatVeResponse);
     }
 
     @Override
@@ -187,39 +142,33 @@ public class DonDatVeServiceImpl implements DonDatVeService {
         veXeService.huyTatCaVeCuaDonDat(maDonDatVe);
     }
 
-    @Override
-    public Optional<DonDatVeResponse> traCuuDonDat(FindingRequest findingRequest){
-        DonDatVe donDatVe = donDatVeRepository.findById(Integer.parseInt(findingRequest.getMaDonDatVe())).get();
-        if(donDatVe == null ){
-            return Optional.empty();
+    @Scheduled(fixedRate = 30000)
+    public void huyDonDatVeChuaThanhToan(){
+        LocalDateTime now = LocalDateTime.now();
+        List<DonDatVe> donCanHuy = donDatVeRepository.findByTrangThaiThanhToanAndKieuThanhToanAndThoiGianDatBefore(0,KieuThanhToan.VNPAY,now.minusMinutes(3));
+        for(DonDatVe donDatVe : donCanHuy){
+            veXeService.huyTatCaVeCuaDonDat(donDatVe.getId());
         }
-
-        DonDatVeResponse donDatVeResponse = modelMapper.map(donDatVe, DonDatVeResponse.class);
-        if(donDatVe.getNguoiDung() != null){
-            donDatVeResponse.setTenNguoiDat(donDatVe.getNguoiDung().getHoTen());
-        }
-        donDatVeResponse.setTenHanhKhach(donDatVe.getTenHanhKhach());
-        donDatVeResponse.setId(donDatVe.getId());
-        donDatVeResponse.setNgayDat(donDatVe.getThoiGianDat());
-        donDatVeResponse.setKieuThanhToan(donDatVe.getKieuThanhToan().toString());
-        donDatVeResponse.setTrangThaiThanhToan(
-                donDatVe.getTrangThaiThanhToan() == 1 ? "PAID" : "UNPAID"
-        );
-        donDatVeResponse.setSoLuongVe(donDatVe.getSoLuongVe());
-
-//            kiểm tra xem đã đánh giá chưa, dùng trong trang đơn hàng của tôi
-        donDatVeResponse.setDaDanhGia(danhGiaService.daDanhGia(donDatVe.getId()));
-
-        int soVeDaHuy = veXeRepository.countCancelledTicketsByDonDatVeId(donDatVe.getId());
-        if(soVeDaHuy > 0){
-            donDatVeResponse.setTrangThai("Đã huỷ "+soVeDaHuy+"/"+donDatVe.getSoLuongVe());
-        }
-        else {
-            donDatVeResponse.setTrangThai("Hoàn thành "+ 0+"/"+donDatVe.getSoLuongVe());
-        }
-        return Optional.of(donDatVeResponse);
     }
 
-
-
+    private DonDatVeResponse toDonDatVeResponse(DonDatVe donDatVe) {
+        DonDatVeResponse response = modelMapper.map(donDatVe, DonDatVeResponse.class);
+        if (donDatVe.getNguoiDung() != null) {
+            response.setTenNguoiDat(donDatVe.getNguoiDung().getHoTen());
+        }
+        response.setTenHanhKhach(donDatVe.getTenHanhKhach());
+        response.setId(donDatVe.getId());
+        response.setNgayDat(donDatVe.getThoiGianDat());
+        response.setKieuThanhToan(donDatVe.getKieuThanhToan().toString());
+        response.setTrangThaiThanhToan(donDatVe.getTrangThaiThanhToan() == 1 ? "PAID" : "UNPAID");
+        response.setSoLuongVe(donDatVe.getSoLuongVe());
+        response.setDaDanhGia(danhGiaService.daDanhGia(donDatVe.getId()));
+        int soVeDaHuy = veXeRepository.countCancelledTicketsByDonDatVeId(donDatVe.getId());
+        if (soVeDaHuy > 0) {
+            response.setTrangThai("Đã huỷ " + soVeDaHuy + "/" + donDatVe.getSoLuongVe());
+        } else {
+            response.setTrangThai("Hoàn thành 0/" + donDatVe.getSoLuongVe());
+        }
+        return response;
+    }
 }

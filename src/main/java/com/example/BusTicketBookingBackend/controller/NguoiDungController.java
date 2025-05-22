@@ -94,7 +94,7 @@ public class NguoiDungController {
 
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(nguoiDungDTO);
-        apiResponse.setCode(HttpStatus.CREATED.value());
+        apiResponse.setCode(HttpStatus.OK.value());
         apiResponse.setMessage("Tạo ng dùng thành công");
         return apiResponse;
     }
