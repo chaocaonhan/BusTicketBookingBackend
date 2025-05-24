@@ -37,16 +37,66 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
     VeXeRepository vexeRepository;
     DiemDungTrenTuyenRepository diemDungTrenTuyenRepository;
 
-    public List<ChuyenXeResponse> timChuyenXeTheoTuyen(String tinhDi, String tinhDen, LocalDate ngayDi, LocalDate ngayVe, Boolean khuHoi) {
-        Optional<TuyenXe> tuyenDi = tuyenXeRepository.findByTinhDiAndTinhDen(tinhDi, tinhDen);
-        Optional<TuyenXe> tuyenVe = tuyenXeRepository.findByTinhDiAndTinhDen(tinhDen, tinhDi);
+//    public List<ChuyenXeResponse> timChuyenXeTheoTuyen(int idDiemDi, int idDiemDen, LocalDate ngayDi, LocalDate ngayVe, Boolean khuHoi) {
+//        List<TuyenXe> tuyenDi = tuyenXeRepository.findTuyenXeByDiemDiAndDiemDen(idDiemDi, idDiemDen);
+//        List<TuyenXe> tuyenVe = tuyenXeRepository.findTuyenXeByDiemDiAndDiemDen(idDiemDen, idDiemDi);
+//
+//        if (tuyenDi.isEmpty()) {
+//            throw new RuntimeException("Không tìm thấy tuyến xe phù hợp.");
+//        }
+//
+//        List<ChuyenXe> lstChuyenDi = chuyenXeRepository.findChuyenXeByTuyenXe(tuyenDi.get())
+//                .stream()
+//                .filter(chuyenXe -> {
+//                    LocalDate ngayKhoiHanh = chuyenXe.getNgayKhoiHanh();
+//                    LocalTime gioKhoiHanh = chuyenXe.getGioKhoiHanh();
+//                    return ngayKhoiHanh.isEqual(ngayDi)
+//                            && (ngayDi.isAfter(LocalDate.now()) || gioKhoiHanh.isAfter(LocalTime.now()));
+//                })
+//                .toList();
+//
+//        List<ChuyenXe> lstChuyenVe = new ArrayList<>();
+//        if (Boolean.TRUE.equals(khuHoi)) {
+//            if (tuyenVe.isEmpty()) {
+//                throw new RuntimeException("Không tìm thấy chuyến xe chiều về");
+//            }
+//            lstChuyenVe = chuyenXeRepository.findChuyenXeByTuyenXe(tuyenVe.get())
+//                    .stream()
+//                    .filter(chuyenXe -> {
+//                        LocalDate ngayKhoiHanh = chuyenXe.getNgayKhoiHanh();
+//                        LocalTime gioKhoiHanh = chuyenXe.getGioKhoiHanh();
+//                        return ngayKhoiHanh.isEqual(ngayVe)
+//                                && (ngayVe.isAfter(LocalDate.now()) || gioKhoiHanh.isAfter(LocalTime.now()));
+//                    })
+//                    .toList();
+//        }
+//
+//        if (lstChuyenDi.isEmpty() && lstChuyenVe.isEmpty()) {
+//            throw new AppException(ErrorCode.DATA_NOT_FOUND);
+//        }
+//
+//        // Gộp 2 list chuyến đi và về
+//        List<ChuyenXe> allChuyenXe = new ArrayList<>();
+//        allChuyenXe.addAll(lstChuyenDi);
+//        allChuyenXe.addAll(lstChuyenVe);
+//
+//        return allChuyenXe.stream()
+//                .map(this::convertToResponse)
+//                .toList();
+//    }
+
+    @Override
+    public List<ChuyenXeResponse> timChuyenXeTheoTuyen(int idDiemDi, int idDiemDen, LocalDate ngayDi, LocalDate ngayVe, Boolean khuHoi) {
+        List<TuyenXe> tuyenDi = tuyenXeRepository.findTuyenXeByDiemDiAndDiemDen(idDiemDi, idDiemDen);
+        List<TuyenXe> tuyenVe = tuyenXeRepository.findTuyenXeByDiemDiAndDiemDen(idDiemDen, idDiemDi);
 
         if (tuyenDi.isEmpty()) {
             throw new RuntimeException("Không tìm thấy tuyến xe phù hợp.");
         }
 
-        List<ChuyenXe> lstChuyenDi = chuyenXeRepository.findChuyenXeByTuyenXe(tuyenDi.get())
-                .stream()
+        // Lấy chuyến xe từ TẤT CẢ các tuyến đi (thay vì chỉ tuyến đầu tiên)
+        List<ChuyenXe> lstChuyenDi = tuyenDi.stream()
+                .flatMap(tuyen -> chuyenXeRepository.findChuyenXeByTuyenXe(tuyen).stream())
                 .filter(chuyenXe -> {
                     LocalDate ngayKhoiHanh = chuyenXe.getNgayKhoiHanh();
                     LocalTime gioKhoiHanh = chuyenXe.getGioKhoiHanh();
@@ -60,8 +110,10 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
             if (tuyenVe.isEmpty()) {
                 throw new RuntimeException("Không tìm thấy chuyến xe chiều về");
             }
-            lstChuyenVe = chuyenXeRepository.findChuyenXeByTuyenXe(tuyenVe.get())
-                    .stream()
+
+            // Lấy chuyến xe từ TẤT CẢ các tuyến về (thay vì chỉ tuyến đầu tiên)
+            lstChuyenVe = tuyenVe.stream()
+                    .flatMap(tuyen -> chuyenXeRepository.findChuyenXeByTuyenXe(tuyen).stream())
                     .filter(chuyenXe -> {
                         LocalDate ngayKhoiHanh = chuyenXe.getNgayKhoiHanh();
                         LocalTime gioKhoiHanh = chuyenXe.getGioKhoiHanh();

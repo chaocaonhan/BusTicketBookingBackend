@@ -41,6 +41,8 @@ public class VeXeServiceImpl implements VeXeService {
                 veXe.setDatGhe(datGheRepository.findById(maGhe).orElseThrow(() ->
                         new IllegalArgumentException("Không tìm thấy ghế với mã: " + maGhe)
                 ));
+                veXe.setDiemDon(chuyenDi.getDiemDon());
+                veXe.setDiemTra(chuyenDi.getDiemTra());
                 veXe.setTrangThaiVe(TrangThaiVe.BOOKED);
                 veXeRepository.save(veXe);
             });
@@ -57,6 +59,8 @@ public class VeXeServiceImpl implements VeXeService {
                 veXe.setDatGhe(datGheRepository.findById(maGhe).orElseThrow(() ->
                         new IllegalArgumentException("Không tìm thấy ghế với mã: " + maGhe)
                 ));
+                veXe.setDiemDon(chuyenDi.getDiemDon());
+                veXe.setDiemTra(chuyenDi.getDiemTra());
                 veXe.setTrangThaiVe(TrangThaiVe.BOOKED);
                 veXeRepository.save(veXe);
             });
@@ -79,10 +83,10 @@ public class VeXeServiceImpl implements VeXeService {
             response.setTenGhe(vexe.getDatGhe().getChoNgoi().getTenghe());
             response.setBienSoXe(vexe.getDatGhe().getChuyenXe().getXe().getBienSo());
             response.setTrungChuyenTu("Tự di chuyển");
-            response.setDiemBatDau(vexe.getDatGhe().getChuyenXe().getDiemDi().getTenDiemDon());
+            response.setDiemBatDau(vexe.getDiemDon());
             response.setThoiGianBatDau(vexe.getDatGhe().getChuyenXe().getGioKhoiHanh());
             response.setThoiGianKetThuc(vexe.getDatGhe().getChuyenXe().getGioKetThuc());
-            response.setDiemKetThuc(vexe.getDatGhe().getChuyenXe().getDiemDen().getTenDiemDon());
+            response.setDiemKetThuc(vexe.getDiemTra());
             response.setTrungChuyenDen("Tự di chuyển");
             return response;
         }).toList();

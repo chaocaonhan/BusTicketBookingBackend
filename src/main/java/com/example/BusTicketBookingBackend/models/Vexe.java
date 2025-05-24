@@ -31,4 +31,10 @@ public class Vexe {
     @NotNull
     @Column(name = "trangthaive", nullable = false, length = 20)
     private TrangThaiVe trangThaiVe;
+
+    @Column(name = "diemdon")
+    private String diemDon;
+
+    @Column(name = "diemtra")
+    private String diemTra;
 }

@@ -13,5 +13,6 @@ import java.util.List;
 public class ChuyenXeVaGheCanDat {
     private Integer idChuyenXe;
     private List<Integer> danhSachGheMuonDat;
-    // Getters và setters
+    private String diemDon;
+    private String diemTra;
 }

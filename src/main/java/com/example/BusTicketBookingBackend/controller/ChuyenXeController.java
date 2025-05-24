@@ -37,14 +37,17 @@ public class ChuyenXeController {
 
     @GetMapping("/search")
     public ResponseEntity<?> getChuyenXe(
-            @RequestParam("tinhDi") String tinhDi,
-            @RequestParam("tinhDen") String tinhDen,
+            @RequestParam("idDiemDi") String idDiemDi,
+            @RequestParam("idDiemDen") String idDiemDen,
             @RequestParam("ngayDi") @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate ngayDi,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate ngayVe,
             @RequestParam(required = false, defaultValue = "false") boolean khuHoi) {
 
         try {
-            List<ChuyenXeResponse> dtoList = chuyenXeService.timChuyenXeTheoTuyen(tinhDi, tinhDen, ngayDi, ngayVe, khuHoi);
+            int diTu = Integer.valueOf(idDiemDi);
+            int denDiem = Integer.valueOf(idDiemDen);
+
+            List<ChuyenXeResponse> dtoList = chuyenXeService.timChuyenXeTheoTuyen(diTu, denDiem, ngayDi, ngayVe, khuHoi);
             return ResponseEntity.ok(dtoList);
         } catch (RuntimeException e) {
 
@@ -54,8 +57,12 @@ public class ChuyenXeController {
 
 
     @PostMapping("/TaoChuyenXe")
-    public String createChuyenXe(@RequestBody ChuyenXeDTO chuyenXedto) {
-        return chuyenXeService.taoChuyenXe(chuyenXedto);
+    public ApiResponse createChuyenXe(@RequestBody ChuyenXeDTO chuyenXedto) {
+        return ApiResponse.builder()
+                .code(200)
+                .message("ChuyenXe create")
+                .result(chuyenXeService.taoChuyenXe(chuyenXedto))
+                .build();
     }
 
     @PutMapping("/editChuyenXe")

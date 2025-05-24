@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ChuyenXeService {
-    List<ChuyenXeResponse> timChuyenXeTheoTuyen(String tinhDi, String tinhDen, LocalDate ngaydi, LocalDate ngayVe, Boolean khuHoi);
+    List<ChuyenXeResponse> timChuyenXeTheoTuyen(int tinhDi, int tinhDen, LocalDate ngaydi, LocalDate ngayVe, Boolean khuHoi);
 
     ChuyenXeResponse editChuyenXe(ChuyenXeDTO chuyenXeDto, Integer idChuyenXe);
 

@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface DiemDungTrenTuyenRepository extends JpaRepository<DiemDungTrenTuyen, Integer> {
     List<DiemDungTrenTuyen> findAll();
 
-    @Query("SELECT d FROM DiemDungTrenTuyen d WHERE d.tuyenXe.id = :tuyenId")
+    @Query("SELECT d FROM DiemDungTrenTuyen d WHERE d.tuyenXe.id = :tuyenId and d.trangThai = 1")
     List<DiemDungTrenTuyen> findByTuyenId(@Param("tuyenId") int tuyenId);
 }

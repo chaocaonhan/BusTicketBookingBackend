@@ -65,8 +65,9 @@ public class DiemDungTrenTuyenServiceImpl implements DiemDungTrenTuyenService {
         }
 
         List<Integer> lichTrinhMoi = capNhatLichTrinhRequest.getDanhSachDiemDonTheoThuTu();
+        int i =1;
         for (Integer diemDon : lichTrinhMoi) {
-            int i =1;
+
             DiemDungTrenTuyen diemDonMoi = new DiemDungTrenTuyen();
             diemDonMoi.setThuTuDiemDung(i);
             diemDonMoi.setTuyenXe(tuyenCanSua);
