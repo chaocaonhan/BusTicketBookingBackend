@@ -30,7 +30,7 @@ public class DiemDungTrenTuyen {
     private int thuTuDiemDung;
 
     @Column(name = "khoangcachtoidiemdau")
-    private float khoangCachToiDiemDau;
+    private int khoangCachToiDiemDau;
 
     @Column(name = "thoigiantudiemdau")
     private int thoiGianTuDiemDau;

@@ -10,6 +10,7 @@ import com.example.BusTicketBookingBackend.repositories.DiemDonTraRepository;
 import com.example.BusTicketBookingBackend.repositories.DiemDungTrenTuyenRepository;
 import com.example.BusTicketBookingBackend.repositories.TuyenXeRepository;
 import com.example.BusTicketBookingBackend.service.DiemDungTrenTuyenService;
+import com.example.BusTicketBookingBackend.service.OpenRouteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class DiemDungTrenTuyenServiceImpl implements DiemDungTrenTuyenService {
     private final DiemDungTrenTuyenRepository ddttRepository;
     private final TuyenXeRepository tuyenXeRepository;
     private final DiemDonTraRepository diemDonTraRepository;
+    private final OpenRouteService openRouteService;
 
     @Override
     public List<DiemDungTrenTuyenDTO> danhSachDiemDungCuaMotTuyen(Integer idTuyen) {
@@ -65,7 +67,13 @@ public class DiemDungTrenTuyenServiceImpl implements DiemDungTrenTuyenService {
         }
 
         List<Integer> lichTrinhMoi = capNhatLichTrinhRequest.getDanhSachDiemDonTheoThuTu();
+
         int i =1;
+        int khoangCachTuDiemDau = 0;
+        int soPhutDiChuyenTuDiemDau = 0;
+        String diaChiBatDau = diemDonTraRepository.findDiemDonTraById(lichTrinhMoi.get(0)).getTenDiemDon();
+
+
         for (Integer diemDon : lichTrinhMoi) {
 
             DiemDungTrenTuyen diemDonMoi = new DiemDungTrenTuyen();
@@ -73,6 +81,20 @@ public class DiemDungTrenTuyenServiceImpl implements DiemDungTrenTuyenService {
             diemDonMoi.setTuyenXe(tuyenCanSua);
             diemDonMoi.setDiemDonTra(diemDonTraRepository.findById(diemDon).get());
             diemDonMoi.setTrangThai(1);
+
+            String tenDiemDon = diemDonTraRepository.findById(diemDon).get().getTenDiemDon();
+            if(i==1){
+                khoangCachTuDiemDau = 0;
+                soPhutDiChuyenTuDiemDau = 0;
+            }
+            else {
+                khoangCachTuDiemDau = (int)openRouteService.getDistanceInKm(diaChiBatDau,tenDiemDon);
+                soPhutDiChuyenTuDiemDau = khoangCachTuDiemDau;
+            }
+
+            diemDonMoi.setKhoangCachToiDiemDau(khoangCachTuDiemDau);
+            diemDonMoi.setThoiGianTuDiemDau(soPhutDiChuyenTuDiemDau);
+
 
             //xử lý khoảng cách vs tgian sau bằng google
             ddttRepository.save(diemDonMoi);
