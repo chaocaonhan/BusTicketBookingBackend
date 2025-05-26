@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,6 +23,7 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
     public KhuyenMai createKhuyenMai(KhuyenMaiDTO khuyenMai) {
         KhuyenMai km = new KhuyenMai();
         km.setMaKhuyenMai(khuyenMai.getMaKhuyenMai());
+        km.setMoTa(khuyenMai.getMoTa());
         km.setPhanTramGiam(khuyenMai.getPhanTramGiam());
         km.setNgayBatDau(khuyenMai.getNgayBatDau());
         km.setNgayKetThuc(khuyenMai.getNgayKetThuc());
@@ -45,5 +45,18 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
             }
         }
         return 0;
+    }
+
+    @Override
+    public KhuyenMai edit(int id, KhuyenMaiDTO khuyenMaiDTO){
+        KhuyenMai km = khuyenMaiRepository.findById(id).get();
+        km.setMoTa(khuyenMaiDTO.getMoTa());
+        km.setMaKhuyenMai(khuyenMaiDTO.getMaKhuyenMai());
+        km.setPhanTramGiam(khuyenMaiDTO.getPhanTramGiam());
+        km.setNgayKetThuc(khuyenMaiDTO.getNgayKetThuc());
+        km.setNgayBatDau(khuyenMaiDTO.getNgayBatDau());
+
+        khuyenMaiRepository.save(km);
+        return km;
     }
 }

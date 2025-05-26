@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -157,6 +158,13 @@ public class NguoiDungController {
                 .code(200)
                 .build();
     }
+
+@PostMapping("/datLaiMatKhau")
+public ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> requestBody) {
+    String email = requestBody.get("email");
+    String response = nguoiDungService.forgotPassword(email);
+    return new ResponseEntity<>(response, HttpStatus.OK);
+}
 
 
     @PutMapping("/{id}")

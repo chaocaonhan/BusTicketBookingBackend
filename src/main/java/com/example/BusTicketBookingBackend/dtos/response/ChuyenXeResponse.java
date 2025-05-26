@@ -30,6 +30,7 @@ public class ChuyenXeResponse {
 
     private String bienSo;
     private String taiXe;
+    private String trangThai;
 
     private int giaVe;
     private String tenLoaiXe;

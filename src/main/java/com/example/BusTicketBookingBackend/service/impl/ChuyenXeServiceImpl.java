@@ -14,9 +14,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -194,6 +196,7 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
                 .gioKetThuc(chuyenXe.getGioKetThuc())
                 .bienSo(chuyenXe.getXe().getBienSo())
                 .taiXe(chuyenXe.getTaiXe().getHoTen())
+                .trangThai(chuyenXe.getTrangThai().toString())
                 .giaVe(chuyenXe.getGiaVe())
                 .tenLoaiXe(chuyenXe.getXe().getLoaiXe().getTenLoaiXe())
                 .soGheTrong(datGheRepository.countSeatAvailableByChuyenXe_Id(chuyenXe.getId()))
@@ -282,7 +285,7 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
     //dùng để tìm chuyến xe trong đánh giá
     @Override
     public int getChuyenXeIdFromDonDatVeId(int donDatVeId) {
-        // Step 1: Find the associated Vexe by DonDatVe ID
+
         List<Vexe> veXes = vexeRepository.findByDonDatVe_Id(donDatVeId);
         Vexe vexe = veXes.get(0);
 
@@ -291,7 +294,7 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
             throw new EntityNotFoundException("Không tìm thấy chuyến xe cho vé xe: " + vexe.getId());
         }
 
-        // Step 3: Return ChuyenXe ID
+
         return vexe.getDatGhe().getChuyenXe().getId();
     }
 
@@ -304,6 +307,50 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
         veXeService.huyVeTheoChuyenXe(idChuyenXe);
         return 1;
     }
+
+    @Scheduled(initialDelay = 10000, fixedRate = 1800000)
+    public void capNhatTrangThaiChuyenXe() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDate today = now.toLocalDate();
+        LocalTime currentTime = now.toLocalTime();
+
+        // Lấy tất cả chuyến xe trong ngày hôm nay trở về sau
+//        List<ChuyenXe> danhSachChuyenXe = chuyenXeRepository.findByNgayKhoiHanhGreaterThanEqual(today);
+
+        List<ChuyenXe> danhSachChuyenXe = chuyenXeRepository.findAll();
+        for (ChuyenXe chuyenXe : danhSachChuyenXe) {
+            LocalDate ngayKhoiHanh = chuyenXe.getNgayKhoiHanh();
+            LocalTime gioKhoiHanh = chuyenXe.getGioKhoiHanh();
+            LocalTime gioKetThuc = chuyenXe.getGioKetThuc();
+
+            ChuyenXe.TrangThai trangThaiHienTai = chuyenXe.getTrangThai();
+
+            if(chuyenXe.getTrangThai() != ChuyenXe.TrangThai.CANCELED){
+                if (ngayKhoiHanh.isEqual(today)) {
+                    if (currentTime.isAfter(gioKetThuc)) {
+                        if (trangThaiHienTai != ChuyenXe.TrangThai.COMPLETED) {
+                            chuyenXe.setTrangThai(ChuyenXe.TrangThai.COMPLETED);
+                        }
+                    } else if (currentTime.isAfter(gioKhoiHanh)) {
+                        if (trangThaiHienTai == ChuyenXe.TrangThai.SCHEDULED) {
+                            chuyenXe.setTrangThai(ChuyenXe.TrangThai.DEPARTED);
+                        }
+                    }
+                } else if (ngayKhoiHanh.isBefore(today)) {
+                    // Ngày khởi hành đã qua → tự động chuyển sang COMPLETED nếu chưa cập nhật
+                    if (trangThaiHienTai != ChuyenXe.TrangThai.COMPLETED) {
+                        chuyenXe.setTrangThai(ChuyenXe.TrangThai.COMPLETED);
+                    }
+                }
+            }
+
+            chuyenXeRepository.save(chuyenXe);
+        }
+    }
+
+
+    //cập nhật trạng thái mỗi 4 giờ :
+
 
 
 }

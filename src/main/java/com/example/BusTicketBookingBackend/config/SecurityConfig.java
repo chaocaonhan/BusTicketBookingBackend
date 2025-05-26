@@ -84,6 +84,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/nguoidung/login").permitAll()
                         .requestMatchers("/api/nguoidung/register").permitAll()
                         .requestMatchers("/api/nguoidung/verify").permitAll()
+                        .requestMatchers("/api/nguoidung/datLaiMatKhau").permitAll()
                         .requestMatchers("/api/nguoidung/getPage").permitAll()
                         .requestMatchers("/api/nguoidung/danhSachTaiXe").permitAll()
                         .requestMatchers("/api/Xe/getAll").permitAll()
@@ -106,22 +107,29 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/driver/**").hasRole("DRIVER")
                         .requestMatchers("/api/user/**").hasRole("USER")
-                        .requestMatchers("api/khuyen-mai/addMa").permitAll()
+                        .requestMatchers("api/khuyen-mai/addMa").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/khuyen-mai/*").hasRole("ADMIN")
+
                         .requestMatchers("api/khuyen-mai/getAll").permitAll()
                         .requestMatchers("api/khuyen-mai/check").permitAll()
                         // Thêm đường dẫn Swagger
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
                 )
+
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint())
                 )
 
+
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+
 
         return http.build();
     }

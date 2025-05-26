@@ -33,7 +33,7 @@ public class OpenRouteService {
 
     public double getDistanceInKm(String originPlace, String destPlace) {
         double[] from = getCoordinates(originPlace);
-        double[] to = getCoordinates(destPlace);
+        double[] to = getCoordinates(destPlace);    
 
         String url = "https://api.openrouteservice.org/v2/matrix/driving-car";
 

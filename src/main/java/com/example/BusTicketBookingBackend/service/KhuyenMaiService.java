@@ -6,4 +6,6 @@ import com.example.BusTicketBookingBackend.models.KhuyenMai;
 public interface KhuyenMaiService {
     KhuyenMai createKhuyenMai(KhuyenMaiDTO khuyenMai);
     int checkKhuyenMai(String khuyenMai);
+
+    KhuyenMai edit(int id, KhuyenMaiDTO khuyenMaiDTO);
 }

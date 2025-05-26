@@ -44,4 +44,13 @@ public class KhuyenMaiController {
                 .result(khuyenMaiService.createKhuyenMai(kmDTO))
                 .build();
     }
+
+    @PutMapping("/{id}")
+    public ApiResponse suaMa(@PathVariable int id, @RequestBody KhuyenMaiDTO kmDTO){
+        return ApiResponse.builder()
+                .code(200)
+                .message("Sửa thành công")
+                .result(khuyenMaiService.edit(id,kmDTO))
+                .build();
+    }
 }

@@ -14,6 +14,7 @@ import com.example.BusTicketBookingBackend.repositories.TaiXeRepository;
 import com.example.BusTicketBookingBackend.repositories.VaiTroRepository;
 import com.example.BusTicketBookingBackend.service.EmailService;
 import com.example.BusTicketBookingBackend.service.NguoiDungService;
+import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,9 +31,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -103,8 +106,8 @@ public class NguoiDungServiceImpl implements NguoiDungService {
             throw new AppException(ErrorCode.EMAIL_EXITS);
         }else {
 //            để code = 123456 thay vì random
-            String confirmToken = "123456";
-//            String confirmToken = String.format("%06d", new Random().nextInt(999999));
+//            String confirmToken = "123456";
+            String confirmToken = String.format("%06d", new Random().nextInt(999999));
             NguoiDung nguoiDung = new NguoiDung();
             nguoiDung.setHoTen(nguoiDungDTO.getHoTen());
             nguoiDung.setEmail(nguoiDungDTO.getEmail());
@@ -120,12 +123,12 @@ public class NguoiDungServiceImpl implements NguoiDungService {
 
 
 //            comment để tắt gửi mail, thêm dòng dưới để vẫn trả về response
-//            try {
-//                emailService.sendVerificationEmail(nguoiDungDTO.getEmail(),confirmToken);
+            try {
+                emailService.sendVerificationEmail(nguoiDungDTO.getEmail(),confirmToken);
 //                result = String.valueOf(savedUser.getId());
-//            }catch(MessagingException e){
+            }catch(MessagingException e){
 //                result = "Tài khoản đã được tạo nhưng gửi email xác nhận thất bại.";
-//            }
+            }
         }
         return NguoiDungDTO.builder()
                 .id(savedUser.getId())
@@ -297,4 +300,51 @@ public class NguoiDungServiceImpl implements NguoiDungService {
         nguoiDungRepository.save(nguoiDung);
     }
 
+    public static String generatePassword(int length) {
+        String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        SecureRandom RANDOM = new SecureRandom();
+        StringBuilder password;
+        boolean hasLetter;
+        boolean hasDigit;
+
+        do {
+            password = new StringBuilder(length);
+            hasLetter = false;
+            hasDigit = false;
+
+            for (int i = 0; i < length; i++) {
+                char ch = CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length()));
+                if (Character.isLetter(ch)) {
+                    hasLetter = true;
+                }
+                if (Character.isDigit(ch)) {
+                    hasDigit = true;
+                }
+                password.append(ch);
+            }
+        } while (!hasLetter || !hasDigit);
+
+        return password.toString();
+    }
+
+    @Override
+    public String forgotPassword(String email) {
+        NguoiDung nd = nguoiDungRepository.findByEmail(email).get();
+        if (nd != null) {
+            // Tạo mật khẩu mới
+            String newPassword = generatePassword(8);
+            // Cập nhật mật khẩu mới vào cơ sở dữ liệu
+            nd.setMatKhau(passwordEncoder.encode(newPassword));
+            nguoiDungRepository.save(nd);
+            // Gửi email thông báo về mật khẩu mới
+            try {
+                emailService.sendForgotPasswordEmail(email, newPassword);
+                return "Mật khẩu mới đã được gửi đến địa chỉ email của bạn.";
+            } catch (MessagingException e) {
+                return "Đã xảy ra lỗi khi gửi email, vui lòng thử lại sau.";
+            }
+        } else {
+            return "Không tìm thấy người dùng với địa chỉ email này.";
+        }
+    }
 }

@@ -39,4 +39,6 @@ public interface NguoiDungService {
     String changePassword(Integer id, ChangePassRequest changePassRequest);
 
     void updateAvatarForCurrentUser(String avatarUrl);
+
+    String forgotPassword(String email);
 }

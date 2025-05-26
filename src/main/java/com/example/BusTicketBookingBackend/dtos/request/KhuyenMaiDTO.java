@@ -11,6 +11,7 @@ import java.time.LocalDate;
 public class KhuyenMaiDTO {
     private String maKhuyenMai;
     private int phanTramGiam;
+    private String moTa;
     private LocalDate ngayBatDau;
     private LocalDate ngayKetThuc;
 }
