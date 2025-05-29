@@ -17,5 +17,5 @@ public interface VeXeRepository extends JpaRepository<Vexe, Integer> {
     List<Vexe> findByDonDatVe_Id(int donDatVeId);
 
     @Query("SELECT v FROM Vexe v JOIN FETCH v.datGhe WHERE v.donDatVe.id = :maDonDat")
-    List<Vexe> findAllByDonDatVeWithIDDatGhe(@Param("maDonDat") Integer maDonDat);
+    List<Vexe> findAllByDonDatVeWithIDMaDonDat(@Param("maDonDat") Integer maDonDat);
 }

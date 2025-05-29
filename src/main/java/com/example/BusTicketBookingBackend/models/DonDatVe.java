@@ -1,6 +1,7 @@
 package com.example.BusTicketBookingBackend.models;
 
 import com.example.BusTicketBookingBackend.enums.KieuThanhToan;
+import com.example.BusTicketBookingBackend.enums.TrangThaiDonDat;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -43,6 +44,10 @@ public class DonDatVe {
 
     @Column(name = "khuhoi")
     int khuHoi;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "trangthaidondat")
+    TrangThaiDonDat trangThaiDonDat;
 
     @Column(name = "ghichu", columnDefinition = "TEXT")
     String ghiChu;

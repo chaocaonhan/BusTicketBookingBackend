@@ -19,7 +19,7 @@ public interface NguoiDungService {
 
     Page<NguoiDungDTO> searchNguoiDung(String keyword, Pageable pageable);
 
-    NguoiDungDTO createNguoiDung(NguoiDungDTO nguoiDungDTO);
+    NguoiDungDTO createNguoiDung(NguoiDungDTO nguoiDungDTO, int canguimail);
     NguoiDung getNguoiDung(int id);
 
     NguoiDung setNguoiDung(NguoiDung nguoiDung);

@@ -3,6 +3,7 @@ package com.example.BusTicketBookingBackend.service;
 import com.example.BusTicketBookingBackend.dtos.request.DatVeRequest;
 import com.example.BusTicketBookingBackend.dtos.request.FindingRequest;
 import com.example.BusTicketBookingBackend.dtos.response.DonDatVeResponse;
+import com.example.BusTicketBookingBackend.enums.TrangThaiDonDat;
 import com.example.BusTicketBookingBackend.models.DonDatVe;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +23,9 @@ public interface DonDatVeService {
 
     Optional<DonDatVeResponse> traCuuDonDat(FindingRequest findingRequest);
 
-    Page<DonDatVeResponse> getAllDonDatVe(Pageable pageable);
 
-    Page<DonDatVeResponse> searchDonDatVe(String keyword, Pageable pageable);
+
+    Page<DonDatVeResponse> getAllDonDatVeByTrangThai(TrangThaiDonDat trangThai, Pageable pageable);
+
+    Page<DonDatVeResponse> searchDonDatVe(String keyword, Pageable pageable, TrangThaiDonDat trangThaiDonDat);
 }

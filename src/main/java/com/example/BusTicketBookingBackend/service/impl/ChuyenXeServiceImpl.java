@@ -113,7 +113,6 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
                 throw new RuntimeException("Không tìm thấy chuyến xe chiều về");
             }
 
-            // Lấy chuyến xe từ TẤT CẢ các tuyến về (thay vì chỉ tuyến đầu tiên)
             lstChuyenVe = tuyenVe.stream()
                     .flatMap(tuyen -> chuyenXeRepository.findChuyenXeByTuyenXe(tuyen).stream())
                     .filter(chuyenXe -> {

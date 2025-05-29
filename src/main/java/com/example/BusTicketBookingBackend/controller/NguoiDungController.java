@@ -40,7 +40,7 @@ public class NguoiDungController {
     @PostMapping("/register")
     //valid là để validation dữ liệu từ frontend gửi về
     public ResponseEntity<ApiResponse<NguoiDungDTO>> register(@RequestBody @Valid NguoiDungDTO nguoiDungDTO) {
-        NguoiDungDTO result = nguoiDungService.createNguoiDung(nguoiDungDTO);
+        NguoiDungDTO result = nguoiDungService.createNguoiDung(nguoiDungDTO,1);
 
         if (result == null) {
             throw new AppException(ErrorCode.UNKNOWN_ERROR);
@@ -91,7 +91,7 @@ public class NguoiDungController {
 
     @PostMapping("/createUser")
     public ApiResponse<NguoiDung> createUser(@RequestBody @Valid NguoiDungDTO nguoiDungDTO) {
-        NguoiDungDTO nguoiDung = nguoiDungService.createNguoiDung(nguoiDungDTO);
+        NguoiDungDTO nguoiDung = nguoiDungService.createNguoiDung(nguoiDungDTO,0);
 
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(nguoiDungDTO);

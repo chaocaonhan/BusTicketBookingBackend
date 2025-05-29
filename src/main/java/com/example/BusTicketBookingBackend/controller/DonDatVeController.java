@@ -4,6 +4,7 @@ import com.example.BusTicketBookingBackend.dtos.request.DatVeRequest;
 import com.example.BusTicketBookingBackend.dtos.request.FindingRequest;
 import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
 import com.example.BusTicketBookingBackend.dtos.response.DonDatVeResponse;
+import com.example.BusTicketBookingBackend.enums.TrangThaiDonDat;
 import com.example.BusTicketBookingBackend.models.DonDatVe;
 import com.example.BusTicketBookingBackend.service.DonDatVeService;
 import lombok.AccessLevel;
@@ -13,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DonDatVeController {
     DonDatVeService donDatVeService;
+
 
     @PostMapping("")
     public ApiResponse taoDonDatVe(@RequestBody DatVeRequest request) {
@@ -50,7 +53,7 @@ public class DonDatVeController {
     }
 
     @DeleteMapping("/huyDon/{id}")
-    public ApiResponse getMyDonDat(@PathVariable Integer idDonCanHuy){
+    public ApiResponse getMyDonDat(@PathVariable("id") Integer idDonCanHuy){
         donDatVeService.huyDon(idDonCanHuy);
         return ApiResponse.builder()
                 .code(200)
@@ -82,21 +85,25 @@ public class DonDatVeController {
     @GetMapping("/getPage")
     public ResponseEntity<Page<DonDatVeResponse>> getAllDonDatVe(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam TrangThaiDonDat trangThaiDonDat
     ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<DonDatVeResponse> result = donDatVeService.getAllDonDatVe(pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "thoiGianDat"));
+
+        Page<DonDatVeResponse> result = donDatVeService.getAllDonDatVeByTrangThai(trangThaiDonDat,pageable );
         return ResponseEntity.ok(result);
     }
+
 
     @GetMapping("/search")
     public ResponseEntity<Page<DonDatVeResponse>> searchDonDatVe(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam TrangThaiDonDat trangThaiDonDat
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<DonDatVeResponse> result = donDatVeService.searchDonDatVe(keyword, pageable);
+        Page<DonDatVeResponse> result = donDatVeService.searchDonDatVe(keyword, pageable,trangThaiDonDat);
         return ResponseEntity.ok(result);
     }
 

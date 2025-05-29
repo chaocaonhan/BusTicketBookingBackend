@@ -3,6 +3,7 @@ package com.example.BusTicketBookingBackend.service.impl;
 import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeVaGheCanDat;
 import com.example.BusTicketBookingBackend.dtos.request.DatVeRequest;
 import com.example.BusTicketBookingBackend.dtos.response.VeXeResponse;
+import com.example.BusTicketBookingBackend.enums.TrangThaiDonDat;
 import com.example.BusTicketBookingBackend.enums.TrangThaiGhe;
 import com.example.BusTicketBookingBackend.enums.TrangThaiVe;
 import com.example.BusTicketBookingBackend.models.DatGhe;
@@ -95,7 +96,7 @@ public class VeXeServiceImpl implements VeXeService {
 
     @Override
     public void huyTatCaVeCuaDonDat(Integer maDonDat){
-        List<Vexe> veXes = veXeRepository.findAllByDonDatVeWithIDDatGhe
+        List<Vexe> veXes = veXeRepository.findAllByDonDatVeWithIDMaDonDat
                 (maDonDat);
         for(Vexe veXe : veXes){
             DatGhe datGheCanSua = veXe.getDatGhe();
@@ -107,6 +108,39 @@ public class VeXeServiceImpl implements VeXeService {
             veXe.setTrangThaiVe(TrangThaiVe.CANCELED);
             veXeRepository.save(veXe);
 
+        }
+    }
+
+    @Override
+    public TrangThaiDonDat kiemTraTrangDonDat(Integer maDonDat){
+        List<Vexe> veXes = veXeRepository.findAllByDonDatVeWithIDMaDonDat
+                (maDonDat);
+
+        String trangThai = "";
+        int tongSoLuongVe = veXes.size();
+        int soVeDaHuy=0;
+        int soVeHoanThanh=0;
+        int soVeDangDat=0;
+        for(Vexe veXe : veXes){
+            if(veXe.getTrangThaiVe().equals(TrangThaiVe.CANCELED)){
+                soVeDaHuy++;
+            }
+            if (veXe.getTrangThaiVe().equals(TrangThaiVe.BOOKED)){
+                soVeDangDat++;
+            }
+            if (veXe.getTrangThaiVe().equals(TrangThaiVe.COMPLETED)){
+                soVeHoanThanh++;
+            }
+        }
+
+        if(soVeDaHuy==tongSoLuongVe){
+            return TrangThaiDonDat.CANCELED;
+        }
+        if(soVeHoanThanh+soVeDaHuy==tongSoLuongVe){
+            return TrangThaiDonDat.COMPLETED;
+        }
+        else {
+            return TrangThaiDonDat.BOOKED;
         }
     }
 

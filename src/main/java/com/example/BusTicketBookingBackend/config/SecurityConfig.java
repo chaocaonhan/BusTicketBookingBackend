@@ -93,6 +93,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/chuyenxe/**").permitAll()
                         .requestMatchers("/api/datve/**").permitAll()
                         .requestMatchers("/api/datve/findByIdAndPhoneNumber").permitAll()
+
                         .requestMatchers("api/ve-xe/**").permitAll()
                         .requestMatchers("api/payment/**").permitAll()
                         .requestMatchers("/api/images/**").permitAll()

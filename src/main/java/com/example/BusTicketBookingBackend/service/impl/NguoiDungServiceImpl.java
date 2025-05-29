@@ -96,7 +96,7 @@ public class NguoiDungServiceImpl implements NguoiDungService {
 
 
     @Override
-    public NguoiDungDTO createNguoiDung(NguoiDungDTO nguoiDungDTO) {
+    public NguoiDungDTO createNguoiDung(NguoiDungDTO nguoiDungDTO, int canguimail) {
 
         NguoiDung savedUser = new NguoiDung();
         if(nguoiDungRepository.existsNguoiDungBySDT(nguoiDungDTO.getSDT())){
@@ -105,8 +105,6 @@ public class NguoiDungServiceImpl implements NguoiDungService {
         if(nguoiDungRepository.existsNguoiDungByEmail(nguoiDungDTO.getEmail())){
             throw new AppException(ErrorCode.EMAIL_EXITS);
         }else {
-//            để code = 123456 thay vì random
-//            String confirmToken = "123456";
             String confirmToken = String.format("%06d", new Random().nextInt(999999));
             NguoiDung nguoiDung = new NguoiDung();
             nguoiDung.setHoTen(nguoiDungDTO.getHoTen());
@@ -118,16 +116,22 @@ public class NguoiDungServiceImpl implements NguoiDungService {
             nguoiDung.setGioiTinh(nguoiDungDTO.getGioiTinh());
             nguoiDung.setLoaiDangKi("Email");
             nguoiDung.setTokenExpiry(LocalDateTime.now().plusMinutes(5));
-            nguoiDung.setTrangThai(TrangThai.INACTIVE);
+            if (canguimail == 1) {
+                nguoiDung.setTrangThai(TrangThai.INACTIVE);
+            } else {
+                nguoiDung.setTrangThai(TrangThai.ACTIVE);
+            }
+
             savedUser = nguoiDungRepository.save(nguoiDung);
 
 
-//            comment để tắt gửi mail, thêm dòng dưới để vẫn trả về response
-            try {
-                emailService.sendVerificationEmail(nguoiDungDTO.getEmail(),confirmToken);
-//                result = String.valueOf(savedUser.getId());
-            }catch(MessagingException e){
-//                result = "Tài khoản đã được tạo nhưng gửi email xác nhận thất bại.";
+
+            if(canguimail == 1){
+                try {
+                    emailService.sendVerificationEmail(nguoiDungDTO.getEmail(),confirmToken);
+                }catch(MessagingException e){
+
+                }
             }
         }
         return NguoiDungDTO.builder()

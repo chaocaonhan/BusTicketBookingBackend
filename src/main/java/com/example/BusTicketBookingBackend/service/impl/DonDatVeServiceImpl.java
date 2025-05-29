@@ -5,6 +5,7 @@ import com.example.BusTicketBookingBackend.dtos.request.DatVeRequest;
 import com.example.BusTicketBookingBackend.dtos.request.FindingRequest;
 import com.example.BusTicketBookingBackend.dtos.response.DonDatVeResponse;
 import com.example.BusTicketBookingBackend.enums.KieuThanhToan;
+import com.example.BusTicketBookingBackend.enums.TrangThaiDonDat;
 import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.DonDatVe;
@@ -120,14 +121,16 @@ public class DonDatVeServiceImpl implements DonDatVeService {
     }
 
     @Override
-    public Page<DonDatVeResponse> getAllDonDatVe(Pageable pageable) {
-        return donDatVeRepository.findAll(pageable)
+    public Page<DonDatVeResponse> getAllDonDatVeByTrangThai(TrangThaiDonDat trangThai, Pageable pageable) {
+        return donDatVeRepository
+                .findAllByTrangThaiDonDat(trangThai, pageable)
                 .map(this::toDonDatVeResponse);
     }
 
+
     @Override
-    public Page<DonDatVeResponse> searchDonDatVe(String keyword, Pageable pageable) {
-        return donDatVeRepository.findByKeyword(keyword, pageable)
+    public Page<DonDatVeResponse> searchDonDatVe(String keyword, Pageable pageable,TrangThaiDonDat trangThaiDonDat) {
+        return donDatVeRepository.findByKeywordAndTrangThai(keyword,trangThaiDonDat, pageable)
                 .map(this::toDonDatVeResponse);
     }
 
@@ -140,6 +143,9 @@ public class DonDatVeServiceImpl implements DonDatVeService {
     @Override
     public void huyDon(Integer maDonDatVe){
         veXeService.huyTatCaVeCuaDonDat(maDonDatVe);
+        DonDatVe donDatVe = donDatVeRepository.findById(maDonDatVe).get();
+        donDatVe.setTrangThaiDonDat(TrangThaiDonDat.CANCELED);
+        donDatVeRepository.save(donDatVe);
     }
 
     @Scheduled(fixedRate = 30000)
@@ -148,6 +154,17 @@ public class DonDatVeServiceImpl implements DonDatVeService {
         List<DonDatVe> donCanHuy = donDatVeRepository.findByTrangThaiThanhToanAndKieuThanhToanAndThoiGianDatBefore(0,KieuThanhToan.VNPAY,now.minusMinutes(3));
         for(DonDatVe donDatVe : donCanHuy){
             veXeService.huyTatCaVeCuaDonDat(donDatVe.getId());
+            donDatVe.setTrangThaiDonDat(TrangThaiDonDat.CANCELED);
+            donDatVeRepository.save(donDatVe);
+        }
+    }
+
+    @Scheduled(fixedRate = 180000)
+    public void capNhatTrangThaiDonDat(){
+        List<DonDatVe> lstDonDat = donDatVeRepository.findAll();
+        for(DonDatVe donDatVe : lstDonDat){
+            donDatVe.setTrangThaiDonDat(veXeService.kiemTraTrangDonDat(donDatVe.getId()));
+            donDatVeRepository.save(donDatVe);
         }
     }
 
