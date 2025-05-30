@@ -3,17 +3,24 @@ package com.example.BusTicketBookingBackend.controller;
 import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
 import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeDTO;
 import com.example.BusTicketBookingBackend.dtos.response.ChuyenXeResponse;
+import com.example.BusTicketBookingBackend.dtos.response.DonDatVeResponse;
+import com.example.BusTicketBookingBackend.enums.TrangThaiDonDat;
 import com.example.BusTicketBookingBackend.models.ChuyenXe;
 import com.example.BusTicketBookingBackend.models.TuyenXe;
 import com.example.BusTicketBookingBackend.service.ChuyenXeService;
 import com.example.BusTicketBookingBackend.service.DatGheService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -127,6 +134,30 @@ public class ChuyenXeController {
                 .message("Lịch trình của chuyến xe + {idChuyenXe}")
                 .result(chuyenXeService.huyChuyen(id))
                 .build();
+    }
+
+    @GetMapping("/getPage")
+    public ResponseEntity<Page<ChuyenXeResponse>> getAllChuyenXeWithStatus(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam ChuyenXe.TrangThai trangThaiChuyenXe
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "ngayKhoiHanh"));
+
+        Page<ChuyenXeResponse> result = chuyenXeService.getAllChuyenXeByTrangThai(trangThaiChuyenXe,pageable );
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/searchWithPageAndDate")
+    public ResponseEntity<Page<ChuyenXeResponse>> searchChuyenXe(
+            @RequestParam LocalDate keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam ChuyenXe.TrangThai trangThaiChuyenXe
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ChuyenXeResponse> result = chuyenXeService.searchChuyenXe(keyword, pageable,trangThaiChuyenXe);
+        return ResponseEntity.ok(result);
     }
 
 }

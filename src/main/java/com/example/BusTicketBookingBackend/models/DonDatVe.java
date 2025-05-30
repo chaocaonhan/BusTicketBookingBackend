@@ -23,7 +23,7 @@ public class DonDatVe {
     int id;
 
     @ManyToOne
-    @JoinColumn(name = "id_nguoi_dung", referencedColumnName = "id")
+    @JoinColumn(name = "id_nguoi_dung", referencedColumnName = "id",nullable = true)
     NguoiDung nguoiDung;
 
     @Column(name = "thoigiandat")

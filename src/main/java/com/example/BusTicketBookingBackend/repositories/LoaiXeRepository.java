@@ -9,5 +9,9 @@ import java.util.List;
 
 @Repository
 public interface LoaiXeRepository extends JpaRepository<LoaiXe, Long> {
+
+
     List<LoaiXe> findAll();
+
+    LoaiXe findLoaiXeByTenLoaiXe(String loaiXe);
 }

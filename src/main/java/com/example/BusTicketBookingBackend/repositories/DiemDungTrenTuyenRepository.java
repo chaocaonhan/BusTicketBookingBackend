@@ -15,4 +15,11 @@ public interface DiemDungTrenTuyenRepository extends JpaRepository<DiemDungTrenT
 
     @Query("SELECT d FROM DiemDungTrenTuyen d WHERE d.tuyenXe.id = :tuyenId and d.trangThai = 1")
     List<DiemDungTrenTuyen> findByTuyenId(@Param("tuyenId") int tuyenId);
+
+
+
+    Optional<DiemDungTrenTuyen> findFirstByTuyenXeIdAndTrangThaiOrderByThuTuDiemDungAsc(int tuyenXeId, int trangThai);
+
+
+    Optional<DiemDungTrenTuyen> findFirstByTuyenXeIdAndTrangThaiOrderByThuTuDiemDungDesc(int tuyenXeId, int trangThai);
 }

@@ -11,4 +11,8 @@ public interface XeRepository extends JpaRepository<Xe, Integer> {
     List<Xe> findAll();
 
     Xe findByBienSo(String bienSo);
+
+    List<Xe> findByTrangThaiNot(Integer trangThai);
+
 }
+

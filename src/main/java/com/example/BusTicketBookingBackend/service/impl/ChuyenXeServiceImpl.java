@@ -3,17 +3,22 @@ package com.example.BusTicketBookingBackend.service.impl;
 import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeDTO;
 import com.example.BusTicketBookingBackend.dtos.response.ChuyenXeResponse;
 import com.example.BusTicketBookingBackend.dtos.response.DiemDonCuaChuyen;
+import com.example.BusTicketBookingBackend.dtos.response.DonDatVeResponse;
+import com.example.BusTicketBookingBackend.enums.TrangThaiDonDat;
 import com.example.BusTicketBookingBackend.enums.TrangThaiGhe;
 import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.*;
 import com.example.BusTicketBookingBackend.repositories.*;
 import com.example.BusTicketBookingBackend.service.ChuyenXeService;
+import com.example.BusTicketBookingBackend.service.DiemDungTrenTuyenService;
 import com.example.BusTicketBookingBackend.service.VeXeService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -38,54 +43,7 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
     DatGheRepository datGheRepository;
     VeXeRepository vexeRepository;
     DiemDungTrenTuyenRepository diemDungTrenTuyenRepository;
-
-//    public List<ChuyenXeResponse> timChuyenXeTheoTuyen(int idDiemDi, int idDiemDen, LocalDate ngayDi, LocalDate ngayVe, Boolean khuHoi) {
-//        List<TuyenXe> tuyenDi = tuyenXeRepository.findTuyenXeByDiemDiAndDiemDen(idDiemDi, idDiemDen);
-//        List<TuyenXe> tuyenVe = tuyenXeRepository.findTuyenXeByDiemDiAndDiemDen(idDiemDen, idDiemDi);
-//
-//        if (tuyenDi.isEmpty()) {
-//            throw new RuntimeException("Không tìm thấy tuyến xe phù hợp.");
-//        }
-//
-//        List<ChuyenXe> lstChuyenDi = chuyenXeRepository.findChuyenXeByTuyenXe(tuyenDi.get())
-//                .stream()
-//                .filter(chuyenXe -> {
-//                    LocalDate ngayKhoiHanh = chuyenXe.getNgayKhoiHanh();
-//                    LocalTime gioKhoiHanh = chuyenXe.getGioKhoiHanh();
-//                    return ngayKhoiHanh.isEqual(ngayDi)
-//                            && (ngayDi.isAfter(LocalDate.now()) || gioKhoiHanh.isAfter(LocalTime.now()));
-//                })
-//                .toList();
-//
-//        List<ChuyenXe> lstChuyenVe = new ArrayList<>();
-//        if (Boolean.TRUE.equals(khuHoi)) {
-//            if (tuyenVe.isEmpty()) {
-//                throw new RuntimeException("Không tìm thấy chuyến xe chiều về");
-//            }
-//            lstChuyenVe = chuyenXeRepository.findChuyenXeByTuyenXe(tuyenVe.get())
-//                    .stream()
-//                    .filter(chuyenXe -> {
-//                        LocalDate ngayKhoiHanh = chuyenXe.getNgayKhoiHanh();
-//                        LocalTime gioKhoiHanh = chuyenXe.getGioKhoiHanh();
-//                        return ngayKhoiHanh.isEqual(ngayVe)
-//                                && (ngayVe.isAfter(LocalDate.now()) || gioKhoiHanh.isAfter(LocalTime.now()));
-//                    })
-//                    .toList();
-//        }
-//
-//        if (lstChuyenDi.isEmpty() && lstChuyenVe.isEmpty()) {
-//            throw new AppException(ErrorCode.DATA_NOT_FOUND);
-//        }
-//
-//        // Gộp 2 list chuyến đi và về
-//        List<ChuyenXe> allChuyenXe = new ArrayList<>();
-//        allChuyenXe.addAll(lstChuyenDi);
-//        allChuyenXe.addAll(lstChuyenVe);
-//
-//        return allChuyenXe.stream()
-//                .map(this::convertToResponse)
-//                .toList();
-//    }
+    private final DiemDungTrenTuyenService diemDungTrenTuyenService;
 
     @Override
     public List<ChuyenXeResponse> timChuyenXeTheoTuyen(int idDiemDi, int idDiemDen, LocalDate ngayDi, LocalDate ngayVe, Boolean khuHoi) {
@@ -103,6 +61,7 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
                     LocalDate ngayKhoiHanh = chuyenXe.getNgayKhoiHanh();
                     LocalTime gioKhoiHanh = chuyenXe.getGioKhoiHanh();
                     return ngayKhoiHanh.isEqual(ngayDi)
+                            && chuyenXe.getTrangThai() == ChuyenXe.TrangThai.SCHEDULED
                             && (ngayDi.isAfter(LocalDate.now()) || gioKhoiHanh.isAfter(LocalTime.now()));
                 })
                 .toList();
@@ -119,9 +78,11 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
                         LocalDate ngayKhoiHanh = chuyenXe.getNgayKhoiHanh();
                         LocalTime gioKhoiHanh = chuyenXe.getGioKhoiHanh();
                         return ngayKhoiHanh.isEqual(ngayVe)
+                                && chuyenXe.getTrangThai() == ChuyenXe.TrangThai.SCHEDULED
                                 && (ngayVe.isAfter(LocalDate.now()) || gioKhoiHanh.isAfter(LocalTime.now()));
                     })
                     .toList();
+
         }
 
         if (lstChuyenDi.isEmpty() && lstChuyenVe.isEmpty()) {
@@ -207,20 +168,28 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
     @Override
     public String taoChuyenXe(ChuyenXeDTO chuyenXe) {
         ChuyenXe cx = new ChuyenXe();
-        cx.setTuyenXe(tuyenXeRepository.findByTenTuyen(chuyenXe.getTenTuyen()));
+        TuyenXe tuyenXe = tuyenXeRepository.findById(Integer.valueOf(chuyenXe.getTenTuyen())).get();
+
+        cx.setTuyenXe(tuyenXe);
         cx.setXe(xeRepository.findByBienSo(chuyenXe.getBienSoXe()));
         cx.setTaiXe(taiXeRepository.findByHoTen(chuyenXe.getTaiXe()));
-        cx.setDiemDi(diemDonTraRepository.findDiemDonTraByTenDiemDon(chuyenXe.getDiemDi()));
-        cx.setDiemDen(diemDonTraRepository.findDiemDonTraByTenDiemDon(chuyenXe.getDiemDen()));
-        cx.setNgayKhoiHanh(chuyenXe.getNgayKhoiHanh());
-        cx.setGioKhoiHanh(chuyenXe.getGioKhoiHanh());
-        cx.setGioKetThuc(chuyenXe.getGioKetThuc());
-        cx.setGiaVe(chuyenXe.getGiaVe());
+
+
+        cx.setDiemDi(diemDungTrenTuyenService.getDiemDau(tuyenXe.getId()));
+        cx.setDiemDen(diemDungTrenTuyenService.getDiemCuoi(tuyenXe.getId()));
 
         LoaiXe loaiXe = xeRepository.findByBienSo(chuyenXe.getBienSoXe()).getLoaiXe();
         int soGhe = loaiXe.getSoLuongGhe();
         cx.setSoGheTrong(soGhe);
         cx.setTrangThai(ChuyenXe.TrangThai.SCHEDULED);
+
+
+
+        cx.setNgayKhoiHanh(chuyenXe.getNgayKhoiHanh());
+        cx.setGioKhoiHanh(chuyenXe.getGioKhoiHanh());
+        cx.setGioKetThuc(chuyenXe.getGioKetThuc());
+        cx.setGiaVe(chuyenXe.getGiaVe());
+
 
         List<ChoiNgoi> choiNgois = choNgoiRepository.findByLoaiXe_Id(loaiXe.getId());
 
@@ -307,14 +276,22 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
         return 1;
     }
 
+    @Override
+    public Page<ChuyenXeResponse> getAllChuyenXeByTrangThai(ChuyenXe.TrangThai trangThaiChuyenXe, Pageable pageable) {
+        return chuyenXeRepository.findAllByTrangThai(trangThaiChuyenXe,pageable).map(this::convertToResponse);
+    }
+
+    @Override
+    public Page<ChuyenXeResponse> searchChuyenXe(LocalDate keyword, Pageable pageable, ChuyenXe.TrangThai trangThaiChuyenXe) {
+        return chuyenXeRepository.findByNgayKhoiHanhAndTrangThai(keyword,trangThaiChuyenXe,pageable).map(this::convertToResponse);
+    }
+
     @Scheduled(initialDelay = 10000, fixedRate = 1800000)
     public void capNhatTrangThaiChuyenXe() {
         LocalDateTime now = LocalDateTime.now();
         LocalDate today = now.toLocalDate();
         LocalTime currentTime = now.toLocalTime();
 
-        // Lấy tất cả chuyến xe trong ngày hôm nay trở về sau
-//        List<ChuyenXe> danhSachChuyenXe = chuyenXeRepository.findByNgayKhoiHanhGreaterThanEqual(today);
 
         List<ChuyenXe> danhSachChuyenXe = chuyenXeRepository.findAll();
         for (ChuyenXe chuyenXe : danhSachChuyenXe) {
@@ -347,8 +324,6 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
         }
     }
 
-
-    //cập nhật trạng thái mỗi 4 giờ :
 
 
 

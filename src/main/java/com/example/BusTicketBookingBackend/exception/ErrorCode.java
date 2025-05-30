@@ -14,7 +14,7 @@ public enum ErrorCode{
     EMAIL_INVALID(1003,"Email must contain @gmail.com",HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1004,"Invalid MUST BE AT LESS 8 characters",HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(1005,"Không tìm thấy ng dùng",HttpStatus.NOT_FOUND),
-    UNAUTHENTICATED(1006,"Unauthenticated",HttpStatus.UNAUTHORIZED),
+    UNAUTHENTICATED(1006,"Yêu cầu chưa xác thực",HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007,"You do not have permisson",HttpStatus.FORBIDDEN),
     DATA_NOT_FOUND(1008,"Khong tim thay du lieu",HttpStatus.NOT_FOUND),
     INVALID_FORMAT(1009,"Sai kiểu dữ liệu đầu vào",HttpStatus.BAD_REQUEST)

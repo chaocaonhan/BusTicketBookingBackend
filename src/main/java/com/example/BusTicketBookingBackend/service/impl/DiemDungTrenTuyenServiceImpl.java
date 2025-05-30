@@ -4,6 +4,7 @@ import com.example.BusTicketBookingBackend.dtos.request.CapNhatLichTrinhRequest;
 import com.example.BusTicketBookingBackend.dtos.response.DiemDungTrenTuyenDTO;
 import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
+import com.example.BusTicketBookingBackend.models.DiemDonTra;
 import com.example.BusTicketBookingBackend.models.DiemDungTrenTuyen;
 import com.example.BusTicketBookingBackend.models.TuyenXe;
 import com.example.BusTicketBookingBackend.repositories.DiemDonTraRepository;
@@ -25,6 +26,7 @@ public class DiemDungTrenTuyenServiceImpl implements DiemDungTrenTuyenService {
     private final TuyenXeRepository tuyenXeRepository;
     private final DiemDonTraRepository diemDonTraRepository;
     private final OpenRouteService openRouteService;
+    private final DiemDungTrenTuyenRepository diemDungTrenTuyenRepository;
 
     @Override
     public List<DiemDungTrenTuyenDTO> danhSachDiemDungCuaMotTuyen(Integer idTuyen) {
@@ -101,5 +103,21 @@ public class DiemDungTrenTuyenServiceImpl implements DiemDungTrenTuyenService {
             i++;
         }
         return 1;
+    }
+
+
+    @Override
+    public DiemDonTra getDiemDau(int tuyenXeId) {
+        DiemDungTrenTuyen diemDonThuNhatTrenTuyen = diemDungTrenTuyenRepository.findFirstByTuyenXeIdAndTrangThaiOrderByThuTuDiemDungAsc(tuyenXeId, 1)
+                .orElse(null);
+
+        return diemDonThuNhatTrenTuyen.getDiemDonTra();
+    }
+
+    @Override
+    public DiemDonTra getDiemCuoi(int tuyenXeId) {
+        DiemDungTrenTuyen diemCuoiTuyen = diemDungTrenTuyenRepository.findFirstByTuyenXeIdAndTrangThaiOrderByThuTuDiemDungDesc(tuyenXeId, 1)
+                .orElse(null);
+        return diemCuoiTuyen.getDiemDonTra();
     }
 }

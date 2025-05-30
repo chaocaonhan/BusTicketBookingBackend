@@ -88,12 +88,16 @@ public class SecurityConfig {
                         .requestMatchers("/api/nguoidung/getPage").permitAll()
                         .requestMatchers("/api/nguoidung/danhSachTaiXe").permitAll()
                         .requestMatchers("/api/Xe/getAll").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/Xe/suaThongTinXe/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"api/Xe/xoaXe/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,"api/Xe/themXe").hasRole("ADMIN")
                         .requestMatchers("/api/Xe/getAllLoaiXe").permitAll()
                         .requestMatchers("/api/diem-dung/**").permitAll()
                         .requestMatchers("/api/chuyenxe/**").permitAll()
                         .requestMatchers("/api/datve/**").permitAll()
                         .requestMatchers("/api/datve/findByIdAndPhoneNumber").permitAll()
 
+                        .requestMatchers(HttpMethod.GET,"/api/taiXe/**").hasRole("ADMIN")
                         .requestMatchers("api/ve-xe/**").permitAll()
                         .requestMatchers("api/payment/**").permitAll()
                         .requestMatchers("/api/images/**").permitAll()
@@ -111,6 +115,7 @@ public class SecurityConfig {
                         .requestMatchers("api/khuyen-mai/addMa").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/khuyen-mai/*").hasRole("ADMIN")
 
+                        .requestMatchers("api/khuyen-mai/getAll").permitAll()
                         .requestMatchers("api/khuyen-mai/getAll").permitAll()
                         .requestMatchers("api/khuyen-mai/check").permitAll()
                         // Thêm đường dẫn Swagger
