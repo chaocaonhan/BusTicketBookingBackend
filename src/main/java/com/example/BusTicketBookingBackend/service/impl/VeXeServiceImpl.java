@@ -107,9 +107,10 @@ public class VeXeServiceImpl implements VeXeService {
 
             veXe.setTrangThaiVe(TrangThaiVe.CANCELED);
             veXeRepository.save(veXe);
-
         }
     }
+
+
 
     @Override
     public TrangThaiDonDat kiemTraTrangDonDat(Integer maDonDat){
@@ -144,6 +145,8 @@ public class VeXeServiceImpl implements VeXeService {
         }
     }
 
+
+
     @Override
     public Integer huyVeXe(Integer maVeXe) {
         Optional<Vexe> vexe = veXeRepository.findById(maVeXe);
@@ -162,6 +165,7 @@ public class VeXeServiceImpl implements VeXeService {
             DonDatVe donDatVe = veCanHuy.getDonDatVe();
             donDatVe.setTongTien(donDatVe.getTongTien()-veCanHuy.getDatGhe().getChuyenXe().getGiaVe());
             donDatVeRepository.save(donDatVe);
+
             return 1;
         }
         return 0;
@@ -174,6 +178,22 @@ public class VeXeServiceImpl implements VeXeService {
             huyTatCaVeCuaDonDat(donDatVe.getId());
         }
     }
+
+    @Override
+    public void capNhatTrangThaiVeKhiHoanThanhChuyen(Integer chuyenXeId){
+//        lây tất cả vé trên chuyến
+        List<Vexe> veXes = veXeRepository.findAllByChuyenXeId(chuyenXeId);
+        for(Vexe veXe : veXes){
+            if(veXe.getTrangThaiVe().equals(TrangThaiVe.BOOKED)){
+                veXe.setTrangThaiVe(TrangThaiVe.COMPLETED);
+                veXeRepository.save(veXe);
+            }
+        }
+    }
+
+
+
+
 
 }
 

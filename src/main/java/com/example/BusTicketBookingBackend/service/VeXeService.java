@@ -18,4 +18,6 @@ public interface VeXeService {
     Integer huyVeXe(Integer maVeXe);
 
     void huyVeTheoChuyenXe(Integer chuyenXeId);
+
+    void capNhatTrangThaiVeKhiHoanThanhChuyen(Integer chuyenXeId);
 }

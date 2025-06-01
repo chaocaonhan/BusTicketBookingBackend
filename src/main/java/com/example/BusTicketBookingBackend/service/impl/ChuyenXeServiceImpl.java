@@ -306,6 +306,7 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
                     if (currentTime.isAfter(gioKetThuc)) {
                         if (trangThaiHienTai != ChuyenXe.TrangThai.COMPLETED) {
                             chuyenXe.setTrangThai(ChuyenXe.TrangThai.COMPLETED);
+                            veXeService.capNhatTrangThaiVeKhiHoanThanhChuyen(chuyenXe.getId());
                         }
                     } else if (currentTime.isAfter(gioKhoiHanh)) {
                         if (trangThaiHienTai == ChuyenXe.TrangThai.SCHEDULED) {
@@ -315,7 +316,9 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
                 } else if (ngayKhoiHanh.isBefore(today)) {
                     // Ngày khởi hành đã qua → tự động chuyển sang COMPLETED nếu chưa cập nhật
                     if (trangThaiHienTai != ChuyenXe.TrangThai.COMPLETED) {
+                        veXeService.capNhatTrangThaiVeKhiHoanThanhChuyen(chuyenXe.getId());
                         chuyenXe.setTrangThai(ChuyenXe.TrangThai.COMPLETED);
+
                     }
                 }
             }

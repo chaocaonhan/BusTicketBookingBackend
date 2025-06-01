@@ -181,7 +181,10 @@ public class DonDatVeServiceImpl implements DonDatVeService {
         response.setSoLuongVe(donDatVe.getSoLuongVe());
         response.setDaDanhGia(danhGiaService.daDanhGia(donDatVe.getId()));
         int soVeDaHuy = veXeRepository.countCancelledTicketsByDonDatVeId(donDatVe.getId());
-        if (soVeDaHuy > 0) {
+        int soVeDaHoanThanh = veXeRepository.countCompleteTicketsByDonDatVeId(donDatVe.getId());
+        if(soVeDaHoanThanh > 0){
+            response.setTrangThai("Hoàn thành " + soVeDaHoanThanh +"/"+donDatVe.getSoLuongVe());
+        } else if(soVeDaHuy > 0) {
             response.setTrangThai("Đã huỷ " + soVeDaHuy + "/" + donDatVe.getSoLuongVe());
         } else {
             response.setTrangThai("Hoàn thành 0/" + donDatVe.getSoLuongVe());

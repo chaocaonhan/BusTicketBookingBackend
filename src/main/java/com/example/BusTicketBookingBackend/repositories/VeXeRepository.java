@@ -14,8 +14,14 @@ public interface VeXeRepository extends JpaRepository<Vexe, Integer> {
     @Query("SELECT COUNT(v) FROM Vexe v WHERE v.donDatVe.id = :maDonDat AND v.trangThaiVe = 'CANCELED'")
     Integer countCancelledTicketsByDonDatVeId(Integer maDonDat);
 
+    @Query("SELECT COUNT(v) FROM Vexe v WHERE v.donDatVe.id = :maDonDat AND v.trangThaiVe = 'COMPLETED'")
+    Integer countCompleteTicketsByDonDatVeId(Integer maDonDat);
+
     List<Vexe> findByDonDatVe_Id(int donDatVeId);
 
     @Query("SELECT v FROM Vexe v JOIN FETCH v.datGhe WHERE v.donDatVe.id = :maDonDat")
     List<Vexe> findAllByDonDatVeWithIDMaDonDat(@Param("maDonDat") Integer maDonDat);
+
+    @Query("SELECT v FROM Vexe v WHERE v.datGhe.chuyenXe.id = :chuyenXeId")
+    List<Vexe> findAllByChuyenXeId(@Param("chuyenXeId") Integer chuyenXeId);
 }
