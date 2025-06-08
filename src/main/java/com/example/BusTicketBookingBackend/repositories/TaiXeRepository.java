@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TaiXeRepository extends JpaRepository<TaiXe, Integer> {
@@ -23,4 +24,6 @@ public interface TaiXeRepository extends JpaRepository<TaiXe, Integer> {
             "AND cx.gioKetThuc >= :gioKhoiHanh)")
     List<TaiXe> findAvailableDrivers(@Param("ngayKhoiHanh") LocalDate ngayKhoiHanh,
                                      @Param("gioKhoiHanh") LocalTime gioKhoiHanh);
+
+    Optional<TaiXe> findById(Integer id);
 }

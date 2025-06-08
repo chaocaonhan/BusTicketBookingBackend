@@ -189,6 +189,7 @@ public class NguoiDungServiceImpl implements NguoiDungService {
         // Lưu vào database
         nguoiDung.setMatKhau(PassWord);
         nguoiDung.setAvatar(avatars);
+
         nguoiDung = nguoiDungRepository.save(nguoiDung);
 
         NguoiDungDTO updatedUser = modelMapper.map(nguoiDung, NguoiDungDTO.class);

@@ -175,7 +175,9 @@ public class VeXeServiceImpl implements VeXeService {
     public void huyVeTheoChuyenXe(Integer chuyenXeId) {
         List<DonDatVe> donDatVeCanHuy = donDatVeRepository.findByChuyenXeId(chuyenXeId);
         for (DonDatVe donDatVe : donDatVeCanHuy) {
+
             huyTatCaVeCuaDonDat(donDatVe.getId());
+            donDatVe.setTrangThaiDonDat(TrangThaiDonDat.CANCELED);
         }
     }
 

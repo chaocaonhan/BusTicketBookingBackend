@@ -38,4 +38,6 @@ public interface ChuyenXeRepository extends JpaRepository<ChuyenXe, Integer> {
             Pageable pageable
     );
 
+    List<ChuyenXe> findByTaiXeIdAndNgayKhoiHanhBetween(int idTaiXe, LocalDate from, LocalDate to);
+
 }

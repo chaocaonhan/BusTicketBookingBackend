@@ -3,6 +3,10 @@ package com.example.BusTicketBookingBackend.service;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.UriUtils;
+
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
@@ -12,23 +16,37 @@ public class OpenRouteService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public double[] getCoordinates(String placeName) {
-        String url = "https://api.openrouteservice.org/geocode/search?api_key=" + apiKey + "&text=" + placeName;
+        String url = UriComponentsBuilder
+                .fromHttpUrl("https://nominatim.openstreetmap.org/search")
+                .queryParam("format", "json")
+                .queryParam("limit", "1")
+                .queryParam("q", placeName)
+                .build()
+                .toUriString();
 
-        ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("User-Agent", "MySpringApp");
 
-        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            List<Map> features = (List<Map>) response.getBody().get("features");
-            if (features != null && !features.isEmpty()) {
-                Map geometry = (Map) features.get(0).get("geometry");
-                if (geometry != null && geometry.get("coordinates") != null) {
-                    List<Double> coords = (List<Double>) geometry.get("coordinates");
-                    return new double[]{coords.get(0), coords.get(1)};
-                }
-            }
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<List> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                requestEntity,
+                List.class
+        );
+
+        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null && !response.getBody().isEmpty()) {
+            Map result = (Map) response.getBody().get(0);
+            double lat = Double.parseDouble((String) result.get("lat"));
+            double lon = Double.parseDouble((String) result.get("lon"));
+            return new double[]{lon, lat};
         }
 
         throw new RuntimeException("Không tìm được tọa độ cho địa điểm: " + placeName);
     }
+
+
 
 
     public double getDistanceInKm(String originPlace, String destPlace) {

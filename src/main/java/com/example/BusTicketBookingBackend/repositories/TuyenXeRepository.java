@@ -11,6 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface TuyenXeRepository extends JpaRepository<TuyenXe, Integer> {
+
+    @Query("SELECT tx from TuyenXe tx where tx.trangThai = 1")
     List<TuyenXe> findAll();
 
     @Query("SELECT tx FROM TuyenXe tx WHERE tx.tinhDi.tenTinhThanh = :tinhDi AND tx.tinhDen.tenTinhThanh = :tinhDen")

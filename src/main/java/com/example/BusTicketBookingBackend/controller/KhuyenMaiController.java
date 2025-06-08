@@ -53,4 +53,13 @@ public class KhuyenMaiController {
                 .result(khuyenMaiService.edit(id,kmDTO))
                 .build();
     }
+
+    @DeleteMapping("{id}")
+    public ApiResponse deleteKm(@PathVariable int id){
+        return ApiResponse.builder()
+                .code(200)
+                .message("Đã xoá khuyến mại")
+                .result(khuyenMaiService.deleteKM(id))
+                .build();
+    }
 }

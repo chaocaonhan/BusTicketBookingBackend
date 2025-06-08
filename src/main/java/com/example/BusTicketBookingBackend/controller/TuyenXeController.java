@@ -48,10 +48,14 @@ public class TuyenXeController {
         }
     }
 
-    @DeleteMapping("/xoaTuyen")
-    public String deleteTuyenXe(@RequestParam Integer id) {
-        return tuyenXeService.deleteTuyenXe(id);
+    @DeleteMapping("/{id}")
+    public ApiResponse deleteTuyenXe(@PathVariable Integer id) {
+        return ApiResponse.builder()
+                .code(200)
+                .message(tuyenXeService.deleteTuyenXe(id))
+                .build();
     }
+
 
     @GetMapping("/top5-popular")
     public ApiResponse getTop5Popular(){

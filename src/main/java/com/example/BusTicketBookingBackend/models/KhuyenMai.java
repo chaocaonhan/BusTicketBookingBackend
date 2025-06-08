@@ -36,4 +36,7 @@ public class KhuyenMai {
 
     @Column(name = "ngayketthuc")
     private LocalDate ngayKetThuc;
+
+    @Column(name = "trangthai")
+    private int trangThai;
 }

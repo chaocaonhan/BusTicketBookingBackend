@@ -50,7 +50,8 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class
+SecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final CustomUserDetailsService userDetailsService;
@@ -87,6 +88,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/nguoidung/datLaiMatKhau").permitAll()
                         .requestMatchers("/api/nguoidung/getPage").permitAll()
                         .requestMatchers("/api/nguoidung/danhSachTaiXe").permitAll()
+                        .requestMatchers("/api/taiXe/lichLamViec").hasRole("ADMIN")
                         .requestMatchers("/api/Xe/getAll").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/Xe/suaThongTinXe/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,"api/Xe/xoaXe/*").hasRole("ADMIN")
@@ -95,6 +97,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/diem-dung/**").permitAll()
                         .requestMatchers("/api/chuyenxe/**").permitAll()
                         .requestMatchers("/api/datve/**").permitAll()
+                        .requestMatchers("/api/datve/findByChuyenXeId").hasRole("ADMIN")
                         .requestMatchers("/api/datve/findByIdAndPhoneNumber").permitAll()
 
                         .requestMatchers(HttpMethod.GET,"/api/taiXe/**").hasRole("ADMIN")
@@ -107,6 +110,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/tuyen-xe/**").permitAll()
                         .requestMatchers("/api/danhGia/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/tuyen-xe/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"/api/tuyen-xe/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,"api/tinhthanh/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE,"/api/tinhthanh/deleteTinhThanh").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")

@@ -36,7 +36,6 @@ import java.util.Optional;
 public class DonDatVeServiceImpl implements DonDatVeService {
     DonDatVeRepository donDatVeRepository;
     NguoiDungRepository nguoiDungRepository;
-    DatGheRepository datGheRepository;
     DatGheService datGheService;
     ChuyenXeService chuyenXeService;
     ModelMapper modelMapper;
@@ -67,6 +66,7 @@ public class DonDatVeServiceImpl implements DonDatVeService {
         donDatVe.setSoLuongVe(sl);
         donDatVe.setSDT(datVeRequest.getSdt());
         donDatVe.setEmail(datVeRequest.getEmail());
+        donDatVe.setTrangThaiDonDat(TrangThaiDonDat.BOOKED);
 
         ChuyenXeVaGheCanDat chuyenDi = datVeRequest.getChuyenDi();
         ChuyenXeVaGheCanDat chuyenVe = datVeRequest.getChuyenVe();
@@ -121,6 +121,11 @@ public class DonDatVeServiceImpl implements DonDatVeService {
     }
 
     @Override
+    public List<DonDatVeResponse> getDonDatVeByIdChuyenXe(Integer id) {
+        return donDatVeRepository.findByChuyenXeId(id).stream().map(this::toDonDatVeResponse).toList();
+    }
+
+    @Override
     public Page<DonDatVeResponse> getAllDonDatVeByTrangThai(TrangThaiDonDat trangThai, Pageable pageable) {
         return donDatVeRepository
                 .findAllByTrangThaiDonDat(trangThai, pageable)
@@ -136,6 +141,13 @@ public class DonDatVeServiceImpl implements DonDatVeService {
 
     @Override
     public Optional<DonDatVeResponse> traCuuDonDat(FindingRequest findingRequest){
+        DonDatVe donDatVe = donDatVeRepository.findById(Integer.parseInt(findingRequest.getMaDonDatVe())).get();
+        if(donDatVe == null){
+            throw new AppException(ErrorCode.DATA_NOT_FOUND);
+        }
+        if(donDatVe.getSDT() != findingRequest.getSdt()){
+            throw new AppException(ErrorCode.DATA_NOT_FOUND);
+        }
         return donDatVeRepository.findById(Integer.parseInt(findingRequest.getMaDonDatVe()))
                 .map(this::toDonDatVeResponse);
     }

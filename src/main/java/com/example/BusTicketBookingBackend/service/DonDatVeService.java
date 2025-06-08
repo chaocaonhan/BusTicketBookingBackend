@@ -18,6 +18,8 @@ public interface DonDatVeService {
 
     List<DonDatVeResponse> getMyBooking();
 
+    List<DonDatVeResponse> getDonDatVeByIdChuyenXe(Integer id);
+
     void huyDon(Integer maDonDatVe);
 
 

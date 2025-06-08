@@ -176,7 +176,7 @@ public ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> re
 
         ApiResponse<NguoiDungDTO> response = ApiResponse.<NguoiDungDTO>builder()
                 .code(200)
-                .message("User updated successfully")
+                .message("Cập nhật thông tin người dùng thành công")
                 .result(updatedUser)
                 .build();
 

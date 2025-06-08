@@ -18,10 +18,7 @@ public class DiemDonTraServiceImpl implements DiemDonTraService {
     private final DiemDonTraRepository diemDonTraRepository;
     private final TinhThanhRepository tinhThanhRepository;
 
-    @Override
-    public List<DiemDonTra> getAllDiemDonTra() {
-        return diemDonTraRepository.findAll();
-    }
+
 
     @Override
     public List<DiemDonTra> getDiemDonTraByTinhThanh(String tinhThanh) {

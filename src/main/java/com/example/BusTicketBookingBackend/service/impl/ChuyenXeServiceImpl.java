@@ -111,7 +111,6 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
 
 
 
-
     @Override
     public List<ChuyenXeResponse> getAll() {
         List<ChuyenXe> lsChuyenXe = chuyenXeRepository.findAll();
@@ -122,6 +121,8 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
         return lsChuyenXe.stream().map(this::convertToResponse).toList();
     }
 
+
+
     @Override
     public ChuyenXeResponse editChuyenXe(ChuyenXeDTO chuyenXeDto, Integer idChuyenXe) {
         ChuyenXe chuyenXe = chuyenXeRepository.findById(idChuyenXe).get();
@@ -129,14 +130,20 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
             throw new AppException(ErrorCode.DATA_NOT_FOUND);
         }
 
-        chuyenXe.setTuyenXe(tuyenXeRepository.findByTenTuyen(chuyenXeDto.getTenTuyen()));
+//        chuyenXe.setTuyenXe(tuyenXeRepository.findByTenTuyen(chuyenXeDto.getTenTuyen()));
         chuyenXe.setXe(xeRepository.findByBienSo(chuyenXeDto.getBienSoXe()));
         chuyenXe.setTaiXe(taiXeRepository.findByHoTen(chuyenXeDto.getTaiXe()));
-        chuyenXe.setDiemDi(diemDonTraRepository.findDiemDonTraByTenDiemDon(chuyenXeDto.getDiemDi()));
-        chuyenXe.setDiemDen(diemDonTraRepository.findDiemDonTraByTenDiemDon(chuyenXeDto.getDiemDen()));
-        chuyenXe.setNgayKhoiHanh(chuyenXeDto.getNgayKhoiHanh());
+//        chuyenXe.setDiemDi(diemDonTraRepository.findDiemDonTraByTenDiemDon(chuyenXeDto.getDiemDi()));
+//        chuyenXe.setDiemDen(diemDonTraRepository.findDiemDonTraByTenDiemDon(chuyenXeDto.getDiemDen()));
+//        chuyenXe.setNgayKhoiHanh(chuyenXeDto.getNgayKhoiHanh());
         chuyenXe.setGioKhoiHanh(chuyenXeDto.getGioKhoiHanh());
-        chuyenXe.setGioKetThuc(chuyenXeDto.getGioKetThuc());
+
+        double soGio = (double) chuyenXe.getTuyenXe().getKhoangCach() / 60;
+        long phut = Math.round(soGio * 60);
+        LocalTime gioKetThucUocTinh = chuyenXe.getGioKhoiHanh().plusMinutes(phut);
+        chuyenXe.setGioKetThuc(gioKetThucUocTinh);
+
+
         chuyenXe.setGiaVe(chuyenXeDto.getGiaVe());
 
         return convertToResponse(chuyenXeRepository.save(chuyenXe));
@@ -149,8 +156,8 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
         return ChuyenXeResponse.builder()
                 .id(chuyenXe.getId())
                 .tenTuyen(chuyenXe.getTuyenXe().getTenTuyen())
-                .diemDi(chuyenXe.getDiemDi().getTenDiemDon())
-                .diemDen(chuyenXe.getDiemDen().getTenDiemDon())
+                .diemDi(diemDungTrenTuyenService.getDiemDau(chuyenXe.getTuyenXe().getId()).getTenDiemDon())
+                .diemDen(diemDungTrenTuyenService.getDiemCuoi(chuyenXe.getTuyenXe().getId()).getTenDiemDon())
                 .ngayKhoiHanh(chuyenXe.getNgayKhoiHanh())
                 .gioKhoiHanh(chuyenXe.getGioKhoiHanh())
                 .gioKetThuc(chuyenXe.getGioKetThuc())
@@ -187,8 +194,28 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
 
         cx.setNgayKhoiHanh(chuyenXe.getNgayKhoiHanh());
         cx.setGioKhoiHanh(chuyenXe.getGioKhoiHanh());
-        cx.setGioKetThuc(chuyenXe.getGioKetThuc());
-        cx.setGiaVe(chuyenXe.getGiaVe());
+
+        double soGio = (double) tuyenXe.getKhoangCach() / 60;
+        long phut = Math.round(soGio * 60);
+        LocalTime gioKetThucUocTinh = chuyenXe.getGioKhoiHanh().plusMinutes(phut);
+        cx.setGioKetThuc(gioKetThucUocTinh);
+
+
+
+        int giaVeTheokm = 1000*(tuyenXe.getKhoangCach());
+        int giaVeCoSo =  ((giaVeTheokm + 5000) / 10000) * 10000;
+
+        switch (loaiXe.getId()){
+            case 1:
+                cx.setGiaVe(giaVeCoSo);
+                break;
+            case 2:
+                cx.setGiaVe(giaVeCoSo+30000);
+                break;
+            case 3:
+                cx.setGiaVe(giaVeCoSo+80000);
+                break;
+        }
 
 
         List<ChoiNgoi> choiNgois = choNgoiRepository.findByLoaiXe_Id(loaiXe.getId());
@@ -257,7 +284,7 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
         List<Vexe> veXes = vexeRepository.findByDonDatVe_Id(donDatVeId);
         Vexe vexe = veXes.get(0);
 
-        // Step 2: Access the linked DatGhe and ChuyenXe
+
         if (vexe.getDatGhe() == null || vexe.getDatGhe().getChuyenXe() == null) {
             throw new EntityNotFoundException("Không tìm thấy chuyến xe cho vé xe: " + vexe.getId());
         }
@@ -314,7 +341,7 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
                         }
                     }
                 } else if (ngayKhoiHanh.isBefore(today)) {
-                    // Ngày khởi hành đã qua → tự động chuyển sang COMPLETED nếu chưa cập nhật
+                    // Ngày khởi hành đã qua thì tự động chuyển sang COMPLETED nếu chưa cập nhật
                     if (trangThaiHienTai != ChuyenXe.TrangThai.COMPLETED) {
                         veXeService.capNhatTrangThaiVeKhiHoanThanhChuyen(chuyenXe.getId());
                         chuyenXe.setTrangThai(ChuyenXe.TrangThai.COMPLETED);

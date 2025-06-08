@@ -8,4 +8,6 @@ public interface KhuyenMaiService {
     int checkKhuyenMai(String khuyenMai);
 
     KhuyenMai edit(int id, KhuyenMaiDTO khuyenMaiDTO);
+
+    Object deleteKM(int id);
 }

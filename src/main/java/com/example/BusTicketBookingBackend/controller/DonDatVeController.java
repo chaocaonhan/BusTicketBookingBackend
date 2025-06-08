@@ -5,10 +5,8 @@ import com.example.BusTicketBookingBackend.dtos.request.FindingRequest;
 import com.example.BusTicketBookingBackend.dtos.response.ApiResponse;
 import com.example.BusTicketBookingBackend.dtos.response.DonDatVeResponse;
 import com.example.BusTicketBookingBackend.enums.TrangThaiDonDat;
-import com.example.BusTicketBookingBackend.models.DonDatVe;
 import com.example.BusTicketBookingBackend.service.DonDatVeService;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
@@ -18,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -69,10 +68,10 @@ public class DonDatVeController {
 
         if (kqTimKiem.isEmpty()) {
             trangThai = 404;
-            result = "No booking found for the provided details"; // Provide a meaningful message for empty results
+            result = "Không tìm thấy";
         } else {
             trangThai = 200;
-            result = kqTimKiem.get(); // Safe because this block guarantees that the Optional is not empty
+            result = kqTimKiem.get();
         }
 
         return ApiResponse.builder()
@@ -80,6 +79,16 @@ public class DonDatVeController {
                 .message("Success")
                 .result(result)
                 .build();
+    }
+
+    @GetMapping("/findByChuyenXe/{idChuyenXe}")
+    public ApiResponse findByChuyenXe(@PathVariable Integer idChuyenXe) {
+        return ApiResponse.builder()
+                .code(200)
+                .message("Success")
+                .result(donDatVeService.getDonDatVeByIdChuyenXe(idChuyenXe))
+                .build();
+
     }
 
     @GetMapping("/getPage")

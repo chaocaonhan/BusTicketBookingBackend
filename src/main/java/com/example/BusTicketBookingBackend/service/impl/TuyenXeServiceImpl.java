@@ -1,6 +1,8 @@
 package com.example.BusTicketBookingBackend.service.impl;
 
 import com.example.BusTicketBookingBackend.dtos.response.TuyenXeDTO;
+import com.example.BusTicketBookingBackend.exception.AppException;
+import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.TinhThanh;
 import com.example.BusTicketBookingBackend.models.TuyenXe;
 import com.example.BusTicketBookingBackend.repositories.ChuyenXeRepository;
@@ -68,6 +70,7 @@ public class TuyenXeServiceImpl implements TuyenXeService {
         tuyenXe.setTinhDen(tinhDen);
         tuyenXe.setKhoangCach(tuyenXeDTO.getKhoangCach());
         tuyenXe.setThoiGianDiChuyen(tuyenXeDTO.getThoiGianDiChuyen());
+        tuyenXe.setTrangThai(1);
 
         return tuyenXeRepository.save(tuyenXe);
     }
@@ -75,7 +78,12 @@ public class TuyenXeServiceImpl implements TuyenXeService {
     @Override
     public String deleteTuyenXe(Integer id) {
 
-        tuyenXeRepository.deleteById(id);
+        TuyenXe tx = tuyenXeRepository.findById(id).get();
+        if (tx == null) {
+            throw new AppException(ErrorCode.DATA_NOT_FOUND);
+        }
+        tx.setTrangThai(0);
+        tuyenXeRepository.save(tx);
         return "Đã xoá tuyến xe";
     }
 

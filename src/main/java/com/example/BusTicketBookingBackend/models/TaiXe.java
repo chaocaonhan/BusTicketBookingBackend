@@ -28,4 +28,7 @@ public class TaiXe {
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "anh")
+    private String anh;
 }
