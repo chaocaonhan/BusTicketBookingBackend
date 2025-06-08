@@ -145,7 +145,7 @@ public class DonDatVeServiceImpl implements DonDatVeService {
         if(donDatVe == null){
             throw new AppException(ErrorCode.DATA_NOT_FOUND);
         }
-        if(donDatVe.getSDT() != findingRequest.getSdt()){
+        if(!donDatVe.getSDT().equals(findingRequest.getSdt())){
             throw new AppException(ErrorCode.DATA_NOT_FOUND);
         }
         return donDatVeRepository.findById(Integer.parseInt(findingRequest.getMaDonDatVe()))
