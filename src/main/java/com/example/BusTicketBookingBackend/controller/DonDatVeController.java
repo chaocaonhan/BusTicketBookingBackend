@@ -43,12 +43,16 @@ public class DonDatVeController {
                 .result(donDatVeService.getAllDonDat()).build();
     }
 
-    @GetMapping("/getMyDonDat")
-    public ApiResponse getMyDonDat(){
-        return ApiResponse.builder()
-                .code(200)
-                .message("Success")
-                .result(donDatVeService.getMyBooking()).build();
+    @GetMapping("/getMyDonDatByTrangThai")
+    public ResponseEntity<Page<DonDatVeResponse>> getMyDonDat(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam TrangThaiDonDat trangThaiDonDat
+    ){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "thoiGianDat"));
+
+        Page<DonDatVeResponse> donDatCuaToi = donDatVeService.getMyDonDatVeByTrangThai(trangThaiDonDat,pageable );
+        return ResponseEntity.ok(donDatCuaToi);
     }
 
     @DeleteMapping("/huyDon/{id}")

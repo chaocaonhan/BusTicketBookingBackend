@@ -81,7 +81,7 @@
                                   <strong>Xin chào, <span th:text="${donDatVe.tenHanhKhach}">Khách hàng</span></strong>
                                 </p>
                                 <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
-                                  Cảm ơn bạn đã lựa chọn dịch vụ của chúng tôi. Dưới đây là thông tin đặt vé của bạn:
+                                  Cảm ơn bạn đã lựa chọn Sao Việt. Dưới đây là thông tin đặt vé của bạn:
                                 </p>
                               </td>
                             </tr>
@@ -97,10 +97,10 @@
                                   <strong>Số lượng vé:</strong> <span th:text="${donDatVe.soLuongVe}"></span>
                                 </p>
                                 <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
-                                  <strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(donDatVe.tongTien, 0, 'COMMA', 0, 'POINT')}"></span> VND
+                                  <strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(donDatVe.getTongTien(), 0, 'COMMA', 0, 'POINT')}"></span> VND
                                 </p>
                                 <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
-                                  <strong>Phương thức thanh toán:</strong> <span th:text="${donDatVe.kieuThanhToan == 'CASH' ? 'Tiền mặt' : 'Thanh toán qua VNPay'}"></span>
+                                  <strong>Phương thức thanh toán:</strong> <span th:text="${donDatVe.getKieuThanhToan() == 'CASH' ? 'Tiền mặt' : 'Thanh toán qua VNPay'}"></span>
                                 </p>
                                 <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
                                   <strong>Trạng thái thanh toán:</strong> <span th:text="${donDatVe.trangThaiThanhToan == 0 ? 'Chưa thanh toán' : 'Đã thanh toán'}"></span>
@@ -110,7 +110,7 @@
                             <tr>
                               <td align="left" style="padding:0;Margin:0;padding-top:20px;">
                                 <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
-                                  Quý khách vui lòng đến nhà xe trước giờ khởi hành <strong>20 phút</strong> và xuất trình email này cho nhân viên soát vé.
+                                  Quý khách vui lòng đến nhà xe trước giờ khởi hành <strong>20 phút</strong> và xuất trình email này để nhận vé vật lý.
                                 </p>
                                 <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
                                   Xin chân thành cảm ơn quý khách!

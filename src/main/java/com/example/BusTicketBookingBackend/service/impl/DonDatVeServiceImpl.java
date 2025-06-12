@@ -10,7 +10,6 @@ import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
 import com.example.BusTicketBookingBackend.models.DonDatVe;
 import com.example.BusTicketBookingBackend.models.NguoiDung;
-import com.example.BusTicketBookingBackend.repositories.DatGheRepository;
 import com.example.BusTicketBookingBackend.repositories.DonDatVeRepository;
 import com.example.BusTicketBookingBackend.repositories.NguoiDungRepository;
 import com.example.BusTicketBookingBackend.repositories.VeXeRepository;
@@ -109,15 +108,17 @@ public class DonDatVeServiceImpl implements DonDatVeService {
                 .toList();
     }
 
+
+
     @Override
-    public List<DonDatVeResponse> getMyBooking() {
+    public Page<DonDatVeResponse> getMyDonDatVeByTrangThai(TrangThaiDonDat trangThai, Pageable pageable) {
         var context = SecurityContextHolder.getContext();
         String mail = context.getAuthentication().getName();
         nguoiDungRepository.findByEmail(mail)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        return donDatVeRepository.findAllByNguoiDung_Email(mail).stream()
-                .map(this::toDonDatVeResponse)
-                .toList();
+
+        return donDatVeRepository.findAllByTrangThaiDonDatAndNguoiDung_Email(trangThai,mail,pageable)
+                .map(this::toDonDatVeResponse);
     }
 
     @Override

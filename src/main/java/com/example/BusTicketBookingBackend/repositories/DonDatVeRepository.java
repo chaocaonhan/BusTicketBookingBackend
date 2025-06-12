@@ -42,4 +42,7 @@ public interface DonDatVeRepository extends JpaRepository<DonDatVe, Integer> {
             Pageable pageable
     );
 
+    Page<DonDatVe> findAllByTrangThaiDonDatAndNguoiDung_Email(TrangThaiDonDat trangThaiDonDat, String email, Pageable pageable);
+
+
 }

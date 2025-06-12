@@ -35,7 +35,7 @@ public class EmailServiceImpl implements EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
 
-        helper.setFrom("roadlineboooking@gmail.com");
+        helper.setFrom("ccnhan1288@gmail.com");
         helper.setTo(to);
         helper.setText(content, true);
         helper.setSubject("Xác Nhận Email Đăng Ký");

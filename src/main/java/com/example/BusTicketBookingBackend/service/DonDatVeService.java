@@ -16,18 +16,17 @@ public interface DonDatVeService {
     String taoDonDatVe(DatVeRequest datVeRequest);
     List<DonDatVeResponse> getAllDonDat();
 
-    List<DonDatVeResponse> getMyBooking();
+
 
     List<DonDatVeResponse> getDonDatVeByIdChuyenXe(Integer id);
 
     void huyDon(Integer maDonDatVe);
 
-
     Optional<DonDatVeResponse> traCuuDonDat(FindingRequest findingRequest);
-
-
 
     Page<DonDatVeResponse> getAllDonDatVeByTrangThai(TrangThaiDonDat trangThai, Pageable pageable);
 
     Page<DonDatVeResponse> searchDonDatVe(String keyword, Pageable pageable, TrangThaiDonDat trangThaiDonDat);
+
+    Page<DonDatVeResponse> getMyDonDatVeByTrangThai(TrangThaiDonDat trangThai, Pageable pageable);
 }

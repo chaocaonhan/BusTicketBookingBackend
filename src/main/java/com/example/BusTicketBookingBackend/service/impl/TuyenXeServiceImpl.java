@@ -3,6 +3,7 @@ package com.example.BusTicketBookingBackend.service.impl;
 import com.example.BusTicketBookingBackend.dtos.response.TuyenXeDTO;
 import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
+import com.example.BusTicketBookingBackend.models.DiemDonTra;
 import com.example.BusTicketBookingBackend.models.TinhThanh;
 import com.example.BusTicketBookingBackend.models.TuyenXe;
 import com.example.BusTicketBookingBackend.repositories.ChuyenXeRepository;
@@ -95,6 +96,8 @@ public class TuyenXeServiceImpl implements TuyenXeService {
                 .map(result -> (TuyenXe) result[0]) // Kết quả đầu tiên là đối tượng TuyenXe
                 .collect(Collectors.toList());
     }
+
+
 
 
 }

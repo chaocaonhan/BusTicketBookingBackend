@@ -16,7 +16,7 @@ public enum ErrorCode{
     USER_NOT_FOUND(1005,"Không tìm thấy ng dùng",HttpStatus.NOT_FOUND),
     UNAUTHENTICATED(1006,"Yêu cầu chưa xác thực",HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007,"You do not have permisson",HttpStatus.FORBIDDEN),
-    DATA_NOT_FOUND(1008,"Khong tim thay du lieu",HttpStatus.NOT_FOUND),
+    DATA_NOT_FOUND(1008,"Không tìm thấy dữ liệu theo yêu cầu",HttpStatus.NOT_FOUND),
     INVALID_FORMAT(1009,"Sai kiểu dữ liệu đầu vào",HttpStatus.BAD_REQUEST)
     ;
 
