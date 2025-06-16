@@ -100,7 +100,7 @@
                                   <strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(donDatVe.getTongTien(), 0, 'COMMA', 0, 'POINT')}"></span> VND
                                 </p>
                                 <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
-                                  <strong>Phương thức thanh toán:</strong> <span th:text="${donDatVe.getKieuThanhToan() == 'CASH' ? 'Tiền mặt' : 'Thanh toán qua VNPay'}"></span>
+                                  <strong>Phương thức thanh toán:</strong> <span th:text="${donDatVe.kieuThanhToan == 'CASH' ? 'Tiền mặt' : 'Thanh toán qua VNPay'}"></span>
                                 </p>
                                 <p style="font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px;">
                                   <strong>Trạng thái thanh toán:</strong> <span th:text="${donDatVe.trangThaiThanhToan == 0 ? 'Chưa thanh toán' : 'Đã thanh toán'}"></span>

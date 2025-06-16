@@ -67,6 +67,7 @@ public class EmailServiceImpl implements EmailService {
         DonDatVe donDatVeCanGui = donDatVeRepository.findById(maDonDatVe).get();
         Context context = new Context();
         context.setVariable("donDatVe", donDatVeCanGui);
+        int a = 8;
 
         // Xử lý template email
         String content = templateEngine.process("booking", context);

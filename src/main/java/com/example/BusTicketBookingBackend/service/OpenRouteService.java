@@ -50,6 +50,7 @@ public class OpenRouteService {
 
 
     public double getDistanceInKm(String originPlace, String destPlace) {
+        //lấy toạ độ
         double[] from = getCoordinates(originPlace);
         double[] to = getCoordinates(destPlace);    
 
