@@ -6,6 +6,7 @@ import com.example.BusTicketBookingBackend.dtos.response.DiemDonCuaChuyen;
 import com.example.BusTicketBookingBackend.dtos.response.DonDatVeResponse;
 import com.example.BusTicketBookingBackend.enums.TrangThaiDonDat;
 import com.example.BusTicketBookingBackend.models.ChuyenXe;
+import jakarta.mail.MessagingException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,7 +29,7 @@ public interface ChuyenXeService {
 
     int getChuyenXeIdFromDonDatVeId(int donDatVeId);
 
-    int huyChuyen(int idChuyenXe);
+    int huyChuyen(int idChuyenXe) throws MessagingException;
 
     Page<ChuyenXeResponse> getAllChuyenXeByTrangThai(ChuyenXe.TrangThai trangThaiChuyenXe, Pageable pageable);
 

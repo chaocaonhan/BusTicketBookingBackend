@@ -3,6 +3,7 @@ package com.example.BusTicketBookingBackend.service;
 import com.example.BusTicketBookingBackend.dtos.request.DatVeRequest;
 import com.example.BusTicketBookingBackend.dtos.response.VeXeResponse;
 import com.example.BusTicketBookingBackend.enums.TrangThaiDonDat;
+import jakarta.mail.MessagingException;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface VeXeService {
 
     Integer huyVeXe(Integer maVeXe);
 
-    void huyVeTheoChuyenXe(Integer chuyenXeId);
+    void huyVeTheoChuyenXe(Integer chuyenXeId) throws MessagingException;
 
     void capNhatTrangThaiVeKhiHoanThanhChuyen(Integer chuyenXeId);
 }

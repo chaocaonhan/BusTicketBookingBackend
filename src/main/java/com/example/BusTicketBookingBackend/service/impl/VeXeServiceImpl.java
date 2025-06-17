@@ -13,11 +13,14 @@ import com.example.BusTicketBookingBackend.repositories.DatGheRepository;
 import com.example.BusTicketBookingBackend.repositories.DonDatVeRepository;
 import com.example.BusTicketBookingBackend.repositories.VeXeRepository;
 import com.example.BusTicketBookingBackend.service.VeXeService;
+import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +32,7 @@ public class VeXeServiceImpl implements VeXeService {
     VeXeRepository veXeRepository;
     DonDatVeRepository donDatVeRepository;
     DatGheRepository datGheRepository;
+    private final EmailServiceImpl emailServiceImpl;
 
     @Override
     public String taoVeXeChoChuyenXe(DatVeRequest datVeRequest, Integer maDonDat) {
@@ -95,7 +99,7 @@ public class VeXeServiceImpl implements VeXeService {
     }
 
     @Override
-    public void huyTatCaVeCuaDonDat(Integer maDonDat){
+    public void huyTatCaVeCuaDonDat(Integer maDonDat) {
         List<Vexe> veXes = veXeRepository.findAllByDonDatVeWithIDMaDonDat
                 (maDonDat);
         for(Vexe veXe : veXes){
@@ -150,9 +154,12 @@ public class VeXeServiceImpl implements VeXeService {
     @Override
     public Integer huyVeXe(Integer maVeXe) {
         Optional<Vexe> vexe = veXeRepository.findById(maVeXe);
+
         if(vexe != null && vexe.isPresent()){
+
             Vexe veCanHuy = vexe.get();
-//            thay doi tranvg thais ve
+
+//          thay doi tranvg thais ve
             veCanHuy.setTrangThaiVe(TrangThaiVe.CANCELED);
             veXeRepository.save(veCanHuy);
 
@@ -172,10 +179,10 @@ public class VeXeServiceImpl implements VeXeService {
     }
 
     @Override
-    public void huyVeTheoChuyenXe(Integer chuyenXeId) {
+    public void huyVeTheoChuyenXe(Integer chuyenXeId) throws MessagingException {
         List<DonDatVe> donDatVeCanHuy = donDatVeRepository.findByChuyenXeId(chuyenXeId);
         for (DonDatVe donDatVe : donDatVeCanHuy) {
-
+            emailServiceImpl.sendSimpleCancelBookingEmail(donDatVe.getId());
             huyTatCaVeCuaDonDat(donDatVe.getId());
             donDatVe.setTrangThaiDonDat(TrangThaiDonDat.CANCELED);
         }

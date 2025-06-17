@@ -82,5 +82,4 @@ public class OpenRouteService {
 
         throw new RuntimeException("Không tính được khoảng cách giữa 2 địa điểm: " + originPlace + " và " + destPlace);
     }
-
 }

@@ -1,9 +1,7 @@
 package com.example.BusTicketBookingBackend.service.impl;
 
-import com.example.BusTicketBookingBackend.dtos.response.DonDatVeResponse;
 import com.example.BusTicketBookingBackend.models.DonDatVe;
 import com.example.BusTicketBookingBackend.repositories.DonDatVeRepository;
-import com.example.BusTicketBookingBackend.service.DonDatVeService;
 import com.example.BusTicketBookingBackend.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -80,6 +78,33 @@ public class EmailServiceImpl implements EmailService {
         helper.setTo(donDatVeCanGui.getEmail());
         helper.setText(content, true);
         helper.setSubject("Xác nhận đặt vé thành công");
+
+        // Gửi email
+        mailSender.send(message);
+    }
+
+    @Override
+    public void sendSimpleCancelBookingEmail(Integer maDonDatVe) throws MessagingException {
+        DonDatVe donDatVeCanGui = donDatVeRepository.findById(maDonDatVe).get();
+
+        // Nội dung email đơn giản
+        String content = String.format(
+                "<html><body>" +
+                        "<h3>Thông báo hủy vé</h3>" +
+                        "<p>Chúng tôi đã hủy đơn đặt vé <strong>%d</strong> của bạn!</p>" +
+                        "<p>Nếu bạn đã thanh toán, chúng tôi sẽ hoàn tiền cho bạn!</p>" +
+                        "<br><p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>" +
+                        "</body></html>",
+                maDonDatVe
+        );
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+
+        helper.setFrom("cnhan1288@gmail.com");
+        helper.setTo(donDatVeCanGui.getEmail());
+        helper.setText(content, true);
+        helper.setSubject("Thông báo hủy vé từ Sao Việt");
 
         // Gửi email
         mailSender.send(message);

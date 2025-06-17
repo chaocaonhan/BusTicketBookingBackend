@@ -73,8 +73,9 @@ public class DiemDungTrenTuyenServiceImpl implements DiemDungTrenTuyenService {
         int i =1;
         int khoangCachTuDiemDau = 0;
         int soPhutDiChuyenTuDiemDau = 0;
+        int size = lichTrinhMoi.size();
         String diaChiBatDau = diemDonTraRepository.findDiemDonTraById(lichTrinhMoi.get(0)).getTenDiemDon();
-
+        String diaChiKetThuc = diemDonTraRepository.findDiemDonTraById(lichTrinhMoi.get(lichTrinhMoi.size()-1)).getTenDiemDon();
 
         for (Integer diemDon : lichTrinhMoi) {
 
@@ -98,10 +99,13 @@ public class DiemDungTrenTuyenServiceImpl implements DiemDungTrenTuyenService {
             diemDonMoi.setThoiGianTuDiemDau(soPhutDiChuyenTuDiemDau);
 
 
-            //xử lý khoảng cách vs tgian sau bằng google
+
             ddttRepository.save(diemDonMoi);
             i++;
         }
+        int khoangCachMoi = (int)openRouteService.getDistanceInKm(diaChiBatDau,diaChiKetThuc);
+        tuyenCanSua.setKhoangCach(khoangCachMoi);
+        tuyenXeRepository.save(tuyenCanSua);
         return 1;
     }
 

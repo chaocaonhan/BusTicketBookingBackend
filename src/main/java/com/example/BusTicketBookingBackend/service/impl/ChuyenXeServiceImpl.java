@@ -3,8 +3,6 @@ package com.example.BusTicketBookingBackend.service.impl;
 import com.example.BusTicketBookingBackend.dtos.request.ChuyenXeDTO;
 import com.example.BusTicketBookingBackend.dtos.response.ChuyenXeResponse;
 import com.example.BusTicketBookingBackend.dtos.response.DiemDonCuaChuyen;
-import com.example.BusTicketBookingBackend.dtos.response.DonDatVeResponse;
-import com.example.BusTicketBookingBackend.enums.TrangThaiDonDat;
 import com.example.BusTicketBookingBackend.enums.TrangThaiGhe;
 import com.example.BusTicketBookingBackend.exception.AppException;
 import com.example.BusTicketBookingBackend.exception.ErrorCode;
@@ -13,6 +11,7 @@ import com.example.BusTicketBookingBackend.repositories.*;
 import com.example.BusTicketBookingBackend.service.ChuyenXeService;
 import com.example.BusTicketBookingBackend.service.DiemDungTrenTuyenService;
 import com.example.BusTicketBookingBackend.service.VeXeService;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -147,8 +146,6 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
         chuyenXe.setGiaVe(chuyenXeDto.getGiaVe());
 
         return convertToResponse(chuyenXeRepository.save(chuyenXe));
-
-
 
     }
 
@@ -294,10 +291,11 @@ public class ChuyenXeServiceImpl implements ChuyenXeService {
     }
 
     @Override
-    public int huyChuyen(int idChuyenXe) {
+    public int huyChuyen(int idChuyenXe) throws MessagingException {
         ChuyenXe chuyenXe = chuyenXeRepository.findById(idChuyenXe)
                 .orElseThrow(() -> new AppException(ErrorCode.DATA_NOT_FOUND));
         chuyenXe.setTrangThai(ChuyenXe.TrangThai.CANCELED);
+//        chuyenXe.setTaiXe(null);
         chuyenXeRepository.save(chuyenXe);
         veXeService.huyVeTheoChuyenXe(idChuyenXe);
         return 1;

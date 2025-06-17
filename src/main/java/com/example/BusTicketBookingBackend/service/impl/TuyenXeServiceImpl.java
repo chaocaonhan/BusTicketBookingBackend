@@ -93,7 +93,7 @@ public class TuyenXeServiceImpl implements TuyenXeService {
         List<Object[]> results = chuyenXeRepository.findTop5TuyenXePhoBien();
 
         return results.stream()
-                .map(result -> (TuyenXe) result[0]) // Kết quả đầu tiên là đối tượng TuyenXe
+                .map(result -> (TuyenXe) result[0])
                 .collect(Collectors.toList());
     }
 

@@ -8,4 +8,6 @@ public interface EmailService {
 
 
     void sendBookingDetailsEmail(Integer maDonDatVe) throws MessagingException;
+
+    void sendSimpleCancelBookingEmail(Integer maDonDatVe) throws MessagingException;
 }

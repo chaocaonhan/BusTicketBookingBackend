@@ -9,6 +9,7 @@ import com.example.BusTicketBookingBackend.models.ChuyenXe;
 import com.example.BusTicketBookingBackend.models.TuyenXe;
 import com.example.BusTicketBookingBackend.service.ChuyenXeService;
 import com.example.BusTicketBookingBackend.service.DatGheService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -128,7 +129,7 @@ public class ChuyenXeController {
 
 
     @DeleteMapping("/huyChuyen/{id}")
-    public ApiResponse huyChuyenXe(@PathVariable Integer id){
+    public ApiResponse huyChuyenXe(@PathVariable Integer id) throws MessagingException {
         return ApiResponse.builder()
                 .code(200)
                 .message("Lịch trình của chuyến xe + {idChuyenXe}")
